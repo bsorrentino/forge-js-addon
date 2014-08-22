@@ -19,16 +19,12 @@ import org.junit.runner.RunWith;
 public class DynjsAddonTest
 {
    //static final String version = "2.4.1.Final";
-   static final String version = "2.6.0.Final";
+   //static final String version = "2.6.0.Final";
+   static final String version = "2.7.2.Final";
 
    @Deployment
    @Dependencies({ 
-       //@AddonDependency(name = "org.jboss.forge.addon:addon-manager", version="2.4.1.Final"),
-       //@AddonDependency(name = "org.jboss.forge.addon:addons", version="2.4.1.Final"),
-       //@AddonDependency(name = "org.jboss.forge.addon:core", version="2.4.1.Final"),
-       //@AddonDependency(name = "org.jboss.forge.furnace.container:cdi", version="2.4.1.Final")
-       //@AddonDependency(name = "org.jboss.forge.addon:maven"),
-	   @AddonDependency(name = "org.bsc:dynjs-addon", version="1.0.1-SNAPSHOT") 
+	  @AddonDependency(name = "org.bsc:dynjs-addon", version="2.7.2-SNAPSHOT") 
 	   })
    public static ForgeArchive getDeployment()
    {
@@ -43,7 +39,7 @@ public class DynjsAddonTest
                     AddonDependencyEntry.create("org.jboss.forge.addon:core", version),
                     AddonDependencyEntry.create("org.jboss.forge.furnace.container:cdi", version),
                     
-            		AddonDependencyEntry.create("org.bsc:dynjs-addon", "1.0.1-SNAPSHOT")
+            		AddonDependencyEntry.create("org.bsc:dynjs-addon", "2.7.2-SNAPSHOT")
             		)
             ;
       return archive;

@@ -2,15 +2,19 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <artifactId>dynjs-addon</artifactId>
-  <version>2.6.0.Final</version>
+  <version>2.7.2.Final</version>
   <parent>
   	<groupId>org.bsc</groupId>
   	<artifactId>forge-addon</artifactId>
   	<version>2</version>
   </parent>
-  
+
+     <prerequisites>
+       <maven>3.1</maven>
+     </prerequisites>
+
   <properties>
-    <version.furnace>2.6.0.Final</version.furnace>
+    <version.furnace>2.7.2.Final</version.furnace>
   </properties>
 
   <dependencyManagement>
@@ -68,12 +72,12 @@
       <version>0.2.3-20140513.132917-60</version>
       <scope>compile</scope>
     </dependency>
-    
-<!-- 
+
+<!--
 =========================================
 TEST
 =========================================
- -->    
+ -->
       <dependency>
          <groupId>org.jboss.forge.addon</groupId>
          <artifactId>ui-test-harness</artifactId>
@@ -89,7 +93,7 @@ TEST
       <artifactId>arquillian-furnace-classpath</artifactId>
       <scope>test</scope>
     </dependency>
- 
+
   </dependencies>
   <build>
     <finalName>dynjs-addon</finalName>
@@ -132,7 +136,7 @@ TEST
             </manifestEntries>
           </archive>
         </configuration>
-        
+
       </plugin>
 	      <plugin>
 	        <groupId>org.apache.maven.plugins</groupId>
@@ -142,8 +146,11 @@ TEST
 	        	<outputDirectory>${project.build.directory}/${project.artifactId}/apidocs</outputDirectory>
 	        </configuration>
 	      </plugin>
-			      
-      
+
+
     </plugins>
   </build>
+  <description>Develop a JBoss Forge Addon using Javascript</description>
+  <name>Forge::DynJS Addon</name>
+  <url>https://github.com/bsorrentino/forge-addon/tree/master/dynjs-addon</url>
 </project>
