@@ -29,7 +29,9 @@ Evaluate a script
 
 #### Implicit Object(s)
 
+////
 [NOTE]
+////
 ====
 Object(s) Available in the script
 ====
@@ -54,8 +56,9 @@ Evaluate a script in project's scope
 |=======================
 
 #### Implicit Object(s)
-
+////
 [NOTE]
+////
 ====
 Object(s) Available in the script
 ====
@@ -211,7 +214,9 @@ module.exports = {
 
 ### Example
 
+////
 [TIP]
+////
 ====
 Checkout more examples from link:samples[here]
 ====
