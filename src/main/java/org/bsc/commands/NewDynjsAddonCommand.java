@@ -1,9 +1,19 @@
 package org.bsc.commands;
 
+import static org.bsc.commands.AddonUtils.getAssetDir;
+import static org.bsc.commands.AddonUtils.getManifest;
+import static org.bsc.commands.AddonUtils.getOut;
+
+import java.io.File;
+import java.io.FilenameFilter;
 import java.util.Iterator;
+import java.util.jar.Manifest;
 
 import javax.inject.Inject;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.maven.model.Resource;
 import org.jboss.forge.addon.dependencies.builder.DependencyBuilder;
 import org.jboss.forge.addon.maven.projects.MavenFacet;
 import org.jboss.forge.addon.parser.java.facets.JavaSourceFacet;
@@ -11,7 +21,6 @@ import org.jboss.forge.addon.parser.java.ui.AbstractJavaSourceCommand;
 import org.jboss.forge.addon.projects.Project;
 import org.jboss.forge.addon.projects.dependencies.DependencyInstaller;
 import org.jboss.forge.addon.resource.FileResource;
-import org.jboss.forge.addon.ui.command.AbstractUICommand;
 import org.jboss.forge.addon.ui.context.UIBuilder;
 import org.jboss.forge.addon.ui.context.UIContext;
 import org.jboss.forge.addon.ui.context.UIExecutionContext;
@@ -79,12 +88,20 @@ public class NewDynjsAddonCommand extends
 	{
 		 installDependencies(project);
 		 
+		 copyModules( context, project );
+		 
 	     if (Strings.isNullOrEmpty(commandName.getValue()))
 	      {
-	         commandName.setValue(script.getValue().getName());
+	    	 
+	         commandName.setValue( FilenameUtils.getBaseName(script.getValue().getName()));
 	      }
 
-	      command.setSuperType(AbstractUICommand.class);
+	      if( Boolean.TRUE.equals(requireProject.getValue()) ) {
+	    	  command.setSuperType(AbstractDynjsProjectCommand.class);
+	      }
+	      else {
+	    	  command.setSuperType(AbstractDynjsUICommand.class);	    	  
+	      }
 	      command.addImport(UIBuilder.class);
 	      command.addImport(UIContext.class);
 	      command.addImport(UIExecutionContext.class);
@@ -101,22 +118,28 @@ public class NewDynjsAddonCommand extends
 	               .setParameters("UIContext context");
 	      getMetadataMethod.addAnnotation(Override.class);
 
-	      String getMetadataMethodBody = "return Metadata.forCommand(" + command.getName() + ".class" + ")\n"
-	               + "\t.name(\"" + commandName.getValue() + "\")";
+	      StringBuilder getMetadataMethodBody = new StringBuilder()
+	      											.append("return Metadata.forCommand(")
+	      											.append(command.getName())
+	      											.append(".class)")
+	      											.append('\n')
+	      											.append("\t.name(\"")
+	      											.append(commandName.getValue())
+	      											.append("\")");
 	      Iterator<String> iterator = categories.getValue().iterator();
 	      if (iterator.hasNext())
 	      {
-	         getMetadataMethodBody += "\t.category(Categories.create(";
+	         getMetadataMethodBody.append("\t.category(Categories.create(");
 	         while (iterator.hasNext())
 	         {
-	            getMetadataMethodBody += "\"" + iterator.next() + "\"";
+	            getMetadataMethodBody.append('"').append(iterator.next()).append('"');
 	            if (iterator.hasNext())
-	               getMetadataMethodBody += ", ";
+	               getMetadataMethodBody.append(", ");
 	         }
-	         getMetadataMethodBody += "))";
+	         getMetadataMethodBody.append("))");
 	      }
-	      getMetadataMethodBody += ";";
-	      getMetadataMethod.setBody(getMetadataMethodBody);
+	      getMetadataMethodBody.append(';');
+	      getMetadataMethod.setBody(getMetadataMethodBody.toString());
 
 	      command.addMethod()
 	               .setPublic()
@@ -157,10 +180,39 @@ public class NewDynjsAddonCommand extends
 	      return "UI Command";
 	}
 	
+	
+	private void copyModules( UIExecutionContext context, Project project  ) throws Exception {
+
+		final Manifest mf = getManifest(getClass());
+
+		java.io.File assetDir = getAssetDir(mf);
+		
+		final String resourcesDir = String.format("%s/src/main/resources",
+				project.getRoot().getFullyQualifiedName());
+
+		final java.io.File resourcesDirFile = new java.io.File(resourcesDir);
+
+		if (!resourcesDirFile.exists()) {
+
+			if (!resourcesDirFile.mkdirs()) {
+				getOut(context).err().printf("ERROR CREATING FOLDER: [%s]\n",
+						resourcesDir);
+				return;
+			}
+		}
+
+		FileUtils.copyDirectory(assetDir, resourcesDirFile);
+	}
+	
+	/**
+	 * 
+	 * @param project
+	 */
 	private void installDependencies( Project project ) {
 		
 	 	
-		DependencyBuilder dep = DependencyBuilder.create( "org.bsc:dynjs-addon:2.7.2.Final");
+		final DependencyBuilder dep = DependencyBuilder.create( "org.bsc:dynjs-addon:2.7.2.Final")
+										.setScopeType("provided");
 		
 		depInstaller.install(project, dep);
 		

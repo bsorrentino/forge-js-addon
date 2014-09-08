@@ -1,7 +1,7 @@
 package org.bsc.commands;
 
-import static org.bsc.commands.AbstractBaseDynjsUICommand.getAttribute;
-import static org.bsc.commands.AbstractBaseDynjsUICommand.getOut;
+import static org.bsc.commands.AddonUtils.getAttribute;
+import static org.bsc.commands.AddonUtils.getOut;
 
 import org.dynjs.runtime.DynJS;
 import org.dynjs.runtime.JSFunction;

@@ -1,15 +1,12 @@
 package org.bsc.commands;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.jar.Manifest;
 
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 import org.bsc.functional.Functional.Fn;
 import org.dynjs.Config;
 import org.dynjs.runtime.DynJS;
@@ -21,16 +18,14 @@ import org.jboss.forge.addon.projects.ui.AbstractProjectCommand;
 import org.jboss.forge.addon.resource.FileResource;
 import org.jboss.forge.addon.ui.context.UIContextProvider;
 import org.jboss.forge.addon.ui.input.InputComponentFactory;
-import org.jboss.forge.addon.ui.output.UIOutput;
 import org.jboss.forge.furnace.manager.maven.MavenContainer;
-import org.jboss.forge.furnace.util.OperatingSystemUtils;
-
+import static org.bsc.commands.AddonUtils.getOut;
 /**
  * 
  * @author softphone
  *
  */
-public abstract class AbstractBaseDynjsUICommand extends AbstractProjectCommand implements AddonConstants {
+public abstract class AbstractBaseDynjsUICommand extends AbstractProjectCommand {
 	@Inject
 	BeanManager beanManager;
 	
@@ -69,46 +64,12 @@ public abstract class AbstractBaseDynjsUICommand extends AbstractProjectCommand 
 
 	/**
 	 * 
-	 * @param context
-	 * @return
-	 */
-	public static  <T extends UIContextProvider> UIOutput getOut( T context ) {
-		return context.getUIContext().getProvider().getOutput();
-	}
-	
-	@SuppressWarnings("unchecked")
-	public static <C extends UIContextProvider,T> T getAttribute( C ctx, String name ) {
-		
-		return (T)ctx.getUIContext().getAttributeMap().get(name);
-	}
-
-	@SuppressWarnings("unchecked")
-	public static <C extends UIContextProvider,T> T putAttribute( C ctx, String name, T value ) {
-		
-		return (T)ctx.getUIContext().getAttributeMap().put(name, value);
-	}
-
-	/**
-	 * 
 	 * @return
 	 * @throws IOException
 	 * @see http://stackoverflow.com/questions/1272648/reading-my-own-jars-manifest
 	 */
 	protected Manifest getManifest() throws IOException {
-		Class<?> clazz = getClass();
-		String className = clazz.getSimpleName() + ".class";
-		String classPath = clazz.getResource(className).toString();
-		
-		if (!classPath.startsWith("jar")) {
-		  // Class not from JAR
-		  throw new IOException( "MANIFEST NOT FOUND!");
-		}
-		
-		final String manifestPath = classPath.substring(0, classPath.lastIndexOf("!") + 1).concat("/META-INF/MANIFEST.MF");
-		
-		Manifest manifest = new Manifest(new java.net.URL(manifestPath).openStream());
-
-		return manifest;
+		return AddonUtils.getManifest(getClass());
 	}
 	
 	/**
@@ -118,10 +79,7 @@ public abstract class AbstractBaseDynjsUICommand extends AbstractProjectCommand 
 	 * @throws IOException
 	 */
 	protected String getVersion( final Manifest mf ) throws IOException {
-
-		final String version = mf.getMainAttributes().getValue("version");
-
-		return version;
+		return AddonUtils.getVersion(mf);
 	}
 
 	/**
@@ -130,19 +88,7 @@ public abstract class AbstractBaseDynjsUICommand extends AbstractProjectCommand 
 	 * @throws IOException 
 	 */
 	protected final java.io.File getAssetDir( final Manifest mf ) throws IOException {
-		
-		final java.io.File forgeDir =  OperatingSystemUtils.getUserForgeDir();
-		
-		final java.io.File result = new java.io.File( forgeDir, String.format("dynjs/%s", getVersion(mf)));
-		
-		if( !result.exists() ) {
-			if( !result.mkdirs() ) {
-			
-				throw new IOException( String.format("error creating dynjs asset dir [%s]", result));
-			}
-		}
-		
-		return result;
+		return AddonUtils.getAssetDir(mf);
 	}
 	
 	/**
@@ -151,17 +97,7 @@ public abstract class AbstractBaseDynjsUICommand extends AbstractProjectCommand 
 	 * @throws IOException 
 	 */
 	protected final void copyResourceToAssetDir( final String resourceName, final Manifest mf  ) throws IOException {
-		
-		final java.net.URL source = getClass().getClassLoader().getResource(resourceName);
-		if( source == null ) {
-			throw new FileNotFoundException( String.format("resource [%s] not found in classloader!", source));
-		}
-		
-		final java.io.File target = new java.io.File( getAssetDir(mf), resourceName );
-
-		if( !target.exists() || getVersion(mf).endsWith("SNAPSHOT")) {
-			FileUtils.copyURLToFile(source, target);
-		}
+		AddonUtils.copyResourceToAssetDir(getClass().getClassLoader(), resourceName,mf);
 	}
 	/**
 	 * 
@@ -172,27 +108,7 @@ public abstract class AbstractBaseDynjsUICommand extends AbstractProjectCommand 
 					Fn<Void,T> onSuccess, 
 					Fn<Exception,T> onError  )  
 	{
-		
-		if( resource == null ) {
-			throw new IllegalArgumentException("resource parameter is null!");
-		}
-		
-		
-		try {
-			final java.io.File assetDir = getAssetDir(mf);
-			final String resourceName = FilenameUtils.getName( resource.getName() );
-			final java.io.File target = new java.io.File( assetDir, resourceName );
-
-			if( target.exists() && !overwrite ) {
-				return onError.f(new IllegalStateException(String.format("resource [%s] already exists!", resourceName)) );
-			}
-			FileUtils.copyFileToDirectory(resource, assetDir);
-
-		} catch (IOException e) {
-			return onError.f(e);
-		}
-		
-		return onSuccess.f(null);
+		return AddonUtils.copyFileToAssetDir( resource,mf,overwrite, onSuccess, onError);
 		
 	}
 	

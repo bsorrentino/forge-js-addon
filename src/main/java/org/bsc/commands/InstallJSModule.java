@@ -19,7 +19,7 @@ import org.jboss.forge.addon.ui.result.Result;
 import org.jboss.forge.addon.ui.result.Results;
 import org.jboss.forge.addon.ui.util.Metadata;
 
-public class InstallJSModule extends AbstractDynjsUICommand {
+public class InstallJSModule extends AbstractDynjsUICommand  implements AddonConstants {
 	@Inject
 	@WithAttributes(label = "JS Module", required = true, type = InputType.FILE_PICKER)
 	private UIInput<FileResource<?>> script;

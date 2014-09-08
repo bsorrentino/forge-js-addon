@@ -35,13 +35,17 @@ import org.jboss.forge.addon.ui.result.Results;
 import org.jboss.forge.addon.ui.util.Metadata;
 import org.jboss.forge.addon.ui.wizard.UIWizard;
 
+import static org.bsc.commands.AddonUtils.getOut;
+import static org.bsc.commands.AddonUtils.getAttribute;
+import static org.bsc.commands.AddonUtils.putAttribute;
+
 /**
  * Evaluate a script in project's scope
  * 
  * @author softphone
  * 
  */
-public class EvalInProject extends AbstractDynjsProjectCommand implements UIWizard {
+public class EvalInProject extends AbstractDynjsProjectCommand implements UIWizard, AddonConstants {
 	@Inject
 	@WithAttributes(label = "Script", required = true, type = InputType.FILE_PICKER)
 	private UIInput<FileResource<?>> script;
