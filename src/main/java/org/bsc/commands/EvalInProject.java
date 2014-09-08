@@ -167,8 +167,8 @@ public class EvalInProject extends AbstractDynjsProjectCommand implements UIWiza
 				public GlobalObject newGlobalObject(DynJS runtime) {
 					return new GlobalObject(runtime) {{
 						
-						defineReadOnlyGlobalProperty("self", EvalInProject.this);
-						defineReadOnlyGlobalProperty("project", project);
+						defineReadOnlyGlobalProperty("self", EvalInProject.this, true);
+						defineReadOnlyGlobalProperty("project", project, true);
 						
 					}};
 				}

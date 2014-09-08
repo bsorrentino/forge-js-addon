@@ -69,7 +69,7 @@
     <dependency>
       <groupId>org.dynjs</groupId>
       <artifactId>dynjs</artifactId>
-      <version>0.2.3-20140513.132917-60</version>
+      <version>0.3.0</version>
       <scope>compile</scope>
     </dependency>
 

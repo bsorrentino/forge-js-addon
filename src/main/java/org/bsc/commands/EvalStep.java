@@ -36,14 +36,14 @@ public class EvalStep extends AbstractUICommand implements UIWizardStep, AddonCo
 
 		if (dynjs != null) {
 
-			Reference ref = dynjs.getExecutionContext().resolve("execute");
+			Reference ref = dynjs.getDefaultExecutionContext().resolve("execute");
 
 			if (ref != null) {
 
-				Object fn = ref.getValue(dynjs.getExecutionContext());
+				Object fn = ref.getValue(dynjs.getDefaultExecutionContext());
 				if (fn instanceof JSFunction) {
 
-					Object result = dynjs.getExecutionContext().call(
+					Object result = dynjs.getDefaultExecutionContext().call(
 							(JSFunction) fn, null, new Object[] { context });
 
 					return Results.success(String.valueOf(result));
@@ -62,14 +62,14 @@ public class EvalStep extends AbstractUICommand implements UIWizardStep, AddonCo
 		if (dynjs != null) {
 			if(DEBUG) getOut(builder).out().println("EvalStep.initializeUI");
 
-			Reference ref = dynjs.getExecutionContext().resolve("initializeUI");
+			Reference ref = dynjs.getDefaultExecutionContext().resolve("initializeUI");
 
 			if (ref != null) {
 
-				Object fn = ref.getValue(dynjs.getExecutionContext());
+				Object fn = ref.getValue(dynjs.getDefaultExecutionContext());
 				if (fn instanceof JSFunction) {
 
-					dynjs.getExecutionContext().call((JSFunction) fn, null,
+					dynjs.getDefaultExecutionContext().call((JSFunction) fn, null,
 							new Object[] { builder });
 
 				}

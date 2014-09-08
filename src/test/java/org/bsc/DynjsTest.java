@@ -32,7 +32,7 @@ public class DynjsTest {
 			public GlobalObject newGlobalObject(DynJS runtime) {
 				return new GlobalObject(runtime) {{
 					
-					defineReadOnlyGlobalProperty("command", DynjsTest.this);
+					defineReadOnlyGlobalProperty("command", DynjsTest.this, true);
 				}};
 			}
 		});

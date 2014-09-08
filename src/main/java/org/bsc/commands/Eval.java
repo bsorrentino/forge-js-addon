@@ -70,7 +70,7 @@ public class Eval extends AbstractDynjsUICommand implements UIWizard {
 				public GlobalObject newGlobalObject(DynJS runtime) {
 					return new GlobalObject(runtime) {{
 						
-						defineReadOnlyGlobalProperty("self", Eval.this);
+						defineReadOnlyGlobalProperty("self", Eval.this, true);
 						//defineReadOnlyGlobalProperty("context", context);
 						
 					}};
