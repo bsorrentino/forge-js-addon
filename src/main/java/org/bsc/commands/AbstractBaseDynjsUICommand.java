@@ -123,6 +123,15 @@ public abstract class AbstractBaseDynjsUICommand extends AbstractProjectCommand 
 		return config;
 	}
 	
+	/**
+	 * 
+	 * @param ctx
+	 * @param resourceName
+	 * @param factory
+	 * @param mf
+	 * @return
+	 * @throws Exception
+	 */
 	protected <T extends UIContextProvider> Runner runnerFromClasspath(T ctx, final String resourceName, GlobalObjectFactory factory, Manifest mf)
 			throws Exception {
 

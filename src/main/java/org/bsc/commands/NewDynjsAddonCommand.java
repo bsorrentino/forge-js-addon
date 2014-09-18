@@ -253,6 +253,8 @@ public class NewDynjsAddonCommand extends
 		}
 
 		FileUtils.copyDirectory(assetDir, resourcesDirFile);
+		
+		FileUtils.copyFileToDirectory(script.getValue().getUnderlyingResourceObject(), resourcesDirFile);
 	}
 	
 	/**
