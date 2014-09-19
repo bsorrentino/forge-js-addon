@@ -48,7 +48,7 @@ public class NewDynjsAddonCommand extends
 		AbstractJavaSourceCommand<JavaClassSource> implements AddonConstants {
 
 	@Inject
-	@WithAttributes(label = "require project", required = false, defaultValue = "true", type = InputType.CHECKBOX)
+	@WithAttributes(label = "require project", required = false, type = InputType.CHECKBOX)
 	UIInput<Boolean> requireProject;
 
 	@Inject
@@ -69,7 +69,8 @@ public class NewDynjsAddonCommand extends
 	@Override
 	public UICommandMetadata getMetadata(UIContext context) {
 		return Metadata.forCommand(NewDynjsAddonCommand.class)
-				.name("addon-new-dynjs-command").category(CATEGORY)
+				.name("addon-new-dynjs-command")
+				.category(CATEGORY)
 				.description("Create a addon from a script");
 	}
 
@@ -93,12 +94,15 @@ public class NewDynjsAddonCommand extends
 	private void addNextMethod(JavaClassSource command) {
 
 		MethodSource<JavaClassSource> method = command.addMethod().setPublic()
-				.setName("next").setReturnType(NavigationResult.class)
+				.setName("next")
+				.setReturnType(NavigationResult.class)
 				.setParameters("UINavigationContext context");
 		method.addThrows(Exception.class).addAnnotation(Override.class);
 
 		try {
-			final String bodyTemplate = loadTextResource( Boolean.TRUE.equals(requireProject.getValue()) ? "nextMethodBodyP.txt" : "nextMethodBody.txt");
+			final String bodyTemplate = 
+					loadTextResource( Boolean.TRUE.equals(requireProject.getValue()) ? "nextMethodBodyP.txt" : "nextMethodBody.txt");
+			
 			method.setBody(String.format(bodyTemplate, command.getName(), script.getValue().getName()));
 		} catch (IOException e) {
 
@@ -118,22 +122,29 @@ public class NewDynjsAddonCommand extends
 						"return Results.success(\"Command '"
 								+ commandName.getValue()
 								+ "' successfully executed!\");")
-				.addThrows(Exception.class).addAnnotation(Override.class);
-
-	}
-
-	private void addInitializeUIMethod(JavaClassSource command) {
-		command.addMethod().setPublic().setName("initializeUI")
-				.setReturnTypeVoid().setBody("// not implemented")
-				.setParameters("UIBuilder builder").addThrows(Exception.class)
+				.addThrows(Exception.class)
 				.addAnnotation(Override.class);
 
 	}
 
+	private void addInitializeUIMethod(JavaClassSource command) {
+		command.addMethod()
+			.setPublic()
+			.setName("initializeUI")
+			.setReturnTypeVoid()
+			.setBody("// not implemented")
+			.setParameters("UIBuilder builder")
+			.addThrows(Exception.class)
+			.addAnnotation(Override.class);
+
+	}
+
 	private void addGetMetdataMethod(JavaClassSource command) {
-		MethodSource<JavaClassSource> method = command.addMethod().setPublic()
-				.setName("getMetadata").setReturnType(UICommandMetadata.class)
-				.setParameters("UIContext context");
+		MethodSource<JavaClassSource> method = 
+				command.addMethod()
+					.setPublic()
+					.setName("getMetadata").setReturnType(UICommandMetadata.class)
+					.setParameters("UIContext context");
 		method.addAnnotation(Override.class);
 
 		StringBuilder body = new StringBuilder()
@@ -168,6 +179,7 @@ public class NewDynjsAddonCommand extends
 		command.addImport(Results.class);
 		command.addImport(UIWizard.class);
 		command.addImport(DynJS.class);
+		command.addImport(EvalStep.class);
 		
 		command.addImport(AddonUtils.class.getName().concat(".*")).setStatic(true);
 	}
@@ -204,7 +216,6 @@ public class NewDynjsAddonCommand extends
 
 		addImports(command);
 		
-
 		addGetMetdataMethod(command);
 
 		addInitializeUIMethod(command);

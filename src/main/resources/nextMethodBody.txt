@@ -1,36 +1,36 @@
 
-		DynJS dynjs = getAttribute(context, DynJS.class.getName());
-		
-		if( dynjs == null ) {
-			final GlobalObjectFactory factory = new GlobalObjectFactory() {
-				
-				@Override
-				public GlobalObject newGlobalObject(DynJS runtime) {
-					return new GlobalObject(runtime) {{
-						
-						defineReadOnlyGlobalProperty("self", %s.this, true);
-						
-					}};
-				}
-			};
-	
-			dynjs = newDynJS(context, factory);
-	
-			final FileResource<?> js = script.getValue();
-	
-			final Manifest mf = getManifest();
-	
-			try {
-				/*Object result = */runnerFromClasspath( dynjs, "%s", mf).evaluate()
-				
-			}
-			catch( Exception e) {
-				//getOut(context).err().println( String.valueOf( e.getMessage()));
-								
-				throw e;
-			}
-			putAttribute( context, DynJS.class.getName(), dynjs );
+DynJS dynjs = getAttribute(context, DynJS.class.getName());
 
-		}
+if( dynjs == null ) {
+	final GlobalObjectFactory factory = new GlobalObjectFactory() {
 		
-		return Results.navigateTo( EvalStep.class);
+		@Override
+		public GlobalObject newGlobalObject(DynJS runtime) {
+			return new GlobalObject(runtime) {{
+				
+				defineReadOnlyGlobalProperty("self", %s.this, true);
+				
+			}};
+		}
+	};
+
+	dynjs = newDynJS(context, factory);
+
+	final FileResource<?> js = script.getValue();
+
+	final Manifest mf = getManifest();
+
+	try {
+		/*Object result = */runnerFromClasspath( dynjs, "%s", mf).evaluate();
+		
+	}
+	catch( Exception e) {
+		//getOut(context).err().println( String.valueOf( e.getMessage()));
+						
+		throw e;
+	}
+	putAttribute( context, DynJS.class.getName(), dynjs );
+
+}
+
+return Results.navigateTo( EvalStep.class);

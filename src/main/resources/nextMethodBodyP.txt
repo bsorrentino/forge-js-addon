@@ -2,6 +2,8 @@
 		DynJS dynjs = getAttribute(context, DynJS.class.getName());
 		
 		if( dynjs == null ) {
+			final Project project = super.getSelectedProject(context);
+			
 			final GlobalObjectFactory factory = new GlobalObjectFactory() {
 				
 				@Override
@@ -22,7 +24,7 @@
 			final Manifest mf = getManifest();
 	
 			try {
-				/*Object result = */runnerFromClasspath( dynjs, "%s", mf).evaluate()
+				/*Object result = */runnerFromClasspath( dynjs, "%s", mf).evaluate();
 				
 			}
 			catch( Exception e) {

@@ -2,5 +2,6 @@
 #
 #forge> run <script> 
 #
-project-new --named forge-test1 --type addon --topLevelPackage org.bsc
-addon-new-dynjs-command --named MyTest --targetPackage org.bsc --script /Users/bsorrentino/WORKSPACES/GITHUB/FORGE/forge-dynjs-addon/samples/purgedeps.js
+rm -rf /tmp/forge-test1
+project-new --named forge-test1 --type addon --topLevelPackage org.bsc --targetLocation /tmp
+addon-new-dynjs-command --named MyTest --targetPackage org.bsc --requireProject --script /Users/bsorrentino/WORKSPACES/GITHUB/FORGE/forge-dynjs-addon/samples/purgedeps.js 
