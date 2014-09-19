@@ -1,13 +1,14 @@
 package org.bsc.commands;
 
+import static org.bsc.commands.AddonUtils.getAssetDir;
+import static org.bsc.commands.AddonUtils.getOut;
+
 import java.io.File;
-import java.io.IOException;
 import java.util.jar.Manifest;
 
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 
-import org.bsc.functional.Functional.Fn;
 import org.dynjs.Config;
 import org.dynjs.runtime.DynJS;
 import org.dynjs.runtime.GlobalObjectFactory;
@@ -19,7 +20,6 @@ import org.jboss.forge.addon.resource.FileResource;
 import org.jboss.forge.addon.ui.context.UIContextProvider;
 import org.jboss.forge.addon.ui.input.InputComponentFactory;
 import org.jboss.forge.furnace.manager.maven.MavenContainer;
-import static org.bsc.commands.AddonUtils.getOut;
 /**
  * 
  * @author softphone
@@ -65,56 +65,6 @@ public abstract class AbstractBaseDynjsUICommand extends AbstractProjectCommand 
 	/**
 	 * 
 	 * @return
-	 * @throws IOException
-	 * @see http://stackoverflow.com/questions/1272648/reading-my-own-jars-manifest
-	 */
-	protected Manifest getManifest() throws IOException {
-		return AddonUtils.getManifest(getClass());
-	}
-	
-	/**
-	 * 
-	 * @param mf
-	 * @return
-	 * @throws IOException
-	 */
-	protected String getVersion( final Manifest mf ) throws IOException {
-		return AddonUtils.getVersion(mf);
-	}
-
-	/**
-	 * 
-	 * @return
-	 * @throws IOException 
-	 */
-	protected final java.io.File getAssetDir( final Manifest mf ) throws IOException {
-		return AddonUtils.getAssetDir(mf);
-	}
-	
-	/**
-	 * 
-	 * @param w
-	 * @throws IOException 
-	 */
-	protected final void copyResourceToAssetDir( final String resourceName, final Manifest mf  ) throws IOException {
-		AddonUtils.copyResourceToAssetDir(getClass().getClassLoader(), resourceName,mf);
-	}
-	/**
-	 * 
-	 * @param w
-	 * @throws IOException 
-	 */
-	protected final <T>  T copyFileToAssetDir( final java.io.File resource, final Manifest mf, boolean overwrite, 
-					Fn<Void,T> onSuccess, 
-					Fn<Exception,T> onError  )  
-	{
-		return AddonUtils.copyFileToAssetDir( resource,mf,overwrite, onSuccess, onError);
-		
-	}
-	
-	/**
-	 * 
-	 * @return
 	 */
 	private Config newConfig() {
 		//final Config config = new Config(getClass().getClassLoader().getParent());
@@ -122,27 +72,19 @@ public abstract class AbstractBaseDynjsUICommand extends AbstractProjectCommand 
 
 		return config;
 	}
-	
+
 	/**
 	 * 
-	 * @param ctx
+	 * @param dynjs
 	 * @param resourceName
 	 * @param factory
 	 * @param mf
 	 * @return
 	 * @throws Exception
 	 */
-	protected <T extends UIContextProvider> Runner runnerFromClasspath(T ctx, final String resourceName, GlobalObjectFactory factory, Manifest mf)
+	protected <T extends UIContextProvider> Runner runnerFromClasspath(DynJS dynjs, final String resourceName, Manifest mf)
 			throws Exception {
-
-		final Config config = newConfig();
 		
-		config.setGlobalObjectFactory(factory);
-		config.setOutputStream(getOut(ctx).out());
-		config.setErrorStream(getOut(ctx).err());
-		
-		final DynJS dynjs = new DynJS(config);
-
 		final Runner runner = dynjs.newRunner();
 
 		java.io.InputStream is = getClass().getClassLoader().getResourceAsStream(resourceName);
@@ -219,7 +161,9 @@ public abstract class AbstractBaseDynjsUICommand extends AbstractProjectCommand 
 	protected <T extends UIContextProvider> Object executeFromClasspath(T ctx, final String resourceName, GlobalObjectFactory factory, Manifest mf)
 			throws Exception {
 		
-		final Object result = runnerFromClasspath(ctx, resourceName, factory, mf).execute();
+		final DynJS dynjs = newDynJS(ctx, factory);
+		
+		final Object result = runnerFromClasspath(dynjs, resourceName, mf).execute();
 
 		return result;
 

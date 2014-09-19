@@ -25,6 +25,7 @@ import org.jboss.forge.addon.ui.wizard.UIWizard;
 import static org.bsc.commands.AddonUtils.getOut;
 import static org.bsc.commands.AddonUtils.getAttribute;
 import static org.bsc.commands.AddonUtils.putAttribute;
+import static org.bsc.commands.AddonUtils.*;
 
 /**
  * Evaluate a script

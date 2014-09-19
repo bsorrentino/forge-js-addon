@@ -9,6 +9,7 @@
 					return new GlobalObject(runtime) {{
 						
 						defineReadOnlyGlobalProperty("self", %s.this, true);
+						defineReadOnlyGlobalProperty("project", project, true);
 						
 					}};
 				}

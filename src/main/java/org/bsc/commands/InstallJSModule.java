@@ -18,6 +18,7 @@ import org.jboss.forge.addon.ui.metadata.WithAttributes;
 import org.jboss.forge.addon.ui.result.Result;
 import org.jboss.forge.addon.ui.result.Results;
 import org.jboss.forge.addon.ui.util.Metadata;
+import static org.bsc.commands.AddonUtils.*;
 
 public class InstallJSModule extends AbstractDynjsUICommand  implements AddonConstants {
 	@Inject
@@ -66,9 +67,9 @@ public class InstallJSModule extends AbstractDynjsUICommand  implements AddonCon
 		final FileResource<?> js = script.getValue();
 		final Boolean canOverwrite = overwrite.getValue();
 		
-		final Manifest mf = super.getManifest();
+		final Manifest mf = getManifest();
 		
-		return super.copyFileToAssetDir(js.getUnderlyingResourceObject(), mf, canOverwrite, onSuccess, onError );
+		return copyFileToAssetDir(js.getUnderlyingResourceObject(), mf, canOverwrite, onSuccess, onError );
 				
 	} 
 	

@@ -51,12 +51,22 @@ public class AddonUtils {
 	}
 
 	/**
+	 * get addon manifest
+	 * 
+	 * @return
+	 * @throws IOException
+	 */
+	public static Manifest getManifest() throws IOException {
+		return getManifest(AddonUtils.class);
+	}
+
+	/**
 	 * 
 	 * @return
 	 * @throws IOException
 	 * @see http://stackoverflow.com/questions/1272648/reading-my-own-jars-manifest
 	 */
-	public static Manifest getManifest(Class<?> clazz) throws IOException {
+	private static Manifest getManifest(Class<?> clazz) throws IOException {
 		if( clazz == null ) throw new IllegalArgumentException( "argument clazz is null!");
 		
 		String className = clazz.getSimpleName().concat(".class");
