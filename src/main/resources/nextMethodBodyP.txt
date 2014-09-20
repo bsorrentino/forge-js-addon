@@ -19,8 +19,6 @@
 	
 			dynjs = newDynJS(context, factory);
 	
-			final FileResource<?> js = script.getValue();
-	
 			final Manifest mf = getManifest();
 	
 			try {

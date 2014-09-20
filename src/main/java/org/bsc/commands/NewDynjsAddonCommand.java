@@ -2,8 +2,8 @@ package org.bsc.commands;
 
 import static org.bsc.commands.AddonUtils.getAssetDir;
 import static org.bsc.commands.AddonUtils.getManifest;
-import static org.bsc.commands.AddonUtils.getVersion;
 import static org.bsc.commands.AddonUtils.getOut;
+import static org.bsc.commands.AddonUtils.getVersion;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -15,6 +15,8 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.dynjs.runtime.DynJS;
+import org.dynjs.runtime.GlobalObject;
+import org.dynjs.runtime.GlobalObjectFactory;
 import org.jboss.forge.addon.dependencies.builder.DependencyBuilder;
 import org.jboss.forge.addon.parser.java.facets.JavaSourceFacet;
 import org.jboss.forge.addon.parser.java.ui.AbstractJavaSourceCommand;
@@ -24,6 +26,7 @@ import org.jboss.forge.addon.resource.FileResource;
 import org.jboss.forge.addon.ui.context.UIBuilder;
 import org.jboss.forge.addon.ui.context.UIContext;
 import org.jboss.forge.addon.ui.context.UIExecutionContext;
+import org.jboss.forge.addon.ui.context.UINavigationContext;
 import org.jboss.forge.addon.ui.hints.InputType;
 import org.jboss.forge.addon.ui.input.UIInput;
 import org.jboss.forge.addon.ui.input.UIInputMany;
@@ -168,6 +171,7 @@ public class NewDynjsAddonCommand extends
 	}
 
 	private void addImports(JavaClassSource command) {
+		command.addImport(Manifest.class);
 		
 		command.addImport(UIBuilder.class);
 		command.addImport(UIContext.class);
@@ -177,8 +181,17 @@ public class NewDynjsAddonCommand extends
 		command.addImport(Categories.class);
 		command.addImport(Result.class);
 		command.addImport(Results.class);
+
+		command.addImport(Project.class);
+		
 		command.addImport(UIWizard.class);
+		command.addImport(UINavigationContext.class);
+		command.addImport(NavigationResult.class);
+		
 		command.addImport(DynJS.class);
+		command.addImport(GlobalObjectFactory.class);
+		command.addImport(GlobalObject.class);
+		
 		command.addImport(EvalStep.class);
 		
 		command.addImport(AddonUtils.class.getName().concat(".*")).setStatic(true);
