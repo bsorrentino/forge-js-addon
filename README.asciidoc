@@ -83,19 +83,55 @@ Install a new common module. After installation such module will be available to
 | --script      | script's full path
 |=======================
 
+### > addon-new-dynjs-command
+====
+Creates a addon command from a script. This command is very similar to *addon-new-ui-command* but it adds all required classes and dependencies to run the given script. So, this useful command, allows to wrap a script within a standard Forge command
+====
+
+#### Parameters
+
+[options="header",cols="<m,<",width="60%"]
+|=======================
+| param        | Description
+| --script      | script's full path
+|=======================
+
+
+
 ### Getting started
 
 #### Install
 
-`> forge --install org.bsc:dynjs-addon,2.7.2.Final`
+`> forge --install org.bsc:dynjs-addon,2.8.0.Final`
 
 *Older versions*
+
+`> forge --install org.bsc:dynjs-addon,2.7.2.Final`
 
 `> forge --install org.bsc:dynjs-addon,2.6.0.Final`
 
 
 
 All available version http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22org.bsc%22%20AND%20a%3A%22dynjs-addon%22[here]
+
+#### Create new script command example (using CLI)
+```
+forge> project-new --named forge-test1
+                   --type addon
+                   --topLevelPackage org.bsc
+                   --targetLocation _MY_OUTPUT_PATH_
+
+forge> addon-new-dynjs-command
+          --named MyTest
+          --targetPackage org.bsc
+          --category test
+          --requireProject
+          --script _MY_SOURCE_PATH_/forge-dynjs-addon/samples/purgedeps.js
+
+forge> addon-build-and-install --projectRoot _MY_OUTPUT_PATH_/forge-test1
+
+```
+
 
 #### Javascript basic template
 ```javascript
