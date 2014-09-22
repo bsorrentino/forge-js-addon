@@ -1,10 +1,5 @@
 package org.bsc.commands;
 
-import static org.bsc.commands.AddonUtils.getAssetDir;
-import static org.bsc.commands.AddonUtils.getManifest;
-import static org.bsc.commands.AddonUtils.getOut;
-import static org.bsc.commands.AddonUtils.getVersion;
-
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.jar.Manifest;
@@ -42,8 +37,10 @@ import org.jboss.forge.furnace.util.Strings;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
 
+import static org.bsc.commands.AddonUtils.*;
+
 /**
- * 
+ *
  * @author softphone
  *
  */
@@ -103,9 +100,9 @@ public class NewDynjsAddonCommand extends
 		method.addThrows(Exception.class).addAnnotation(Override.class);
 
 		try {
-			final String bodyTemplate = 
+			final String bodyTemplate =
 					loadTextResource( Boolean.TRUE.equals(requireProject.getValue()) ? "nextMethodBodyP.txt" : "nextMethodBody.txt");
-			
+
 			method.setBody(String.format(bodyTemplate, command.getName(), script.getValue().getName()));
 		} catch (IOException e) {
 
@@ -143,7 +140,7 @@ public class NewDynjsAddonCommand extends
 	}
 
 	private void addGetMetdataMethod(JavaClassSource command) {
-		MethodSource<JavaClassSource> method = 
+		MethodSource<JavaClassSource> method =
 				command.addMethod()
 					.setPublic()
 					.setName("getMetadata").setReturnType(UICommandMetadata.class)
@@ -172,7 +169,7 @@ public class NewDynjsAddonCommand extends
 
 	private void addImports(JavaClassSource command) {
 		command.addImport(Manifest.class);
-		
+
 		command.addImport(UIBuilder.class);
 		command.addImport(UIContext.class);
 		command.addImport(UIExecutionContext.class);
@@ -183,31 +180,31 @@ public class NewDynjsAddonCommand extends
 		command.addImport(Results.class);
 
 		command.addImport(Project.class);
-		
+
 		command.addImport(UIWizard.class);
 		command.addImport(UINavigationContext.class);
 		command.addImport(NavigationResult.class);
-		
+
 		command.addImport(DynJS.class);
 		command.addImport(GlobalObjectFactory.class);
 		command.addImport(GlobalObject.class);
-		
+
 		command.addImport(EvalStep.class);
-		
+
 		command.addImport(AddonUtils.class.getName().concat(".*")).setStatic(true);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public JavaClassSource decorateSource(UIExecutionContext context,
 			Project project, JavaClassSource command) throws Exception {
-		
+
 		final Manifest mf = getManifest();
-		
+
 		final String version = getVersion(mf);
-		
+
 		installDependencies(project, version);
 
 		final java.io.File assetDir = getAssetDir(mf);
@@ -228,7 +225,7 @@ public class NewDynjsAddonCommand extends
 		command.addInterface(UIWizard.class);
 
 		addImports(command);
-		
+
 		addGetMetdataMethod(command);
 
 		addInitializeUIMethod(command);
@@ -282,13 +279,13 @@ public class NewDynjsAddonCommand extends
 	}
 
 	/**
-	 * 
+	 *
 	 * @param project
 	 */
 	private void installDependencies(Project project, String version ) {
 
 		final DependencyBuilder dep = DependencyBuilder.create(
-				String.format("org.bsc:dynjs-addon:%s", version)).setScopeType("provided");
+				String.format("org.bsc:dynjs-addon:%s", version)).setScopeType("compile");
 
 		depInstaller.install(project, dep);
 
