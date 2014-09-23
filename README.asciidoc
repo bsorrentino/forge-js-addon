@@ -93,7 +93,12 @@ Creates a addon command from a script. This command is very similar to *addon-ne
 [options="header",cols="<m,<",width="60%"]
 |=======================
 | param        | Description
+| --named  | class name
 | --script      | script's full path
+| --requireProject | whether the generated command require project is required
+| --targetPackage  | command target package
+| --commandName  | command name
+| --categories | command categories
 |=======================
 
 
