@@ -161,7 +161,6 @@ public class AddonUtils {
 			throw new IllegalArgumentException("resource parameter is null!");
 		}
 		
-		
 		try {
 			final java.io.File assetDir = getAssetDir(mf);
 			final String resourceName = FilenameUtils.getName( resource.getName() );

@@ -20,11 +20,11 @@ public class DynjsAddonTest
 {
    //static final String version = "2.4.1.Final";
    //static final String version = "2.6.0.Final";
-   static final String version = "2.7.2.Final";
+   static final String version = "2.8.0.Final";
 
    @Deployment
    @Dependencies({ 
-	  @AddonDependency(name = "org.bsc:dynjs-addon", version="2.7.2-SNAPSHOT") 
+	  @AddonDependency(name = "org.bsc:dynjs-addon", version="2.8.0.1-SNAPSHOT") 
 	   })
    public static ForgeArchive getDeployment()
    {
@@ -39,7 +39,7 @@ public class DynjsAddonTest
                     AddonDependencyEntry.create("org.jboss.forge.addon:core", version),
                     AddonDependencyEntry.create("org.jboss.forge.furnace.container:cdi", version),
                     
-            		AddonDependencyEntry.create("org.bsc:dynjs-addon", "2.7.2-SNAPSHOT")
+            		AddonDependencyEntry.create("org.bsc:dynjs-addon", "2.8.0.1-SNAPSHOT")
             		)
             ;
       return archive;

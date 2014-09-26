@@ -20,10 +20,10 @@ import org.jboss.forge.addon.ui.result.Results;
 import org.jboss.forge.addon.ui.util.Metadata;
 import static org.bsc.commands.AddonUtils.*;
 
-public class InstallJSModule extends AbstractDynjsUICommand  implements AddonConstants {
+public class InstallJSModules extends AbstractDynjsUICommand  implements AddonConstants {
 	@Inject
-	@WithAttributes(label = "JS Module", required = true, type = InputType.FILE_PICKER)
-	private UIInput<FileResource<?>> script;
+	@WithAttributes(label = "JS Module Directory", required = true, type = InputType.DIRECTORY_PICKER)
+	private UIInput<FileResource<?>> scriptDir;
 
 	@Inject
 	@WithAttributes(label = "Overwrite", required = true, type = InputType.CHECKBOX, defaultValue = "true")
@@ -31,16 +31,16 @@ public class InstallJSModule extends AbstractDynjsUICommand  implements AddonCon
 	
 	@Override
 	public UICommandMetadata getMetadata(UIContext context) {
-		return Metadata.forCommand(InstallJSModule.class)
-				.name("InstallJSModule")
+		return Metadata.forCommand(InstallJSModules.class)
+				.name("InstallJSModules")
 				.category(CATEGORY)
-				.description("Install a new common/shared module")
+				.description("Install common/shared modules from given directory")
 				;
 	}
 
 	@Override
 	public void initializeUI(UIBuilder builder) throws Exception {
-		builder.add(script);
+		builder.add(scriptDir);
 		builder.add(overwrite);
 	}
 
@@ -67,7 +67,7 @@ public class InstallJSModule extends AbstractDynjsUICommand  implements AddonCon
 
 		final PrintStream out = context.getUIContext().getProvider().getOutput().out();
 		
-		final FileResource<?> js = script.getValue();
+		final FileResource<?> js = scriptDir.getValue();
 		final Boolean canOverwrite = overwrite.getValue();
 		
 		final Manifest mf = getManifest();
