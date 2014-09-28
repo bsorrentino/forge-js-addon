@@ -82,32 +82,28 @@ public class Eval extends AbstractDynjsUICommand implements UIWizard, AddonConst
 				}
 			};
 	
-			dynjs = newDynJS(context, factory);
-	
 			final FileResource<?> js = script.getValue();
 	
 			final Manifest mf = getManifest();
 	
-			while( true ) {
-				try {
-					/*Object result = */runnerFromFile(dynjs, js, mf).evaluate();
-					break;
-				}
-				catch(java.lang.LinkageError e) {
-					if(DEBUG) getOut(context).err().println( String.valueOf( e.getMessage()));
-					
-				}
-				catch( Exception e) {
+			dynjs = newDynJS(context, factory);
+			
+			try {
+				/*Object result = */runnerFromFile(dynjs, js, mf).evaluate();
+			}
+			catch(java.lang.LinkageError e) {
+				if(DEBUG) getOut(context).err().println( String.valueOf( e.getMessage()));
+				
+			}
+			catch( Exception e) {
+				
 					getOut(context).err().println( String.valueOf( e.getMessage()));
 					
 					if(DEBUG) e.printStackTrace(getOut(context).err());
 					
 					throw e;
-				}
-				
-				Thread.sleep(500);
-				
 			}
+				
 			putAttribute( context, DynJS.class.getName(), dynjs );
 
 		}
