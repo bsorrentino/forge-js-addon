@@ -1,3 +1,7 @@
+var facets = require("facets")();
+var MavenPluginBuilder = org.jboss.forge.addon.maven.plugins.MavenPluginBuilder;
+var CoordinateBuilder = org.jboss.forge.addon.dependencies.builder.CoordinateBuilder;
+
 print( "test executing ....");
 
 var String = java.lang.String;
@@ -22,6 +26,7 @@ function initializeUI( builder ) {
 
 }
 
+var result = "";
 function execute( context ) {
 
   var dps = require("dependencies");
@@ -29,14 +34,44 @@ function execute( context ) {
   var list = dps.resolve("" + attrs.gid.value+":"+attrs.aid.value);
 
   if( list ) {
-    var i = list.iterator();
+	var i = -1;
+	var d = list.iterator();
 
-    while( i.hasNext() ) {
+    while( d.hasNext() ) {
 
-      print( "" + i.next() );
+      print( "[" + (++i) + "] " + d.next() );
     }
 
+    result = context.prompt.prompt( "Choose dependency [" + i + "]" );
+    
+    //for( var m in facets ) { print(""+m); }
+    
+    try {
+    	
+    	
+        if(result ) i = parseInt(result);
+
+        var cc = list.get(i);
+        
+        
+        var pb = MavenPluginBuilder.create().setCoordinate(cc);
+        
+        if( facets.mavenpluginfacet.hasPlugin(cc)) {
+            print( "updating ...." + cc );
+            facets.mavenpluginfacet.updatePlugin(pb)        	        	
+        }
+        else {
+            print( "adding ...." + cc );
+            facets.mavenpluginfacet.addPlugin(pb)        	
+        }
+    	
+    }
+    catch(e) {
+    	
+    	print(e);
+    }
+    
   }
 }
 
-"OK";
+result;

@@ -40,7 +40,7 @@ import static org.bsc.commands.AddonUtils.*;
 /**
  * Evaluate a script in project's scope
  * 
- * @author softphone
+ * @author bsorrentino
  * 
  */
 public class EvalInProject extends AbstractDynjsProjectCommand implements UIWizard, AddonConstants {

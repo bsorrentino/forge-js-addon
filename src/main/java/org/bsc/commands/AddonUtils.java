@@ -6,11 +6,18 @@ import java.util.jar.Manifest;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.filefilter.FileFilterUtils;
+import org.apache.commons.io.filefilter.IOFileFilter;
 import org.bsc.functional.Functional.Fn;
 import org.jboss.forge.addon.ui.context.UIContextProvider;
 import org.jboss.forge.addon.ui.output.UIOutput;
 import org.jboss.forge.furnace.util.OperatingSystemUtils;
 
+/**
+ * 
+ * @author bsorrentino
+ *
+ */
 public class AddonUtils {
 
 	private AddonUtils() {
@@ -170,6 +177,41 @@ public class AddonUtils {
 				return onError.f(new IllegalStateException(String.format("resource [%s] already exists!", resourceName)) );
 			}
 			FileUtils.copyFileToDirectory(resource, assetDir);
+
+		} catch (IOException e) {
+			return onError.f(e);
+		}
+		
+		return onSuccess.f(null);
+		
+	}
+	
+	/**
+	 * 
+	 * @param w
+	 * @throws IOException 
+	 */
+	public static <T>  T copyDirToAssetDir( final java.io.File source, final Manifest mf, 
+					Fn<Void,T> onSuccess, 
+					Fn<Exception,T> onError  )  
+	{
+		
+		if( source == null ) {
+			throw new IllegalArgumentException("resource parameter is null!");
+		}
+		if( !source.exists() ) {
+			throw new IllegalArgumentException("source directory doesn't exist!");			
+		}
+		if( !source.isDirectory() ) {
+			throw new IllegalArgumentException("source is not a directory!");			
+		}
+		
+		try {
+			final java.io.File assetDir = getAssetDir(mf);
+			
+			IOFileFilter jsFiles = FileFilterUtils.and( FileFilterUtils.fileFileFilter(), FileFilterUtils.suffixFileFilter(".js"));
+
+			FileUtils.copyDirectory(source, assetDir, jsFiles,true);
 
 		} catch (IOException e) {
 			return onError.f(e);

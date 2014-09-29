@@ -4,6 +4,11 @@ import javax.inject.Inject;
 
 import org.jboss.forge.addon.projects.ProjectFactory;
 
+/**
+ * 
+ * @author bsorrentino
+ *
+ */
 public abstract class AbstractDynjsProjectCommand extends AbstractBaseDynjsUICommand {
 	
 	@Inject

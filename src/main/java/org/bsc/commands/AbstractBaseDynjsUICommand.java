@@ -20,9 +20,10 @@ import org.jboss.forge.addon.resource.FileResource;
 import org.jboss.forge.addon.ui.context.UIContextProvider;
 import org.jboss.forge.addon.ui.input.InputComponentFactory;
 import org.jboss.forge.furnace.manager.maven.MavenContainer;
+
 /**
  * 
- * @author softphone
+ * @author bsorrentino
  *
  */
 public abstract class AbstractBaseDynjsUICommand extends AbstractProjectCommand {

@@ -41,7 +41,7 @@ import static org.bsc.commands.AddonUtils.*;
 
 /**
  *
- * @author softphone
+ * @author bsorrentino
  *
  */
 public class NewDynjsAddonCommand extends

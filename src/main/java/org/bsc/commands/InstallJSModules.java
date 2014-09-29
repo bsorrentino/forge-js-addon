@@ -1,7 +1,9 @@
 package org.bsc.commands;
 
 
-import java.io.PrintStream;
+import static org.bsc.commands.AddonUtils.copyDirToAssetDir;
+import static org.bsc.commands.AddonUtils.getManifest;
+
 import java.util.jar.Manifest;
 
 import javax.inject.Inject;
@@ -18,16 +20,20 @@ import org.jboss.forge.addon.ui.metadata.WithAttributes;
 import org.jboss.forge.addon.ui.result.Result;
 import org.jboss.forge.addon.ui.result.Results;
 import org.jboss.forge.addon.ui.util.Metadata;
-import static org.bsc.commands.AddonUtils.*;
 
+/**
+ * 
+ * @author bsorrentino
+ *
+ */
 public class InstallJSModules extends AbstractDynjsUICommand  implements AddonConstants {
 	@Inject
 	@WithAttributes(label = "JS Module Directory", required = true, type = InputType.DIRECTORY_PICKER)
 	private UIInput<FileResource<?>> scriptDir;
 
-	@Inject
-	@WithAttributes(label = "Overwrite", required = true, type = InputType.CHECKBOX, defaultValue = "true")
-	private UIInput<Boolean> overwrite;
+	//@Inject
+	//@WithAttributes(label = "Overwrite", required = true, type = InputType.CHECKBOX, defaultValue = "true")
+	//private UIInput<Boolean> overwrite;
 	
 	@Override
 	public UICommandMetadata getMetadata(UIContext context) {
@@ -41,7 +47,7 @@ public class InstallJSModules extends AbstractDynjsUICommand  implements AddonCo
 	@Override
 	public void initializeUI(UIBuilder builder) throws Exception {
 		builder.add(scriptDir);
-		builder.add(overwrite);
+		//builder.add(overwrite);
 	}
 
 	static final  Fn<Void,Result> onSuccess = new Fn<Void,Result>() {
@@ -65,14 +71,13 @@ public class InstallJSModules extends AbstractDynjsUICommand  implements AddonCo
 	@Override
 	public Result execute(UIExecutionContext context) throws Exception {
 
-		final PrintStream out = context.getUIContext().getProvider().getOutput().out();
+		//final PrintStream out = context.getUIContext().getProvider().getOutput().out();
 		
 		final FileResource<?> js = scriptDir.getValue();
-		final Boolean canOverwrite = overwrite.getValue();
 		
 		final Manifest mf = getManifest();
 		
-		return copyFileToAssetDir(js.getUnderlyingResourceObject(), mf, canOverwrite, onSuccess, onError );
+		return copyDirToAssetDir(js.getUnderlyingResourceObject(), mf, onSuccess, onError );
 				
 	} 
 	
