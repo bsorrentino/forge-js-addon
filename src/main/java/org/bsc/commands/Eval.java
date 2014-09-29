@@ -42,7 +42,7 @@ public class Eval extends AbstractDynjsUICommand implements UIWizard, AddonConst
 	@Override
 	public UICommandMetadata getMetadata(UIContext context) {
 		return Metadata.forCommand(Eval.class)
-						.name("Eval")
+						.name("EvalJS")
 						.category(CATEGORY)
 						.description("Evaluate a script")
 						;

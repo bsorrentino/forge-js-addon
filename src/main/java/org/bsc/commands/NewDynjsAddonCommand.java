@@ -69,7 +69,7 @@ public class NewDynjsAddonCommand extends
 	@Override
 	public UICommandMetadata getMetadata(UIContext context) {
 		return Metadata.forCommand(NewDynjsAddonCommand.class)
-				.name("addon-new-dynjs-command")
+				.name("addon-new-js-command")
 				.category(CATEGORY)
 				.description("Create a addon from a script");
 	}

@@ -38,7 +38,7 @@ public class InstallJSModules extends AbstractDynjsUICommand  implements AddonCo
 	@Override
 	public UICommandMetadata getMetadata(UIContext context) {
 		return Metadata.forCommand(InstallJSModules.class)
-				.name("InstallJSModules")
+				.name("install-js-modules")
 				.category(CATEGORY)
 				.description("Install common/shared modules from given directory")
 				;
