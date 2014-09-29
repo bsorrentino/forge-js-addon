@@ -54,7 +54,7 @@ public class EvalInProject extends AbstractDynjsProjectCommand implements UIWiza
 	@Override
 	public UICommandMetadata getMetadata(UIContext context) {
 		return Metadata.forCommand(EvalInProject.class)
-					   .name("EvalJSInProject")
+					   .name("eval-js-in-project")
 					   .category(CATEGORY)
 					   .description("Evaluate a script in project's scope")
 					   ;
