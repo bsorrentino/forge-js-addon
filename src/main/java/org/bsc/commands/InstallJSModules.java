@@ -22,7 +22,7 @@ import org.jboss.forge.addon.ui.result.Results;
 import org.jboss.forge.addon.ui.util.Metadata;
 
 /**
- * 
+ *
  * @author bsorrentino
  *
  */
@@ -34,11 +34,11 @@ public class InstallJSModules extends AbstractDynjsUICommand  implements AddonCo
 	//@Inject
 	//@WithAttributes(label = "Overwrite", required = true, type = InputType.CHECKBOX, defaultValue = "true")
 	//private UIInput<Boolean> overwrite;
-	
+
 	@Override
 	public UICommandMetadata getMetadata(UIContext context) {
 		return Metadata.forCommand(InstallJSModules.class)
-				.name("install-js-modules")
+				.name("js-install-modules")
 				.category(CATEGORY)
 				.description("Install common/shared modules from given directory")
 				;
@@ -58,7 +58,7 @@ public class InstallJSModules extends AbstractDynjsUICommand  implements AddonCo
 		}
 
 	};
-	
+
 	static final  Fn<Exception,Result> onError = new Fn<Exception,Result>() {
 
 		@Override
@@ -67,19 +67,19 @@ public class InstallJSModules extends AbstractDynjsUICommand  implements AddonCo
 		}
 
 	};
-	
+
 	@Override
 	public Result execute(UIExecutionContext context) throws Exception {
 
 		//final PrintStream out = context.getUIContext().getProvider().getOutput().out();
-		
+
 		final FileResource<?> js = scriptDir.getValue();
-		
+
 		final Manifest mf = getManifest();
-		
+
 		return copyDirToAssetDir(js.getUnderlyingResourceObject(), mf, onSuccess, onError );
-				
-	} 
-	
+
+	}
+
 
 }

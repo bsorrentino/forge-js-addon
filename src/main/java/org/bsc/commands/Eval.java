@@ -29,7 +29,7 @@ import static org.bsc.commands.AddonUtils.*;
 
 /**
  * Evaluate a script
- * 
+ *
  * @author bsorrentino
  *
  */
@@ -42,7 +42,7 @@ public class Eval extends AbstractDynjsUICommand implements UIWizard, AddonConst
 	@Override
 	public UICommandMetadata getMetadata(UIContext context) {
 		return Metadata.forCommand(Eval.class)
-						.name("eval-js")
+						.name("js-eval")
 						.category(CATEGORY)
 						.description("Evaluate a script")
 						;
@@ -51,7 +51,7 @@ public class Eval extends AbstractDynjsUICommand implements UIWizard, AddonConst
 	@Override
 	public void initializeUI(UIBuilder builder) throws Exception {
 		if(DEBUG) getOut( builder ).out().println( "Eval.initializeUI");
-		
+
 		builder.add(script);
 	}
 
@@ -60,57 +60,57 @@ public class Eval extends AbstractDynjsUICommand implements UIWizard, AddonConst
 		if(DEBUG) getOut( context ).out().println( "Eval.execute");
 		return Results.success();
 	}
-	
+
 	@Override
 	public NavigationResult next(UINavigationContext context) throws Exception {
-		
+
 		if(DEBUG) getOut(context).out().println( "Eval.next" );
-		
+
 		DynJS dynjs = getAttribute(context, DynJS.class.getName());
-		
+
 		if( dynjs == null ) {
 			final GlobalObjectFactory factory = new GlobalObjectFactory() {
-				
+
 				@Override
 				public GlobalObject newGlobalObject(DynJS runtime) {
 					return new GlobalObject(runtime) {{
-						
+
 						defineReadOnlyGlobalProperty("self", Eval.this, true);
 						//defineReadOnlyGlobalProperty("context", context);
-						
+
 					}};
 				}
 			};
-	
+
 			final FileResource<?> js = script.getValue();
-	
+
 			final Manifest mf = getManifest();
-	
+
 			dynjs = newDynJS(context, factory);
-			
+
 			try {
 				/*Object result = */runnerFromFile(dynjs, js, mf).evaluate();
 			}
 			catch(java.lang.LinkageError e) {
 				if(DEBUG) getOut(context).err().println( String.valueOf( e.getMessage()));
-				
+
 			}
 			catch( Exception e) {
-				
+
 					getOut(context).err().println( String.valueOf( e.getMessage()));
-					
+
 					if(DEBUG) e.printStackTrace(getOut(context).err());
-					
+
 					throw e;
 			}
-				
+
 			putAttribute( context, DynJS.class.getName(), dynjs );
 
 		}
-		
+
 		return Results.navigateTo( EvalStep.class);
-		
+
 	}
-		
-	
+
+
 }

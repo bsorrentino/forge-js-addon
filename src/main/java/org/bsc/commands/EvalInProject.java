@@ -39,9 +39,9 @@ import static org.bsc.commands.AddonUtils.*;
 
 /**
  * Evaluate a script in project's scope
- * 
+ *
  * @author bsorrentino
- * 
+ *
  */
 public class EvalInProject extends AbstractDynjsProjectCommand implements UIWizard, AddonConstants {
 	@Inject
@@ -50,11 +50,11 @@ public class EvalInProject extends AbstractDynjsProjectCommand implements UIWiza
 
 	@Inject
 	ResourceFactory resFactory;
-	
+
 	@Override
 	public UICommandMetadata getMetadata(UIContext context) {
 		return Metadata.forCommand(EvalInProject.class)
-					   .name("eval-js-in-project")
+					   .name("js-eval-in-project")
 					   .category(CATEGORY)
 					   .description("Evaluate a script in project's scope")
 					   ;
@@ -89,7 +89,7 @@ public class EvalInProject extends AbstractDynjsProjectCommand implements UIWiza
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public void initializeUI(final UIBuilder builder) throws Exception {
@@ -113,19 +113,19 @@ public class EvalInProject extends AbstractDynjsProjectCommand implements UIWiza
 						project.getRoot(), new ArrayList<Resource<?>>());
 
 				final java.io.File root = (java.io.File) project.getRoot().getUnderlyingResourceObject();
-						
-				final java.io.File resourcesDirs[] = { 
+
+				final java.io.File resourcesDirs[] = {
 						new java.io.File( root, "src/main/resources"),
 						new java.io.File( root, "src/test/resources")
 				};
-				
+
 				for( java.io.File resourcesDir : resourcesDirs ) {
 					if( resourcesDir.exists() ) {
-	
+
 						Resource<?> resourcesRes = resFactory.create(resourcesDir);
-						
+
 						listResources(resourcesRes, result);
-						
+
 					}
 				}
 
@@ -154,50 +154,50 @@ public class EvalInProject extends AbstractDynjsProjectCommand implements UIWiza
 
 	@Override
 	public NavigationResult next(UINavigationContext context) throws Exception {
-		
+
 		if(DEBUG) getOut(context).out().println( "EvalP.next" );
 
 		DynJS dynjs = getAttribute(context, DynJS.class.getName());
-		
-		
+
+
 		if( dynjs == null ) {
 			final Project project = super.getSelectedProject(context);
 
 			final GlobalObjectFactory factory = new GlobalObjectFactory() {
-				
+
 				@Override
 				public GlobalObject newGlobalObject(DynJS runtime) {
 					return new GlobalObject(runtime) {{
-						
+
 						defineReadOnlyGlobalProperty("self", EvalInProject.this, true);
 						defineReadOnlyGlobalProperty("project", project, true);
-						
+
 					}};
 				}
 			};
-	
+
 			final FileResource<?> js = script.getValue();
-	
+
 			final Manifest mf = getManifest();
 
 			dynjs = newDynJS(context, factory);
-			
+
 			try {
 				/*Object result = */runnerFromFile(dynjs, js, mf).evaluate();
 			}
 			catch( Exception e) {
 				getOut(context).err().println( String.valueOf( e.getMessage()));
-				
+
 				if(DEBUG) e.printStackTrace(getOut(context).err());
-				
+
 				throw e;
 			}
-				
-	
+
+
 			putAttribute( context, DynJS.class.getName(), dynjs );
 
 		}
-		
+
 		return Results.navigateTo( EvalStep.class);
 	}
 
