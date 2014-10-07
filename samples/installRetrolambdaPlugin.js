@@ -1,4 +1,5 @@
 var facets = require("facets")();
+
 var MavenPluginBuilder = org.jboss.forge.addon.maven.plugins.MavenPluginBuilder;
 var CoordinateBuilder = org.jboss.forge.addon.dependencies.builder.CoordinateBuilder;
 var ConfigurationBuilder = org.jboss.forge.addon.maven.plugins.ConfigurationBuilder;
@@ -14,7 +15,7 @@ var attrs = {};
 attrs.gid = self.componentFactory.createInput("coordinate", String );
 attrs.gid.label = "Coordinate GroupId:ArtifactId[:version]";
 attrs.gid.required = true;
-//attrs.gid.defaultValue = '<add plugin coordinate>';
+attrs.gid.defaultValue = 'net.orfjackal.retrolambda:retrolambda-maven-plugin';
 
 
 function initializeUI( builder ) {
@@ -37,15 +38,14 @@ function installPlugin( cc ) {
 
 			var pb = MavenPluginBuilder.create()
 								.setCoordinate(cc)
-// ADD PLUGIN CONFIGURATION HERE
-/*
 								.addExecution(
 									ExecutionBuilder.create()
 										.addGoal("process-main")
 										.addGoal("process-test")
 									)
-*/
 								;
+
+
 
 			if( facets.mavenpluginfacet.hasPlugin(cc)) {
 					print( "updating ...." + cc );
