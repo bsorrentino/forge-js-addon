@@ -9,12 +9,14 @@ Addon that allow to develop a http://forge.jboss.org/addons[forge addon] using h
 [options="header",cols="<m,<",width="60%"]
 |=======================
 | Command       | Description
-| eval          |Evaluate a script
-| evalinproject | Evaluate a script in project's scope
-| installmodule | Install a new common module
+| js-eval       |Evaluate a script
+| js-eval-in-project | Evaluate a script in project's scope
+| js-install-module | Install a new common module
+| js-install-modules | Install common modules from a directory
+| addon-new-js-command | Create a addon command (_java code_) from a script |
 |=======================
 
-### > eval
+### > js-eval
 ====
 Evaluate a script
 ====
@@ -43,7 +45,7 @@ Object(s) Available in the script
 |=======================
 
 
-### > evalinproject
+### > js-eval-in-project
 ====
 Evaluate a script in project's scope
 ====
@@ -70,7 +72,7 @@ Object(s) Available in the script
 | project       | the current http://docs.jboss.org/forge/javadoc/2.6.1-SNAPSHOT/org/jboss/forge/addon/projects/Project.html[project] instance
 |=======================
 
-### > installmodule
+### > js-install-module
 ====
 Install a new common module. After installation such module will be available to script using **require** command
 ====
@@ -81,6 +83,19 @@ Install a new common module. After installation such module will be available to
 |=======================
 | param        | Description
 | --script      | script's full path
+|=======================
+
+### > js-install-modules
+====
+Install common modules from a directory. After installation such modules will be available to script using **require** command
+====
+
+#### Parameters
+
+[options="header",cols="<m,<",width="60%"]
+|=======================
+| param        | Description
+| --scriptDir      | directory's full path
 |=======================
 
 ### > addon-new-dynjs-command
@@ -106,6 +121,12 @@ Creates a addon command from a script. This command is very similar to *addon-ne
 ### Getting started
 
 #### Install
+
+##### From GITHUB
+
+`> addon-install-from-git --url https://github.com/bsorrentino/forge-dynjs-addon.git --coordinate org.bsc:dynjs-addon`
+
+##### From MAVEN
 
 `> forge --install org.bsc:dynjs-addon,2.8.0.Final`
 
