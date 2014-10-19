@@ -20,32 +20,32 @@ public class DynjsAddonTest
 {
    //static final String version = "2.4.1.Final";
    //static final String version = "2.6.0.Final";
-   static final String version = "2.8.0.Final";
+   static final String version = "2.10.1.Final";
 
    @Deployment
-   @Dependencies({ 
-	  @AddonDependency(name = "org.bsc:dynjs-addon", version="2.8.0.1-SNAPSHOT") 
+   @Dependencies({
+	  @AddonDependency(name = "org.bsc:dynjs-addon", version="2.10.1-SNAPSHOT")
 	   })
    public static ForgeArchive getDeployment()
    {
-	  
+
       ForgeArchive archive = ShrinkWrap
             .create(ForgeArchive.class)
             .addBeansXML()
             .addAsAddonDependencies(
-            		
+
                     AddonDependencyEntry.create("org.jboss.forge.addon:addon-manager", version),
                     AddonDependencyEntry.create("org.jboss.forge.addon:addons", version),
                     AddonDependencyEntry.create("org.jboss.forge.addon:core", version),
                     AddonDependencyEntry.create("org.jboss.forge.furnace.container:cdi", version),
-                    
-            		AddonDependencyEntry.create("org.bsc:dynjs-addon", "2.8.0.1-SNAPSHOT")
+
+            		AddonDependencyEntry.create("org.bsc:dynjs-addon", "2.10.1-SNAPSHOT")
             		)
             ;
       return archive;
    }
-   
-   
+
+
    @Inject
    private Eval evalCommand;
 
@@ -54,8 +54,8 @@ public class DynjsAddonTest
    {
       Assert.assertNotNull(evalCommand);
       Assert.assertNotNull(evalCommand.getDependencyResolver());
-      
+
       System.out.println( String.valueOf(evalCommand.getDependencyResolver()));
    }
-   
+
 }
