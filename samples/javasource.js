@@ -32,7 +32,9 @@ var c = Roaster.create( JavaClassSource )
 
 print( "Class " + c );
 
-facets.mavenjavasourcefacet.saveJavaSource( c );
+facets.MavenJavaSourceFacet.saveJavaSource( c );
+print( "getBasePackageDirectory " + facets.MavenJavaSourceFacet.getBasePackageDirectory() );
+print( "getBasePackage " + facets.MavenJavaSourceFacet.getBasePackage() );
 
 return "OK";
 
