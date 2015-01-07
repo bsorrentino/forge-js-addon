@@ -40,21 +40,25 @@
       <groupId>org.jboss.forge.furnace.container</groupId>
       <artifactId>cdi</artifactId>
       <classifier>forge-addon</classifier>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.jboss.forge.addon</groupId>
       <artifactId>addon-manager</artifactId>
       <classifier>forge-addon</classifier>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.jboss.forge.addon</groupId>
       <artifactId>addons</artifactId>
       <classifier>forge-addon</classifier>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.jboss.forge.addon</groupId>
       <artifactId>configuration</artifactId>
       <classifier>forge-addon</classifier>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.jboss.forge.addon</groupId>
