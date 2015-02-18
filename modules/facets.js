@@ -25,13 +25,16 @@ function() {
 	while( i.hasNext() ) {
 
 			var facet = i.next(),
-			n = facet.class.simpleName;print(n);
+			n = facet.class.simpleName;
 			g = pattern.exec(n);
 			if( g ) {
 
 				var m = g[1] || g[0];
 
 				facets[m] = facet;
+
+				print( n + " = " + m );
+
 			}else print( "WARN: " + n + ",DOESN'T MATCH ");
 
 	}

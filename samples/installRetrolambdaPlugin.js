@@ -47,13 +47,13 @@ function installPlugin( cc ) {
 
 
 
-			if( facets.mavenpluginfacet.hasPlugin(cc)) {
+			if( facets.MavenPluginFacet.hasPlugin(cc)) {
 					print( "updating ...." + cc );
-					facets.mavenpluginfacet.updatePlugin(pb)
+					facets.MavenPluginFacet.updatePlugin(pb)
 			}
 			else {
 					print( "adding ...." + cc );
-					facets.mavenpluginfacet.addPlugin(pb)
+					facets.MavenPluginFacet.addPlugin(pb)
 			}
 
 	}
