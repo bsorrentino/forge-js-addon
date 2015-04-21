@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.bsc</groupId>
+    <artifactId>forge-addon</artifactId>
+    <version>2</version>
+  </parent>
   <artifactId>dynjs-addon</artifactId>
   <version>2.16.0</version>
-  <parent>
-  	<groupId>org.bsc</groupId>
-  	<artifactId>forge-addon</artifactId>
-  	<version>2</version>
-  </parent>
-
-     <prerequisites>
-       <maven>3.1</maven>
-     </prerequisites>
-
+  <name>Forge::DynJS Addon</name>
+  <description>Develop a JBoss Forge Addon using Javascript</description>
+  <url>https://github.com/bsorrentino/forge-addon/tree/master/dynjs-addon</url>
+  <prerequisites>
+    <maven>3.1</maven>
+  </prerequisites>
   <properties>
     <version.furnace>2.16.0.Final</version.furnace>
   </properties>
-
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -34,7 +35,6 @@
       </dependency>
     </dependencies>
   </dependencyManagement>
-
   <dependencies>
     <dependency>
       <groupId>org.jboss.forge.furnace.container</groupId>
@@ -76,24 +76,19 @@
       <version>0.3.1</version>
       <scope>compile</scope>
     </dependency>
-
-<!--
-=========================================
-TEST
-=========================================
- -->
     <dependency>
-        <groupId>org.jboss.forge.roaster</groupId>
-        <artifactId>roaster-jdt</artifactId>
-        <version> 2.13.1.Final</version>
-        <scope>test</scope>
+      <groupId>org.jboss.forge.roaster</groupId>
+      <artifactId>roaster-jdt</artifactId>
+      <version>2.13.1.Final</version>
+      <scope>test</scope>
     </dependency>
-      <dependency>
-         <groupId>org.jboss.forge.addon</groupId>
-         <artifactId>ui-test-harness</artifactId>
-         <classifier>forge-addon</classifier>
-         <scope>test</scope>
-      </dependency>    <dependency>
+    <dependency>
+      <groupId>org.jboss.forge.addon</groupId>
+      <artifactId>ui-test-harness</artifactId>
+      <classifier>forge-addon</classifier>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>org.jboss.forge.furnace.test</groupId>
       <artifactId>furnace-test-harness</artifactId>
       <scope>test</scope>
@@ -103,11 +98,18 @@ TEST
       <artifactId>arquillian-furnace-classpath</artifactId>
       <scope>test</scope>
     </dependency>
-
   </dependencies>
   <build>
     <finalName>dynjs-addon</finalName>
     <plugins>
+        <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+        </configuration>
+       </plugin>  
       <plugin>
         <groupId>org.jboss.forge.furnace</groupId>
         <artifactId>furnace-maven-plugin</artifactId>
@@ -146,21 +148,27 @@ TEST
             </manifestEntries>
           </archive>
         </configuration>
-
       </plugin>
-	      <plugin>
-	        <groupId>org.apache.maven.plugins</groupId>
-	        <artifactId>maven-javadoc-plugin</artifactId>
-	        <configuration>
-	        	<reportOutputDirectory>${project.reporting.outputDirectory}/${project.artifactId}/apidocs</reportOutputDirectory>
-	        	<outputDirectory>${project.build.directory}/${project.artifactId}/apidocs</outputDirectory>
-	        </configuration>
-	      </plugin>
-
-
+      <plugin>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <configuration>
+          <reportOutputDirectory>${project.reporting.outputDirectory}/${project.artifactId}/apidocs</reportOutputDirectory>
+          <outputDirectory>${project.build.directory}/${project.artifactId}/apidocs</outputDirectory>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>net.orfjackal.retrolambda</groupId>
+        <artifactId>retrolambda-maven-plugin</artifactId>
+        <version>2.0.2</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>process-main</goal>
+              <goal>process-test</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
-  <description>Develop a JBoss Forge Addon using Javascript</description>
-  <name>Forge::DynJS Addon</name>
-  <url>https://github.com/bsorrentino/forge-addon/tree/master/dynjs-addon</url>
 </project>

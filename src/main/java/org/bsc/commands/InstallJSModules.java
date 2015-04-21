@@ -51,24 +51,6 @@ public class InstallJSModules extends AbstractDynjsUICommand  implements AddonCo
 		//builder.add(overwrite);
 	}
 
-	static final  Fn<Void,Result> onSuccess = new Fn<Void,Result>() {
-
-		@Override
-		public Result f(Void param) {
-			return Results.success();
-		}
-
-	};
-
-	static final  Fn<Exception,Result> onError = new Fn<Exception,Result>() {
-
-		@Override
-		public Result f(Exception e) {
-			return Results.fail("install module failed!", e);
-		}
-
-	};
-
 	@Override
 	public Result execute(UIExecutionContext context) throws Exception {
 
@@ -78,7 +60,10 @@ public class InstallJSModules extends AbstractDynjsUICommand  implements AddonCo
 
 		final Manifest mf = getManifest();
 
-		return copyDirToAssetDir(js.getUnderlyingResourceObject(), mf, onSuccess, onError );
+		return copyDirToAssetDir(js.getUnderlyingResourceObject(), mf, 
+                        (p) -> { return Results.success(); }, 
+                        (e) -> { return Results.fail("install module failed!", e);} 
+                );
 
 	}
 
