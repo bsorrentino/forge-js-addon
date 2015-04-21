@@ -73,7 +73,7 @@ function execute(context) {
     if (list) {
         
         var i ;
-        if( context.provider.isGUI() ) {
+        if( context.getUIContext().getProvider().isGUI() ) {
             i = list.size() - 1;
         }
         else {
