@@ -6,25 +6,25 @@ var ConfigurationBuilder = org.jboss.forge.addon.maven.plugins.ConfigurationBuil
 var ConfigurationElementBuilder = org.jboss.forge.addon.maven.plugins.ConfigurationElementBuilder;
 var ExecutionBuilder = org.jboss.forge.addon.maven.plugins.ExecutionBuilder;
 
-print( "Install Plugin executing ....");
+print("Install Plugin executing ....");
 
 var String = java.lang.String;
 
 var attrs = {};
 
-attrs.gid = self.componentFactory.createInput("coordinate", String );
+attrs.gid = self.componentFactory.createInput("coordinate", String);
 attrs.gid.label = "Coordinate GroupId:ArtifactId[:version]";
 attrs.gid.required = true;
 attrs.gid.defaultValue = 'net.orfjackal.retrolambda:retrolambda-maven-plugin';
 
 
-function initializeUI( builder ) {
+function initializeUI(builder) {
 
-	print( "initialize UI");
-	for( m in attrs ) {
-		builder.add( attrs[m] );
-	}
-	print( "UI initialized!")
+    print("initialize UI");
+    for (m in attrs) {
+        builder.add(attrs[m]);
+    }
+    print("UI initialized!")
 
 }
 
@@ -32,66 +32,68 @@ function initializeUI( builder ) {
 
 var result = "";
 
-function installPlugin( cc ) {
-	try {
+function installPlugin(cc) {
+    try {
 
 
-			var pb = MavenPluginBuilder.create()
-								.setCoordinate(cc)
-								.addExecution(
-									ExecutionBuilder.create()
-										.addGoal("process-main")
-										.addGoal("process-test")
-									)
-								;
+        var pb = MavenPluginBuilder.create()
+                .setCoordinate(cc)
+                .addExecution(
+                        ExecutionBuilder.create()
+                        .addGoal("process-main")
+                        .addGoal("process-test")
+                        )
+                ;
 
 
 
-			if( facets.MavenPluginFacet.hasPlugin(cc)) {
-					print( "updating ...." + cc );
-					facets.MavenPluginFacet.updatePlugin(pb)
-			}
-			else {
-					print( "adding ...." + cc );
-					facets.MavenPluginFacet.addPlugin(pb)
-			}
+        if (facets.MavenPluginFacet.hasPlugin(cc)) {
+            print("updating ...." + cc);
+            facets.MavenPluginFacet.updatePlugin(pb)
+        }
+        else {
+            print("adding ...." + cc);
+            facets.MavenPluginFacet.addPlugin(pb)
+        }
 
-	}
-	catch(e) {
+    }
+    catch (e) {
 
-		print(e);
-	}
+        print(e);
+    }
 
 }
 
-function execute( context ) {
+function execute(context) {
 
-  var dps = require("dependencies");
+    var dps = require("dependencies");
 
-  var list = dps.resolve("" + attrs.gid.value );
+    var list = dps.resolve("" + attrs.gid.value);
 
-  if( list ) {
-	var i = -1;
-	var d = list.iterator();
+    if (list) {
+        
+        var i ;
+        if( context.provider.isGUI() ) {
+            i = list.size() - 1;
+        }
+        else {
+            i = -1;
+            var d = list.iterator();
 
-    while( d.hasNext() ) {
+            while (d.hasNext()) {
+                print("[" + (++i) + "] " + d.next());
+            }
 
-      print( "[" + (++i) + "] " + d.next() );
+            result = context.prompt.prompt("Choose dependency [" + i + "]");
+
+            //for( var m in facets ) { print(""+m); }
+            if (result)
+                i = parseInt(result);
+        }
+        var cc = list.get(i);
+
+        installPlugin(cc);
     }
-
-    result = context.prompt.prompt( "Choose dependency [" + i + "]" );
-
-    //for( var m in facets ) { print(""+m); }
-
-
-    if(result ) i = parseInt(result);
-
-    var cc = list.get(i);
-
-		installPlugin( cc );
-
-
-  }
 }
 
 result;
