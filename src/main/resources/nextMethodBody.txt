@@ -2,19 +2,12 @@
 DynJS dynjs = getAttribute(context, DynJS.class.getName());
 
 if( dynjs == null ) {
-	final GlobalObjectFactory factory = new GlobalObjectFactory() {
-		
-		@Override
-		public GlobalObject newGlobalObject(DynJS runtime) {
-			return new GlobalObject(runtime) {{
-				
-				defineReadOnlyGlobalProperty("self", %s.this, true);
-				
-			}};
-		}
-	};
+        
+        final JSObject globalObject = new DynObject();
+                    
+        globalObject.put( null /*context*/, "self", %s.this, true /*shouldThrow*/);
 
-	dynjs = newDynJS(context, factory);
+	dynjs = newDynJS(context, globalObject);
 
 	final Manifest mf = getManifest();
 

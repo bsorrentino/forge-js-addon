@@ -5,8 +5,6 @@ import java.util.jar.Manifest;
 import javax.inject.Inject;
 
 import org.dynjs.runtime.DynJS;
-import org.dynjs.runtime.GlobalObject;
-import org.dynjs.runtime.GlobalObjectFactory;
 import org.jboss.forge.addon.resource.FileResource;
 import org.jboss.forge.addon.ui.context.UIBuilder;
 import org.jboss.forge.addon.ui.context.UIContext;
@@ -22,10 +20,9 @@ import org.jboss.forge.addon.ui.result.Results;
 import org.jboss.forge.addon.ui.util.Metadata;
 import org.jboss.forge.addon.ui.wizard.UIWizard;
 
-import static org.bsc.commands.AddonUtils.getOut;
-import static org.bsc.commands.AddonUtils.getAttribute;
-import static org.bsc.commands.AddonUtils.putAttribute;
 import static org.bsc.commands.AddonUtils.*;
+import org.dynjs.runtime.DynObject;
+import org.dynjs.runtime.JSObject;
 
 /**
  * Evaluate a script
@@ -69,24 +66,15 @@ public class Eval extends AbstractDynjsUICommand implements UIWizard, AddonConst
 		DynJS dynjs = getAttribute(context, DynJS.class.getName());
 
 		if( dynjs == null ) {
-			final GlobalObjectFactory factory = new GlobalObjectFactory() {
-
-				@Override
-				public GlobalObject newGlobalObject(DynJS runtime) {
-					return new GlobalObject(runtime) {{
-
-						defineReadOnlyGlobalProperty("self", Eval.this, true);
-						//defineReadOnlyGlobalProperty("context", context);
-
-					}};
-				}
-			};
+                        final JSObject globalObject = new DynObject();
+                    
+                        globalObject.put( null /*context*/, "self", this, true /*shouldThrow*/);
 
 			final FileResource<?> js = script.getValue();
 
 			final Manifest mf = getManifest();
 
-			dynjs = newDynJS(context, factory);
+			dynjs = newDynJS(context, globalObject);
 
 			try {
 				/*Object result = */runnerFromFile(dynjs, js, mf).evaluate();

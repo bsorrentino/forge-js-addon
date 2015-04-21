@@ -10,8 +10,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.dynjs.runtime.DynJS;
-import org.dynjs.runtime.GlobalObject;
-import org.dynjs.runtime.GlobalObjectFactory;
 import org.jboss.forge.addon.dependencies.builder.DependencyBuilder;
 import org.jboss.forge.addon.parser.java.facets.JavaSourceFacet;
 import org.jboss.forge.addon.parser.java.ui.AbstractJavaSourceCommand;
@@ -38,6 +36,8 @@ import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
 
 import static org.bsc.commands.AddonUtils.*;
+import org.dynjs.runtime.DynObject;
+import org.dynjs.runtime.JSObject;
 
 /**
  *
@@ -185,18 +185,23 @@ public class NewDynjsAddonCommand extends
 		command.addImport(UINavigationContext.class);
 		command.addImport(NavigationResult.class);
 
+		command.addImport(JSObject.class);
+                command.addImport(DynObject.class);
 		command.addImport(DynJS.class);
-		command.addImport(GlobalObjectFactory.class);
-		command.addImport(GlobalObject.class);
 
 		command.addImport(EvalStep.class);
 
 		command.addImport(AddonUtils.class.getName().concat(".*")).setStatic(true);
 	}
 
-	/**
-	 *
-	 */
+        /**
+         * 
+         * @param context
+         * @param project
+         * @param command
+         * @return
+         * @throws Exception 
+         */
 	@Override
 	public JavaClassSource decorateSource(UIExecutionContext context,
 			Project project, JavaClassSource command) throws Exception {

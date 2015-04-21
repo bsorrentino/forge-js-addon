@@ -11,8 +11,9 @@ import javax.inject.Inject;
 
 import org.dynjs.Config;
 import org.dynjs.runtime.DynJS;
-import org.dynjs.runtime.GlobalObjectFactory;
+import org.dynjs.runtime.JSObject;
 import org.dynjs.runtime.Runner;
+import static org.dynjs.runtime.linker.DynJSBootstrapper.factory;
 import org.jboss.forge.addon.dependencies.DependencyResolver;
 import org.jboss.forge.addon.environment.Environment;
 import org.jboss.forge.addon.projects.ui.AbstractProjectCommand;
@@ -110,15 +111,14 @@ public abstract class AbstractBaseDynjsUICommand extends AbstractProjectCommand 
 	 * @param factory
 	 * @return
 	 */
-	protected <T extends UIContextProvider> DynJS newDynJS( T ctx, GlobalObjectFactory factory) {
+	protected <T extends UIContextProvider> DynJS newDynJS( T ctx, JSObject globalObject) {
 		
 		final Config config = newConfig();
 
-		config.setGlobalObjectFactory(factory);
 		config.setOutputStream(getOut(ctx).out());
 		config.setErrorStream(getOut(ctx).err());
 
-		final DynJS dynjs = new DynJS(config);
+		final DynJS dynjs = new DynJS(config,globalObject);
 
 		return dynjs;
 	}
@@ -159,10 +159,10 @@ public abstract class AbstractBaseDynjsUICommand extends AbstractProjectCommand 
 	 * @return
 	 * @throws Exception
 	 */
-	protected <T extends UIContextProvider> Object executeFromClasspath(T ctx, final String resourceName, GlobalObjectFactory factory, Manifest mf)
+	protected <T extends UIContextProvider> Object executeFromClasspath(T ctx, final String resourceName, JSObject globalObject, Manifest mf)
 			throws Exception {
 		
-		final DynJS dynjs = newDynJS(ctx, factory);
+		final DynJS dynjs = newDynJS(ctx, globalObject);
 		
 		final Object result = runnerFromClasspath(dynjs, resourceName, mf).execute();
 
@@ -177,10 +177,10 @@ public abstract class AbstractBaseDynjsUICommand extends AbstractProjectCommand 
 	 * @return
 	 * @throws Exception
 	 */
-	protected <T extends UIContextProvider> Object executeFromFile(T ctx, final FileResource<?> js, GlobalObjectFactory factory, Manifest mf)
+	protected <T extends UIContextProvider> Object executeFromFile(T ctx, final FileResource<?> js, JSObject globalObject, Manifest mf)
 			throws Exception {
 
-		final DynJS dynjs = newDynJS(ctx, factory);
+		final DynJS dynjs = newDynJS(ctx, globalObject);
 
 		final Object result = runnerFromFile(dynjs, js, mf).execute();
 

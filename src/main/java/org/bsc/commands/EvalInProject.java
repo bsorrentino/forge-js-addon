@@ -10,8 +10,6 @@ import java.util.jar.Manifest;
 import javax.inject.Inject;
 
 import org.dynjs.runtime.DynJS;
-import org.dynjs.runtime.GlobalObject;
-import org.dynjs.runtime.GlobalObjectFactory;
 import org.jboss.forge.addon.projects.Project;
 import org.jboss.forge.addon.projects.Projects;
 import org.jboss.forge.addon.resource.DirectoryResource;
@@ -36,6 +34,8 @@ import org.jboss.forge.addon.ui.util.Metadata;
 import org.jboss.forge.addon.ui.wizard.UIWizard;
 
 import static org.bsc.commands.AddonUtils.*;
+import org.dynjs.runtime.DynObject;
+import org.dynjs.runtime.JSObject;
 
 /**
  * Evaluate a script in project's scope
@@ -163,24 +163,17 @@ public class EvalInProject extends AbstractDynjsProjectCommand implements UIWiza
 		if( dynjs == null ) {
 			final Project project = super.getSelectedProject(context);
 
-			final GlobalObjectFactory factory = new GlobalObjectFactory() {
-
-				@Override
-				public GlobalObject newGlobalObject(DynJS runtime) {
-					return new GlobalObject(runtime) {{
-
-						defineReadOnlyGlobalProperty("self", EvalInProject.this, true);
-						defineReadOnlyGlobalProperty("project", project, true);
-
-					}};
-				}
-			};
+                        
+                        final JSObject globalObject = new DynObject();
+                        
+                        globalObject.put( null /*context*/, "self", this, true /*shouldThrow*/);
+                        globalObject.put( null /*context*/, "project", project, true /*shouldThrow*/);
 
 			final FileResource<?> js = script.getValue();
 
 			final Manifest mf = getManifest();
 
-			dynjs = newDynJS(context, factory);
+			dynjs = newDynJS(context, globalObject);
 
 			try {
 				/*Object result = */runnerFromFile(dynjs, js, mf).evaluate();

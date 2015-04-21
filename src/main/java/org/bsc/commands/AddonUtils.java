@@ -3,6 +3,8 @@ package org.bsc.commands;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.jar.Manifest;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -22,37 +24,42 @@ public class AddonUtils {
 
 	private AddonUtils() {
 	}
-	
-	/**
-	 * 
-	 * @param ctx
-	 * @param name
-	 * @return
-	 */
+
+        /**
+         * 
+         * @param <C>
+         * @param <T>
+         * @param ctx
+         * @param name
+         * @return 
+         */
 	@SuppressWarnings("unchecked")
 	public static <C extends UIContextProvider,T> T getAttribute( C ctx, String name ) {
 		
 		return (T)ctx.getUIContext().getAttributeMap().get(name);
 	}
 
-	/**
-	 * 
-	 * @param ctx
-	 * @param name
-	 * @param value
-	 * @return
-	 */
+        /**
+         * 
+         * @param <C>
+         * @param <T>
+         * @param ctx
+         * @param name
+         * @param value
+         * @return 
+         */
 	@SuppressWarnings("unchecked")
 	public static <C extends UIContextProvider,T> T putAttribute( C ctx, String name, T value ) {
 		
 		return (T)ctx.getUIContext().getAttributeMap().put(name, value);
 	}
 
-	/**
-	 * 
-	 * @param context
-	 * @return
-	 */
+        /**
+         * 
+         * @param <T>
+         * @param context
+         * @return 
+         */
 	public static  <T extends UIContextProvider> UIOutput getOut( T context ) {
 		return context.getUIContext().getProvider().getOutput();
 	}
@@ -106,8 +113,18 @@ public class AddonUtils {
 		return version;
 	}
 
+        /**
+         * 
+         * @return
+         * @throws IOException 
+         */
+        public static String getVersion() throws IOException {
+            return getVersion( getManifest() );
+        }
+        
 	/**
 	 * 
+         * @param mf
 	 * @return
 	 * @throws IOException 
 	 */
@@ -130,7 +147,9 @@ public class AddonUtils {
 	
 	/**
 	 * 
-	 * @param w
+         * @param cl
+         * @param resourceName
+         * @param mf
 	 * @throws IOException 
 	 */
 	public static void copyResourceToAssetDir( final ClassLoader cl, final String resourceName, final Manifest mf  ) throws IOException {
@@ -154,11 +173,17 @@ public class AddonUtils {
 			FileUtils.copyURLToFile(source, target);
 		}
 	}
-	/**
-	 * 
-	 * @param w
-	 * @throws IOException 
-	 */
+
+        /**
+         * 
+         * @param <T>
+         * @param resource
+         * @param mf
+         * @param overwrite
+         * @param onSuccess
+         * @param onError
+         * @return 
+         */
 	public static <T>  T copyFileToAssetDir( final java.io.File resource, final Manifest mf, boolean overwrite, 
 					Fn<Void,T> onSuccess, 
 					Fn<Exception,T> onError  )  
@@ -185,12 +210,16 @@ public class AddonUtils {
 		return onSuccess.f(null);
 		
 	}
-	
-	/**
-	 * 
-	 * @param w
-	 * @throws IOException 
-	 */
+
+        /**
+         * 
+         * @param <T>
+         * @param source
+         * @param mf
+         * @param onSuccess
+         * @param onError
+         * @return 
+         */
 	public static <T>  T copyDirToAssetDir( final java.io.File source, final Manifest mf, 
 					Fn<Void,T> onSuccess, 
 					Fn<Exception,T> onError  )  

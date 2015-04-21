@@ -4,18 +4,10 @@
 		if( dynjs == null ) {
 			final Project project = super.getSelectedProject(context);
 			
-			final GlobalObjectFactory factory = new GlobalObjectFactory() {
-				
-				@Override
-				public GlobalObject newGlobalObject(DynJS runtime) {
-					return new GlobalObject(runtime) {{
-						
-						defineReadOnlyGlobalProperty("self", %s.this, true);
-						defineReadOnlyGlobalProperty("project", project, true);
-						
-					}};
-				}
-			};
+                        final JSObject globalObject = new DynObject();
+                        
+                        globalObject.put( null /*context*/, "self", %s.this, true /*shouldThrow*/);
+                        globalObject.put( null /*context*/, "project", project, true /*shouldThrow*/);
 	
 			dynjs = newDynJS(context, factory);
 	

@@ -5,8 +5,8 @@ import java.io.FileNotFoundException;
 
 import org.dynjs.Config;
 import org.dynjs.runtime.DynJS;
-import org.dynjs.runtime.GlobalObject;
-import org.dynjs.runtime.GlobalObjectFactory;
+import org.dynjs.runtime.DynObject;
+import org.dynjs.runtime.JSObject;
 import org.dynjs.runtime.Runner;
 import org.hamcrest.core.IsEqual;
 import org.hamcrest.core.IsInstanceOf;
@@ -23,21 +23,13 @@ public class DynjsTest {
 	  @Before
 	  public void initialize() {
 	    config = new Config();
-	    
-	    config.setInvokeDynamicEnabled(true);
-		config.setGlobalObjectFactory( new GlobalObjectFactory() {
-			
-			@Override
-			public GlobalObject newGlobalObject(DynJS runtime) {
-				return new GlobalObject(runtime) {{
-					
-					defineReadOnlyGlobalProperty("command", DynjsTest.this, true);
-				}};
-			}
-		});
+
+            final JSObject globalObject = new DynObject();
+                    
+            globalObject.put( null /*context*/, "command", DynjsTest.this, true /*shouldThrow*/);
 
 	    config.setDebug(true);
-	    dynjs  = new DynJS(config);
+	    dynjs  = new DynJS(config,globalObject);
 	   
 	    
 	  }
