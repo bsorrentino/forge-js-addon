@@ -2,6 +2,7 @@
 
 ===============================
 Addon that allow to develop a http://forge.jboss.org/addons[forge addon] using http://dynjs.org/[DynJS javascript engine].
+
 ===============================
 
 ### Available Commands
@@ -117,7 +118,6 @@ Creates a addon command from a script. This command is very similar to *addon-ne
 |=======================
 
 
-
 ### Getting started
 
 #### Install
@@ -128,15 +128,7 @@ Creates a addon command from a script. This command is very similar to *addon-ne
 
 ##### From MAVEN
 
-`> forge --install org.bsc:dynjs-addon,2.8.0.Final`
-
-*Older versions*
-
-`> forge --install org.bsc:dynjs-addon,2.7.2.Final`
-
-`> forge --install org.bsc:dynjs-addon,2.6.0.Final`
-
-
+`> forge --install org.bsc:dynjs-addon,2.16.0`
 
 All available version http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22org.bsc%22%20AND%20a%3A%22dynjs-addon%22[here]
 
