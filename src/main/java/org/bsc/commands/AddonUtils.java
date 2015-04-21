@@ -115,11 +115,18 @@ public class AddonUtils {
 
         /**
          * 
-         * @return
-         * @throws IOException 
+         * @param ctx 
          */
-        public static String getVersion() throws IOException {
-            return getVersion( getManifest() );
+        public static void  printVersion( UIContextProvider ctx )  {
+            try {
+                final String currentVersion =  getVersion( getManifest() );
+                
+                getOut(ctx).out().printf("FORGE::DynJS current version [%s]\n", currentVersion);
+            } catch (IOException ex) {
+                
+                getOut(ctx).err().printf( "Error reading FORGE::DynJS current version\n%s\n", 
+                        (ex.getCause()!=null) ? ex.getCause().getMessage() : ex.getMessage());
+            }
         }
         
 	/**

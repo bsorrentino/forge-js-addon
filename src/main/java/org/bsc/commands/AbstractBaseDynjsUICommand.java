@@ -13,7 +13,6 @@ import org.dynjs.Config;
 import org.dynjs.runtime.DynJS;
 import org.dynjs.runtime.JSObject;
 import org.dynjs.runtime.Runner;
-import static org.dynjs.runtime.linker.DynJSBootstrapper.factory;
 import org.jboss.forge.addon.dependencies.DependencyResolver;
 import org.jboss.forge.addon.environment.Environment;
 import org.jboss.forge.addon.projects.ui.AbstractProjectCommand;
@@ -74,16 +73,16 @@ public abstract class AbstractBaseDynjsUICommand extends AbstractProjectCommand 
 
 		return config;
 	}
-
-	/**
-	 * 
-	 * @param dynjs
-	 * @param resourceName
-	 * @param factory
-	 * @param mf
-	 * @return
-	 * @throws Exception
-	 */
+        
+        /**
+         * 
+         * @param <T>
+         * @param dynjs
+         * @param resourceName
+         * @param mf
+         * @return
+         * @throws Exception 
+         */
 	protected <T extends UIContextProvider> Runner runnerFromClasspath(DynJS dynjs, final String resourceName, Manifest mf)
 			throws Exception {
 		

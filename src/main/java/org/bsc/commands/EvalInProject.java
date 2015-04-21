@@ -147,7 +147,9 @@ public class EvalInProject extends AbstractDynjsProjectCommand implements UIWiza
 
 	@Override
 	public Result execute(final UIExecutionContext context) {
-		if(DEBUG) getOut(context).out().println( "EvalP.execute" );
+                printVersion(context);
+
+                if(DEBUG) getOut(context).out().println( "EvalP.execute" );
 
 		return Results.success();
 	}

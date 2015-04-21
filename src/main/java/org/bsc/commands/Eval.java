@@ -54,13 +54,15 @@ public class Eval extends AbstractDynjsUICommand implements UIWizard, AddonConst
 
 	@Override
 	public Result execute(final UIExecutionContext context) {
+                printVersion(context);
+                
 		if(DEBUG) getOut( context ).out().println( "Eval.execute");
 		return Results.success();
 	}
 
 	@Override
 	public NavigationResult next(UINavigationContext context) throws Exception {
-
+                
 		if(DEBUG) getOut(context).out().println( "Eval.next" );
 
 		DynJS dynjs = getAttribute(context, DynJS.class.getName());
