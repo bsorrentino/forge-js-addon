@@ -67,10 +67,15 @@ public class InstallJSModule extends AbstractDynjsUICommand  implements AddonCon
 
 	};
 
+        /**
+         * 
+         * @param context
+         * @return
+         * @throws Exception 
+         */
 	@Override
 	public Result execute(UIExecutionContext context) throws Exception {
-
-		final PrintStream out = context.getUIContext().getProvider().getOutput().out();
+                printVersion(context);
 
 		final FileResource<?> js = script.getValue();
 		final Boolean canOverwrite = overwrite.getValue();

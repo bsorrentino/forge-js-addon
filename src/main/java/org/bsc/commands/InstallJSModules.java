@@ -3,6 +3,7 @@ package org.bsc.commands;
 
 import static org.bsc.commands.AddonUtils.copyDirToAssetDir;
 import static org.bsc.commands.AddonUtils.getManifest;
+import static org.bsc.commands.AddonUtils.printVersion;
 
 import java.util.jar.Manifest;
 
@@ -71,7 +72,7 @@ public class InstallJSModules extends AbstractDynjsUICommand  implements AddonCo
 	@Override
 	public Result execute(UIExecutionContext context) throws Exception {
 
-		//final PrintStream out = context.getUIContext().getProvider().getOutput().out();
+		printVersion(context);
 
 		final FileResource<?> js = scriptDir.getValue();
 
