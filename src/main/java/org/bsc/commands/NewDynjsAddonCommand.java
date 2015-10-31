@@ -38,6 +38,7 @@ import org.jboss.forge.roaster.model.source.MethodSource;
 import static org.bsc.commands.AddonUtils.*;
 import org.dynjs.runtime.DynObject;
 import org.dynjs.runtime.JSObject;
+import org.jboss.forge.addon.projects.ProjectFactory;
 
 /**
  *
@@ -66,6 +67,9 @@ public class NewDynjsAddonCommand extends
 	@Inject
 	protected DependencyInstaller depInstaller;
 
+	@Inject
+	protected ProjectFactory projectFactory;
+        
 	@Override
 	public UICommandMetadata getMetadata(UIContext context) {
 		return Metadata.forCommand(NewDynjsAddonCommand.class)
@@ -295,4 +299,9 @@ public class NewDynjsAddonCommand extends
 		depInstaller.install(project, dep);
 
 	}
+
+    @Override
+    protected ProjectFactory getProjectFactory() {
+        return projectFactory;
+    }
 }
