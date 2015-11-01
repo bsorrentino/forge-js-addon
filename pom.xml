@@ -76,6 +76,8 @@
       <version>0.3.1</version>
       <scope>compile</scope>
     </dependency>
+    
+    
     <dependency>
       <groupId>org.jboss.forge.roaster</groupId>
       <artifactId>roaster-jdt</artifactId>
@@ -98,6 +100,12 @@
       <artifactId>arquillian-furnace-classpath</artifactId>
       <scope>test</scope>
     </dependency>
+      <dependency>
+         <groupId>org.jboss.forge.addon</groupId>
+         <artifactId>shell-test-harness</artifactId>
+         <classifier>forge-addon</classifier>
+         <scope>test</scope>
+      </dependency>    
   </dependencies>
   <build>
     <finalName>dynjs-addon</finalName>
