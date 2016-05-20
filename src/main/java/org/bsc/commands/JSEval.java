@@ -33,6 +33,7 @@ import org.jboss.forge.addon.projects.ui.AbstractProjectCommand;
 import org.jboss.forge.addon.script.ScriptContextBuilder;
 import org.jboss.forge.addon.ui.input.InputComponentFactory;
 import org.jboss.forge.furnace.manager.maven.MavenContainer;
+import org.jboss.forge.addon.ui.command.AbstractUICommand;
 
 /**
  * Evaluate a script
@@ -40,7 +41,8 @@ import org.jboss.forge.furnace.manager.maven.MavenContainer;
  * @author bsorrentino
  *
  */
-public class JSEval extends AbstractProjectCommand implements UIWizard {
+public class JSEval extends AbstractUICommand implements UIWizard {
+    /*
     @Inject
     private BeanManager beanManager;
 
@@ -55,18 +57,11 @@ public class JSEval extends AbstractProjectCommand implements UIWizard {
 
     @Inject
     private InputComponentFactory componentFactory;
-
+    */
+    
     @Inject
     @WithAttributes(label = "Script", required = true, type = InputType.FILE_PICKER)
     private UIInput<FileResource<?>> script;
-
-    protected final RhinoScriptEngine scriptEngine;
-
-    public JSEval() {
-
-        final ScriptEngineManager manager = new ScriptEngineManager(getClass().getClassLoader());
-        scriptEngine = (RhinoScriptEngine)manager.getEngineByName("rhino-npm");
-    }
 
     @Override
     public UICommandMetadata getMetadata(UIContext context) {
@@ -106,6 +101,9 @@ public class JSEval extends AbstractProjectCommand implements UIWizard {
 
         final Manifest mf = getManifest();
 
+        final ScriptEngineManager manager = new ScriptEngineManager(getClass().getClassLoader());
+        final RhinoScriptEngine scriptEngine = (RhinoScriptEngine)manager.getEngineByName("rhino-npm");
+
         scriptEngine.setContext(ScriptContextBuilder.create()
                 .currentResource(js)
                 .stdout(getOut(context).out())
@@ -113,9 +111,16 @@ public class JSEval extends AbstractProjectCommand implements UIWizard {
                 .build());
         scriptEngine.put("self", this);
 
-        try {
-            /*Object result = */
-            evalFromFile(js, mf);
+        final File file = js.getUnderlyingResourceObject();
+
+        try ( java.io.Reader r = new java.io.FileReader(file) ) {
+
+            final Object result =  scriptEngine.eval(r);
+
+            if (DEBUG) {
+                getOut(context).out().println( String.valueOf(result) );
+            }
+
         } catch (java.lang.LinkageError e) {
             if (DEBUG) {
                 getOut(context).err().println(String.valueOf(e.getMessage()));
@@ -135,35 +140,6 @@ public class JSEval extends AbstractProjectCommand implements UIWizard {
         putAttribute(context, ScriptEngine.class.getName(), scriptEngine);
 
         return Results.navigateTo(JSEvalStep.class);
-
-    }
-
-    @Override
-    protected boolean isProjectRequired() {
-        return false;
-    }
-
-    @Override
-    protected ProjectFactory getProjectFactory() {
-        return null;
-    }
-    
-    /**
-     * 
-     * @param js
-     * @param mf
-     * @return
-     * @throws Exception
-     */
-    protected Object evalFromFile( final FileResource<?> js,  Manifest mf)  throws Exception {
-
-            final File file = js.getUnderlyingResourceObject();
-
-            try ( java.io.Reader r = new java.io.FileReader(file) ) {
-
-                return scriptEngine.eval(r);
-            }
-
 
     }
 

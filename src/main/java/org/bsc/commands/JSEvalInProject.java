@@ -55,6 +55,7 @@ import org.jboss.forge.furnace.manager.maven.MavenContainer;
  *
  */
 public class JSEvalInProject extends AbstractProjectCommand implements UIWizard {
+/*
     @Inject
     BeanManager beanManager;
 
@@ -69,7 +70,7 @@ public class JSEvalInProject extends AbstractProjectCommand implements UIWizard 
 
     @Inject
     private InputComponentFactory componentFactory;
-
+*/
     @Inject
     @WithAttributes(label = "Script", required = true, type = InputType.FILE_PICKER)
     private UIInput<FileResource<?>> script;
@@ -213,18 +214,18 @@ public class JSEvalInProject extends AbstractProjectCommand implements UIWizard 
                 .build());
         scriptEngine.put("self", this);
         scriptEngine.put("project", project);
-        
+
         final File file = js.getUnderlyingResourceObject();
 
         try(java.io.Reader r = new java.io.FileReader(file)) {
 
             final Object result =  scriptEngine.eval(r);
-            
+
             if (DEBUG) {
                 getOut(context).out().printf("result = [%s]\n", String.valueOf(result));
             }
 
-            
+
         } catch (java.lang.LinkageError e) {
             if (DEBUG) {
                 getOut(context).err().println(String.valueOf(e.getMessage()));
@@ -259,4 +260,4 @@ public class JSEvalInProject extends AbstractProjectCommand implements UIWizard 
         return true;
     }
 
-} 
+}
