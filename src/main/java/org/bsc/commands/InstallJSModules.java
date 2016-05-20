@@ -9,8 +9,9 @@ import java.util.jar.Manifest;
 
 import javax.inject.Inject;
 
-import org.bsc.functional.Functional.Fn;
+import static org.bsc.commands.AddonConstants.CATEGORY;
 import org.jboss.forge.addon.resource.FileResource;
+import org.jboss.forge.addon.ui.command.AbstractUICommand;
 import org.jboss.forge.addon.ui.context.UIBuilder;
 import org.jboss.forge.addon.ui.context.UIContext;
 import org.jboss.forge.addon.ui.context.UIExecutionContext;
@@ -27,7 +28,7 @@ import org.jboss.forge.addon.ui.util.Metadata;
  * @author bsorrentino
  *
  */
-public class InstallJSModules extends AbstractDynjsUICommand  implements AddonConstants {
+public class InstallJSModules extends AbstractUICommand  {
 	@Inject
 	@WithAttributes(label = "JS Module Directory", required = true, type = InputType.DIRECTORY_PICKER)
 	private UIInput<FileResource<?>> scriptDir;
@@ -66,6 +67,5 @@ public class InstallJSModules extends AbstractDynjsUICommand  implements AddonCo
                 );
 
 	}
-
 
 }

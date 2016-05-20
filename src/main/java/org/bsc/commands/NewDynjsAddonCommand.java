@@ -37,6 +37,8 @@ import org.jboss.forge.roaster.model.source.MethodSource;
 import static org.bsc.commands.AddonUtils.*;
 
 import org.jboss.forge.addon.projects.ProjectFactory;
+import org.jboss.forge.addon.projects.ui.AbstractProjectCommand;
+import org.jboss.forge.addon.ui.command.AbstractUICommand;
 
 /**
  *
@@ -191,7 +193,7 @@ public class NewDynjsAddonCommand extends
                 //command.addImport(DynObject.class);
 		//command.addImport(DynJS.class);
 
-		command.addImport(EvalStep.class);
+		command.addImport(JSEvalStep.class);
 
 		command.addImport(AddonUtils.class.getName().concat(".*")).setStatic(true);
 	}
@@ -225,9 +227,9 @@ public class NewDynjsAddonCommand extends
 		}
 
 		if (Boolean.TRUE.equals(requireProject.getValue())) {
-			command.setSuperType(AbstractDynjsProjectCommand.class);
+			command.setSuperType(AbstractProjectCommand.class);
 		} else {
-			command.setSuperType(AbstractDynjsUICommand.class);
+			command.setSuperType(AbstractUICommand.class);
 		}
 		command.addInterface(UIWizard.class);
 

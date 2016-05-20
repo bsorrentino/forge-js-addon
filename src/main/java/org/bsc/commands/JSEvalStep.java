@@ -15,12 +15,14 @@ import org.jboss.forge.addon.ui.result.Result;
 import org.jboss.forge.addon.ui.result.Results;
 import org.jboss.forge.addon.ui.wizard.UIWizardStep;
 
+import static org.bsc.commands.AddonConstants.*;
+
 /**
  * 
  * @author bsorrentino
  *
  */
-public class EvalStep extends AbstractUICommand implements UIWizardStep, AddonConstants {
+public class JSEvalStep extends AbstractUICommand implements UIWizardStep {
         
         final ScriptEngineManager manager = new ScriptEngineManager(getClass().getClassLoader());
 

@@ -1,10 +1,10 @@
 package org.bsc.commands;
 
 
-import java.io.PrintStream;
 import java.util.jar.Manifest;
 
 import javax.inject.Inject;
+import static org.bsc.commands.AddonConstants.CATEGORY;
 
 import org.bsc.functional.Functional.Fn;
 import org.jboss.forge.addon.resource.FileResource;
@@ -19,13 +19,15 @@ import org.jboss.forge.addon.ui.result.Result;
 import org.jboss.forge.addon.ui.result.Results;
 import org.jboss.forge.addon.ui.util.Metadata;
 import static org.bsc.commands.AddonUtils.*;
+import org.jboss.forge.addon.projects.ProjectFactory;
+import org.jboss.forge.addon.ui.command.AbstractUICommand;
 
 /**
  *
  * @author bsorrentino
  *
  */
-public class InstallJSModule extends AbstractDynjsUICommand  implements AddonConstants {
+public class InstallJSModule extends AbstractUICommand   {
 	@Inject
 	@WithAttributes(label = "JS Module", required = true, type = InputType.FILE_PICKER)
 	private UIInput<FileResource<?>> script;
@@ -85,6 +87,5 @@ public class InstallJSModule extends AbstractDynjsUICommand  implements AddonCon
 		return copyFileToAssetDir(js.getUnderlyingResourceObject(), mf, canOverwrite, onSuccess, onError );
 
 	}
-
 
 }

@@ -10,7 +10,7 @@ import org.jboss.forge.addon.ui.util.Categories;
  */
 public interface AddonConstants {
 
-	boolean DEBUG = false;
+	boolean DEBUG = true;
 
 	UICategory CATEGORY = Categories.create("Utility", "js");
 
