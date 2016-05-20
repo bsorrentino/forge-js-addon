@@ -4,37 +4,19 @@
   <parent>
     <groupId>org.bsc</groupId>
     <artifactId>forge-addon</artifactId>
-    <version>3</version>
+    <version>4</version>
   </parent>
   <artifactId>dynjs-addon</artifactId>
-  <version>2.19.2</version>
+  <version>3.0.0</version>
   <name>FORGE::DynJS Addon</name>
   <description>Develop a JBoss Forge Addon using Javascript</description>
   <url>https://github.com/bsorrentino/forge-addon/tree/master/dynjs-addon</url>
+  
   <prerequisites>
     <maven>3.2.5</maven>
   </prerequisites>
-  <properties>
-    <version.furnace>2.19.2.Final</version.furnace>
-    <version.furnace.maven>2.19.0.Final</version.furnace.maven>
-  </properties>
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>org.jboss.forge</groupId>
-        <artifactId>forge-bom</artifactId>
-        <version>${version.furnace}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.jboss.forge.addon</groupId>
-        <artifactId>core</artifactId>
-        <version>${version.furnace}</version>
-        <classifier>forge-addon</classifier>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
+
+    
   <dependencies>
     <dependency>
       <groupId>org.jboss.forge.furnace.container</groupId>
@@ -71,13 +53,14 @@
       <classifier>forge-addon</classifier>
     </dependency>
     <dependency>
-      <groupId>org.dynjs</groupId>
-      <artifactId>dynjs</artifactId>
-      <version>0.3.1</version>
-      <scope>compile</scope>
-    </dependency>
+       <groupId>org.jboss.forge.addon</groupId>
+       <artifactId>script</artifactId>
+       <classifier>forge-addon</classifier>
+    </dependency>    
     
-    
+<!--
+    TEST
+-->        
     <dependency>
       <groupId>org.jboss.forge.roaster</groupId>
       <artifactId>roaster-jdt</artifactId>
@@ -105,7 +88,16 @@
          <artifactId>shell-test-harness</artifactId>
          <classifier>forge-addon</classifier>
          <scope>test</scope>
-      </dependency>    
+      </dependency>
+      <dependency>
+      <groupId>org.kohsuke.metainf-services</groupId>
+      <artifactId>metainf-services</artifactId>
+      <optional>true</optional>
+    </dependency>
+      <dependency>
+      <groupId>org.mozilla</groupId>
+      <artifactId>rhino</artifactId>
+    </dependency>    
   </dependencies>
   <build>
     <finalName>dynjs-addon</finalName>
@@ -118,23 +110,6 @@
           <target>1.8</target>
         </configuration>
        </plugin>  
-      <plugin>
-        <groupId>org.jboss.forge.furnace</groupId>
-        <artifactId>furnace-maven-plugin</artifactId>
-        <version>${version.furnace.maven}</version>
-        <executions>
-          <execution>
-            <id>generate-dot</id>
-            <phase>prepare-package</phase>
-            <goals>
-              <goal>generate-dot</goal>
-            </goals>
-            <configuration>
-              <attach>true</attach>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>
         <executions>
@@ -180,4 +155,48 @@
       </plugin>
     </plugins>
   </build>
+  
+  <profiles>
+    <profile>
+      <id>release</id>
+      <activation />
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.jboss.forge.furnace</groupId>
+            <artifactId>furnace-maven-plugin</artifactId>
+            <version>${version.furnace}</version>
+            <executions>
+              <execution>
+                <id>generate-dot</id>
+                <phase>prepare-package</phase>
+                <goals>
+                  <goal>generate-dot</goal>
+                </goals>
+                <configuration>
+                  <attach>true</attach>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+  
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.kohsuke.metainf-services</groupId>
+        <artifactId>metainf-services</artifactId>
+        <version>1.7</version>
+      </dependency>
+      <dependency>
+        <groupId>org.mozilla</groupId>
+        <artifactId>rhino</artifactId>
+        <version>1.7.7.1</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+  
 </project>

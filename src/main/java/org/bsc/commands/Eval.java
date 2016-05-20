@@ -3,8 +3,8 @@ package org.bsc.commands;
 import java.util.jar.Manifest;
 
 import javax.inject.Inject;
+import javax.script.ScriptEngine;
 
-import org.dynjs.runtime.DynJS;
 import org.jboss.forge.addon.resource.FileResource;
 import org.jboss.forge.addon.ui.context.UIBuilder;
 import org.jboss.forge.addon.ui.context.UIContext;
@@ -21,8 +21,7 @@ import org.jboss.forge.addon.ui.util.Metadata;
 import org.jboss.forge.addon.ui.wizard.UIWizard;
 
 import static org.bsc.commands.AddonUtils.*;
-import org.dynjs.runtime.DynObject;
-import org.dynjs.runtime.JSObject;
+import org.jboss.forge.addon.script.ScriptContextBuilder;
 
 /**
  * Evaluate a script
@@ -65,38 +64,36 @@ public class Eval extends AbstractDynjsUICommand implements UIWizard, AddonConst
                 
 		if(DEBUG) getOut(context).out().println( "Eval.next" );
 
-		DynJS dynjs = getAttribute(context, DynJS.class.getName());
 
-		if( dynjs == null ) {
-                        final JSObject globalObject = new DynObject();
-                    
-                        globalObject.put( null /*context*/, "self", this, true /*shouldThrow*/);
+                final FileResource<?> js = script.getValue();
 
-			final FileResource<?> js = script.getValue();
+                final Manifest mf = getManifest();
 
-			final Manifest mf = getManifest();
+                scriptEngine.setContext(ScriptContextBuilder.create()
+                            .currentResource(js)
+                            .stdout(getOut(context).out())
+                            .stderr(getOut(context).err())
+                            .build());
+                scriptEngine.put("self", this);
+                
 
-			dynjs = newDynJS(context, globalObject);
+                try {
+                        /*Object result = */evalFromFile(js, mf);
+                }
+                catch(java.lang.LinkageError e) {
+                        if(DEBUG) getOut(context).err().println( String.valueOf( e.getMessage()));
 
-			try {
-				/*Object result = */runnerFromFile(dynjs, js, mf).evaluate();
-			}
-			catch(java.lang.LinkageError e) {
-				if(DEBUG) getOut(context).err().println( String.valueOf( e.getMessage()));
+                }
+                catch( Exception e) {
 
-			}
-			catch( Exception e) {
+                        getOut(context).err().println( String.valueOf( e.getMessage()));
 
-					getOut(context).err().println( String.valueOf( e.getMessage()));
+                        if(DEBUG) e.printStackTrace(getOut(context).err());
 
-					if(DEBUG) e.printStackTrace(getOut(context).err());
+                        throw e;
+                }
 
-					throw e;
-			}
-
-			putAttribute( context, DynJS.class.getName(), dynjs );
-
-		}
+		putAttribute( context, ScriptEngine.class.getName(), scriptEngine );
 
 		return Results.navigateTo( EvalStep.class);
 

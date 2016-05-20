@@ -12,7 +12,7 @@ public interface AddonConstants {
 
 	boolean DEBUG = false;
 
-	UICategory CATEGORY = Categories.create("Utility", "Dynjs");
+	UICategory CATEGORY = Categories.create("Utility", "js");
 
 
 }

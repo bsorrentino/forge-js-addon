@@ -1,11 +1,11 @@
 package org.bsc.commands;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
 import static org.bsc.commands.AddonUtils.getAttribute;
 import static org.bsc.commands.AddonUtils.getOut;
+import org.bsc.script.rhino.RhinoScriptEngine;
 
-import org.dynjs.runtime.DynJS;
-import org.dynjs.runtime.JSFunction;
-import org.dynjs.runtime.Reference;
 import org.jboss.forge.addon.ui.command.AbstractUICommand;
 import org.jboss.forge.addon.ui.context.UIBuilder;
 import org.jboss.forge.addon.ui.context.UIExecutionContext;
@@ -21,6 +21,8 @@ import org.jboss.forge.addon.ui.wizard.UIWizardStep;
  *
  */
 public class EvalStep extends AbstractUICommand implements UIWizardStep, AddonConstants {
+        
+        final ScriptEngineManager manager = new ScriptEngineManager(getClass().getClassLoader());
 
 	@Override
 	public NavigationResult next(UINavigationContext context) throws Exception {
@@ -32,50 +34,22 @@ public class EvalStep extends AbstractUICommand implements UIWizardStep, AddonCo
 	public Result execute(UIExecutionContext context) throws Exception {
 		if(DEBUG) getOut(context).out().println("EvalStep.execute");
 
-		DynJS dynjs = getAttribute(context, DynJS.class.getName());
+                final RhinoScriptEngine scriptEngine = (RhinoScriptEngine)manager.getEngineByName("rhino-npm");
 
-		if (dynjs != null) {
+                final Object result = scriptEngine.invokeFunction("execute", context);
 
-			Reference ref = dynjs.getDefaultExecutionContext().resolve("execute");
-
-			if (ref != null) {
-
-				Object fn = ref.getValue(dynjs.getDefaultExecutionContext());
-				if (fn instanceof JSFunction) {
-
-					Object result = dynjs.getDefaultExecutionContext().call(
-							(JSFunction) fn, null, new Object[] { context });
-
-					return Results.success(String.valueOf(result));
-				}
-			}
-		}
-
-		return Results.success();
+                return Results.success(String.valueOf(result));          
 	}
 
 	@Override
 	public void initializeUI(UIBuilder builder) throws Exception {
 
-		DynJS dynjs = getAttribute(builder, DynJS.class.getName());
+                final RhinoScriptEngine scriptEngine = (RhinoScriptEngine)manager.getEngineByName("rhino-npm");
 
-		if (dynjs != null) {
-			if(DEBUG) getOut(builder).out().println("EvalStep.initializeUI");
+                if(DEBUG) getOut(builder).out().println("EvalStep.initializeUI");
 
-			Reference ref = dynjs.getDefaultExecutionContext().resolve("initializeUI");
-
-			if (ref != null) {
-
-				Object fn = ref.getValue(dynjs.getDefaultExecutionContext());
-				if (fn instanceof JSFunction) {
-
-					dynjs.getDefaultExecutionContext().call((JSFunction) fn, null,
-							new Object[] { builder });
-
-				}
-			}
-		}
-
+                scriptEngine.invokeFunction("initializeUI", builder);
+                
 	}
 
 }
