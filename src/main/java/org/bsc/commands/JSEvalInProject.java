@@ -198,6 +198,7 @@ public class JSEvalInProject extends AbstractJSProjectCommand implements UIWizar
         }
 
         putAttribute(context, ScriptEngine.class.getName(), scriptEngine);
+        putAttribute(context, "verbose", verbose.getValue());
 
         return Results.navigateTo(JSEvalStep.class);
     }
