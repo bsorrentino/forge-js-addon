@@ -2,10 +2,10 @@ package org.bsc.commands;
 
 import java.io.File;
 import java.util.jar.Manifest;
-import javax.enterprise.inject.spi.BeanManager;
 
 import javax.inject.Inject;
 import javax.script.ScriptEngine;
+import javax.script.ScriptEngineFactory;
 import javax.script.ScriptEngineManager;
 
 import org.jboss.forge.addon.resource.FileResource;
@@ -26,14 +26,13 @@ import org.jboss.forge.addon.ui.wizard.UIWizard;
 import static org.bsc.commands.AddonUtils.*;
 import static org.bsc.commands.AddonConstants.*;
 import org.bsc.script.rhino.RhinoScriptEngine;
-import org.jboss.forge.addon.dependencies.DependencyResolver;
-import org.jboss.forge.addon.environment.Environment;
-import org.jboss.forge.addon.projects.ProjectFactory;
-import org.jboss.forge.addon.projects.ui.AbstractProjectCommand;
 import org.jboss.forge.addon.script.ScriptContextBuilder;
-import org.jboss.forge.addon.ui.input.InputComponentFactory;
-import org.jboss.forge.furnace.manager.maven.MavenContainer;
 import org.jboss.forge.addon.ui.command.AbstractUICommand;
+import org.jboss.forge.addon.ui.context.UIContextProvider;
+import static java.lang.String.format;
+import org.bsc.script.rhino.npm.NPMRhinoScriptEngineFactory;
+import org.jboss.forge.addon.projects.ProjectFactory;
+import org.jboss.forge.addon.ui.command.UICommand;
 
 /**
  * Evaluate a script
@@ -41,24 +40,8 @@ import org.jboss.forge.addon.ui.command.AbstractUICommand;
  * @author bsorrentino
  *
  */
-public class JSEval extends AbstractUICommand implements UIWizard {
-    /*
-    @Inject
-    private BeanManager beanManager;
-
-    @Inject
-    private MavenContainer container;
-
-    @Inject
-    private Environment environment;
-
-    @Inject
-    private DependencyResolver dependencyResolver;
-
-    @Inject
-    private InputComponentFactory componentFactory;
-    */
-    
+public class JSEval extends AbstractJSProjectCommand implements UIWizard {
+        
     @Inject
     @WithAttributes(label = "Script", required = true, type = InputType.FILE_PICKER)
     private UIInput<FileResource<?>> script;
@@ -73,10 +56,8 @@ public class JSEval extends AbstractUICommand implements UIWizard {
 
     @Override
     public void initializeUI(UIBuilder builder) throws Exception {
-        if (DEBUG) {
-            getOut(builder).out().println("Eval.initializeUI");
-        }
-
+        debug( builder, "Eval.initializeUI");
+        
         builder.add(script);
     }
 
@@ -84,55 +65,42 @@ public class JSEval extends AbstractUICommand implements UIWizard {
     public Result execute(final UIExecutionContext context) {
         printVersion(context);
 
-        if (DEBUG) {
-            getOut(context).out().println("Eval.execute");
-        }
+        debug( context, "Eval.execute");
+        
         return Results.success();
     }
 
     @Override
     public NavigationResult next(UINavigationContext context) throws Exception {
 
-        if (DEBUG) {
-            getOut(context).out().println("Eval.next");
-        }
-
+        debug( context, "Eval.next" );
+        
         final FileResource<?> js = script.getValue();
-
-        final Manifest mf = getManifest();
-
-        final ScriptEngineManager manager = new ScriptEngineManager(getClass().getClassLoader());
-        final RhinoScriptEngine scriptEngine = (RhinoScriptEngine)manager.getEngineByName("rhino-npm");
+        
+        final RhinoScriptEngine scriptEngine = super.getScriptEngine(context);
 
         scriptEngine.setContext(ScriptContextBuilder.create()
                 .currentResource(js)
                 .stdout(getOut(context).out())
                 .stderr(getOut(context).err())
                 .build());
-        scriptEngine.put("self", this);
 
         final File file = js.getUnderlyingResourceObject();
 
         try ( java.io.Reader r = new java.io.FileReader(file) ) {
 
+            debug( context, "scriptEngine.eval(%s)", js );
+
             final Object result =  scriptEngine.eval(r);
 
-            if (DEBUG) {
-                getOut(context).out().println( String.valueOf(result) );
-            }
+            debug( context, "scriptEngine.eval()=%s", result );
 
         } catch (java.lang.LinkageError e) {
-            if (DEBUG) {
-                getOut(context).err().println(String.valueOf(e.getMessage()));
-            }
+            error( context, "linkage error [%s]", e.getMessage(), e);
 
         } catch (Exception e) {
 
-            getOut(context).err().println(String.valueOf(e.getMessage()));
-
-            if (DEBUG) {
-                e.printStackTrace(getOut(context).err());
-            }
+            error( context, "exception [%s]", e.getMessage(), e);
 
             throw e;
         }
@@ -141,6 +109,16 @@ public class JSEval extends AbstractUICommand implements UIWizard {
 
         return Results.navigateTo(JSEvalStep.class);
 
+    }
+
+    @Override
+    protected boolean isProjectRequired() {
+        return false;
+    }
+
+    @Override
+    protected ProjectFactory getProjectFactory() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

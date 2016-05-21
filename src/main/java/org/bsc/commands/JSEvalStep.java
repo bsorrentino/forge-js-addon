@@ -24,8 +24,6 @@ import static org.bsc.commands.AddonConstants.*;
  */
 public class JSEvalStep extends AbstractUICommand implements UIWizardStep {
         
-        final ScriptEngineManager manager = new ScriptEngineManager(getClass().getClassLoader());
-
 	@Override
 	public NavigationResult next(UINavigationContext context) throws Exception {
 		if(DEBUG) getOut(context).out().println("EvalStep.next");
@@ -36,7 +34,7 @@ public class JSEvalStep extends AbstractUICommand implements UIWizardStep {
 	public Result execute(UIExecutionContext context) throws Exception {
 		if(DEBUG) getOut(context).out().println("EvalStep.execute");
 
-                final RhinoScriptEngine scriptEngine = (RhinoScriptEngine)manager.getEngineByName("rhino-npm");
+                final RhinoScriptEngine scriptEngine = (RhinoScriptEngine)getAttribute(context, ScriptEngine.class.getName());
 
                 final Object result = scriptEngine.invokeFunction("execute", context);
 
@@ -46,7 +44,8 @@ public class JSEvalStep extends AbstractUICommand implements UIWizardStep {
 	@Override
 	public void initializeUI(UIBuilder builder) throws Exception {
 
-                final RhinoScriptEngine scriptEngine = (RhinoScriptEngine)manager.getEngineByName("rhino-npm");
+            
+                final RhinoScriptEngine scriptEngine = (RhinoScriptEngine)getAttribute(builder, ScriptEngine.class.getName());
 
                 if(DEBUG) getOut(builder).out().println("EvalStep.initializeUI");
 

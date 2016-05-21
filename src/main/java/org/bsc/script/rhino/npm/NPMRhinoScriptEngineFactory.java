@@ -49,7 +49,7 @@ public class NPMRhinoScriptEngineFactory  extends AbstractRhinoScriptEngineFacto
 		final ClassLoader cl = null; // getClass().getClassLoader()
 		final RhinoScriptEngine service = new RhinoScriptEngine( cl, (cx, engine) -> {
 			
-			final RootTopLevel root =  new RootTopLevel(cx, true, engine);
+			final RootTopLevel root =  new RootTopLevel(cx, false, engine);
                         
                         return NPMTopLevel.createNPMTopLevel(cx, root);
 		});

@@ -54,37 +54,13 @@ import org.jboss.forge.furnace.manager.maven.MavenContainer;
  * @author bsorrentino
  *
  */
-public class JSEvalInProject extends AbstractProjectCommand implements UIWizard {
-/*
-    @Inject
-    BeanManager beanManager;
-
-    @Inject
-    private MavenContainer container;
-
-    @Inject
-    private Environment environment;
-
-    @Inject
-    protected DependencyResolver dependencyResolver;
-
-    @Inject
-    private InputComponentFactory componentFactory;
-*/
+public class JSEvalInProject extends AbstractJSProjectCommand implements UIWizard {
     @Inject
     @WithAttributes(label = "Script", required = true, type = InputType.FILE_PICKER)
     private UIInput<FileResource<?>> script;
 
     @Inject
     ResourceFactory resFactory;
-
-    protected final RhinoScriptEngine scriptEngine;
-
-    public JSEvalInProject() {
-
-        final ScriptEngineManager manager = new ScriptEngineManager(getClass().getClassLoader());
-        scriptEngine = (RhinoScriptEngine) manager.getEngineByName("rhino-npm");
-    }
 
     @Override
     public UICommandMetadata getMetadata(UIContext context) {
@@ -128,16 +104,12 @@ public class JSEvalInProject extends AbstractProjectCommand implements UIWizard 
     @Override
     public void initializeUI(final UIBuilder builder) throws Exception {
 
-        if (DEBUG) {
-            getOut(builder).out().println("initializeUI");
-        }
+        debug( builder, "initializeUI");
 
         final Project project = Projects.getSelectedProject(getProjectFactory(),
                 builder.getUIContext());
 
-        if (DEBUG) {
-            getOut(builder).out().printf("root [%s]\n", project.getRoot());
-        }
+        debug( builder, "root [%s]\n", project.getRoot());
 
         script.setCompleter(new UICompleter<FileResource<?>>() {
 
@@ -187,9 +159,7 @@ public class JSEvalInProject extends AbstractProjectCommand implements UIWizard 
     public Result execute(final UIExecutionContext context) {
         printVersion(context);
 
-        if (DEBUG) {
-            getOut(context).out().println("EvalP.execute");
-        }
+        debug( context, "EvalP.execute");
 
         return Results.success();
     }
@@ -197,22 +167,19 @@ public class JSEvalInProject extends AbstractProjectCommand implements UIWizard 
     @Override
     public NavigationResult next(UINavigationContext context) throws Exception {
 
-        if (DEBUG) {
-            getOut(context).out().println("EvalP.next");
-        }
+        debug(context, "EvalP.next");
 
         final FileResource<?> js = script.getValue();
 
-        final Manifest mf = getManifest();
-
         final Project project = super.getSelectedProject(context);
 
+        final RhinoScriptEngine scriptEngine = getScriptEngine(context);
+        
         scriptEngine.setContext(ScriptContextBuilder.create()
                 .currentResource(js)
                 .stdout(getOut(context).out())
                 .stderr(getOut(context).err())
                 .build());
-        scriptEngine.put("self", this);
         scriptEngine.put("project", project);
 
         final File file = js.getUnderlyingResourceObject();
@@ -221,23 +188,14 @@ public class JSEvalInProject extends AbstractProjectCommand implements UIWizard 
 
             final Object result =  scriptEngine.eval(r);
 
-            if (DEBUG) {
-                getOut(context).out().printf("result = [%s]\n", String.valueOf(result));
-            }
-
+            debug( context,"result = [%s]\n", String.valueOf(result));
 
         } catch (java.lang.LinkageError e) {
-            if (DEBUG) {
-                getOut(context).err().println(String.valueOf(e.getMessage()));
-            }
+            error( context, "linkage error [%s]", e.getMessage(), e);
 
         } catch (Exception e) {
 
-            getOut(context).err().println(String.valueOf(e.getMessage()));
-
-            if (DEBUG) {
-                e.printStackTrace(getOut(context).err());
-            }
+            error( context, "exception [%s]", e.getMessage(), e);
 
             throw e;
         }
