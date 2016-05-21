@@ -16,6 +16,7 @@ import org.jboss.forge.addon.ui.result.Results;
 import org.jboss.forge.addon.ui.wizard.UIWizardStep;
 
 import static org.bsc.commands.AddonConstants.*;
+import org.jboss.forge.addon.ui.command.UICommand;
 
 /**
  * 
@@ -26,13 +27,14 @@ public class JSEvalStep extends AbstractUICommand implements UIWizardStep {
         
 	@Override
 	public NavigationResult next(UINavigationContext context) throws Exception {
-		if(DEBUG) getOut(context).out().println("EvalStep.next");
-		return null;
+        
+            if(Boolean.TRUE.equals(getAttribute(context,"verbose"))) getOut(context).out().println("EvalStep.next" );
+            return null;
 	}
 
 	@Override
 	public Result execute(UIExecutionContext context) throws Exception {
-		if(DEBUG) getOut(context).out().println("EvalStep.execute");
+		if(Boolean.TRUE.equals(getAttribute(context,"verbose"))) getOut(context).out().println("EvalStep.execute");
 
                 final RhinoScriptEngine scriptEngine = (RhinoScriptEngine)getAttribute(context, ScriptEngine.class.getName());
 
@@ -47,7 +49,7 @@ public class JSEvalStep extends AbstractUICommand implements UIWizardStep {
             
                 final RhinoScriptEngine scriptEngine = (RhinoScriptEngine)getAttribute(builder, ScriptEngine.class.getName());
 
-                if(DEBUG) getOut(builder).out().println("EvalStep.initializeUI");
+                if(Boolean.TRUE.equals(getAttribute(builder,"verbose"))) getOut(builder).out().println("EvalStep.initializeUI");
 
                 scriptEngine.invokeFunction("initializeUI", builder);
                 

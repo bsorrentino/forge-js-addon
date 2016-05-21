@@ -33,8 +33,13 @@ import org.bsc.script.rhino.RhinoScriptEngine;
 import org.bsc.script.rhino.npm.NPMRhinoScriptEngineFactory;
 import org.jboss.forge.addon.dependencies.DependencyResolver;
 import org.jboss.forge.addon.projects.ui.AbstractProjectCommand;
+import org.jboss.forge.addon.resource.FileResource;
+import org.jboss.forge.addon.ui.context.UIBuilder;
 import org.jboss.forge.addon.ui.context.UIContextProvider;
+import org.jboss.forge.addon.ui.hints.InputType;
 import org.jboss.forge.addon.ui.input.InputComponentFactory;
+import org.jboss.forge.addon.ui.input.UIInput;
+import org.jboss.forge.addon.ui.metadata.WithAttributes;
 
 /**
  *
@@ -56,6 +61,21 @@ public abstract class AbstractJSProjectCommand extends AbstractProjectCommand {
     @Inject
     private InputComponentFactory componentFactory;
 
+    @Inject
+    @WithAttributes(label = "Script", required = true, type = InputType.FILE_PICKER)
+    protected UIInput<FileResource<?>> script;
+    
+    @Inject
+    @WithAttributes(label = "Verbose", required = true, type = InputType.CHECKBOX,defaultValue = "false")
+    protected UIInput<Boolean> verbose;
+
+    @Override
+    public void initializeUI(UIBuilder builder) throws Exception {
+        builder.add(script);
+        builder.add(verbose);
+    }
+
+    
     final ScriptEngineManager manager = new ScriptEngineManager(Thread.currentThread().getContextClassLoader());
 
     protected <T extends UIContextProvider> void info( T cx, String format, Object...args ) {
@@ -67,7 +87,7 @@ public abstract class AbstractJSProjectCommand extends AbstractProjectCommand {
     
     protected <T extends UIContextProvider> void debug( T cx, String format, Object...args ) {
         
-        if( !DEBUG ) return;
+        if( !verbose.getValue().booleanValue() ) return;
         
         final java.io.PrintStream s = getOut(cx).out();
         s.printf(format, (Object [])args);
@@ -98,7 +118,7 @@ public abstract class AbstractJSProjectCommand extends AbstractProjectCommand {
         
         for( ScriptEngineFactory f : manager.getEngineFactories() ) {
                 
-            debug( context, "factory [%s]\n%s", f.getEngineName(), String.valueOf(f.getNames()));
+            //debug( context, "factory [%s]\n%s", f.getEngineName(), String.valueOf(f.getNames()));
             if( f instanceof NPMRhinoScriptEngineFactory ) {
                 try {
                     

@@ -55,9 +55,6 @@ import org.jboss.forge.furnace.manager.maven.MavenContainer;
  *
  */
 public class JSEvalInProject extends AbstractJSProjectCommand implements UIWizard {
-    @Inject
-    @WithAttributes(label = "Script", required = true, type = InputType.FILE_PICKER)
-    private UIInput<FileResource<?>> script;
 
     @Inject
     ResourceFactory resFactory;
@@ -104,7 +101,7 @@ public class JSEvalInProject extends AbstractJSProjectCommand implements UIWizar
     @Override
     public void initializeUI(final UIBuilder builder) throws Exception {
 
-        debug( builder, "initializeUI");
+        debug( builder, "JSEvalInProject.initializeUI");
 
         final Project project = Projects.getSelectedProject(getProjectFactory(),
                 builder.getUIContext());
@@ -151,7 +148,7 @@ public class JSEvalInProject extends AbstractJSProjectCommand implements UIWizar
                 return (Iterable<FileResource<?>>) (List<?>) result;
             }
         });
-        builder.add(script);
+        super.initializeUI(builder);
 
     }
 

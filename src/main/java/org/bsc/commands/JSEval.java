@@ -42,9 +42,6 @@ import org.jboss.forge.addon.ui.command.UICommand;
  */
 public class JSEval extends AbstractJSProjectCommand implements UIWizard {
         
-    @Inject
-    @WithAttributes(label = "Script", required = true, type = InputType.FILE_PICKER)
-    private UIInput<FileResource<?>> script;
 
     @Override
     public UICommandMetadata getMetadata(UIContext context) {
@@ -56,9 +53,9 @@ public class JSEval extends AbstractJSProjectCommand implements UIWizard {
 
     @Override
     public void initializeUI(UIBuilder builder) throws Exception {
-        debug( builder, "Eval.initializeUI");
+        debug( builder, "Eval.initializeUI verbose=%b", verbose);
         
-        builder.add(script);
+        super.initializeUI(builder);
     }
 
     @Override
@@ -106,6 +103,7 @@ public class JSEval extends AbstractJSProjectCommand implements UIWizard {
         }
 
         putAttribute(context, ScriptEngine.class.getName(), scriptEngine);
+        putAttribute(context, "verbose", verbose.getValue());
 
         return Results.navigateTo(JSEvalStep.class);
 
