@@ -34,6 +34,8 @@ import org.bsc.script.rhino.npm.NPMRhinoScriptEngineFactory;
 import org.jboss.forge.addon.projects.ProjectFactory;
 import org.jboss.forge.addon.ui.command.UICommand;
 import static java.lang.String.format;
+import static java.lang.String.format;
+import static java.lang.String.format;
 
 /**
  * Evaluate a script
@@ -68,8 +70,14 @@ public class JSEval extends AbstractJSProjectCommand implements UIWizard {
         return Results.success();
     }
 
+    private int nextCalls = 0;
+    
     @Override
     public NavigationResult next(UINavigationContext context) throws Exception {
+
+        if( nextCalls++ > 0 ) { // FIX ISSUE : MULTI INVOCATION
+            return Results.navigateTo(JSEvalStep.class);
+        }
 
         debug( context, "Eval.next" );
         

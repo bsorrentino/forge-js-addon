@@ -118,9 +118,15 @@ public class JSEvalInProject extends AbstractJSProjectCommand implements UIWizar
         return Results.success();
     }
 
+    private int nextCalls = 0;
+    
     @Override
     public NavigationResult next(UINavigationContext context) throws Exception {
 
+        if( nextCalls++ > 0 ) { // FIX ISSUE : MULTI INVOCATION
+            return Results.navigateTo(JSEvalStep.class);
+        }
+        
         debug(context, "EvalP.next");
 
         final FileResource<?> js = script.getValue();

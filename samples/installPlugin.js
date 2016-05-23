@@ -69,7 +69,12 @@ exports.execute = function( context ) {
     var dps = require("dependencies");
 
     var list = dps.resolve("" + attrs.gid.value);
-        
+
+    if( list.length == 0 ) {
+        print( "dependency not found!", attrs.gid.value);
+        return;
+    }
+    
     var i ;
     if( context.getUIContext().getProvider().isGUI() ) {
         i = list.length - 1;
