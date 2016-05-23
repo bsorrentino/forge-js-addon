@@ -66,7 +66,7 @@ exports.installPlugin = function(cc) {
 
 exports.execute = function( context ) {
 
-    var dps = require("./dependencies");
+    var dps = require("dependencies");
 
     var list = dps.resolve("" + attrs.gid.value);
         

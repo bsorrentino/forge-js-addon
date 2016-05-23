@@ -189,10 +189,6 @@ public class NewDynjsAddonCommand extends
 		command.addImport(UINavigationContext.class);
 		command.addImport(NavigationResult.class);
 
-		//command.addImport(JSObject.class);
-                //command.addImport(DynObject.class);
-		//command.addImport(DynJS.class);
-
 		command.addImport(JSEvalStep.class);
 
 		command.addImport(AddonUtils.class.getName().concat(".*")).setStatic(true);

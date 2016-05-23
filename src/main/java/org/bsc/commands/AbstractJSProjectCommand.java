@@ -87,19 +87,19 @@ public abstract class AbstractJSProjectCommand extends AbstractProjectCommand {
         builder.add(script);
         builder.add(verbose);
         
-        script.addValidator( new UIValidator() {
-            @Override
-            public void validate(UIValidationContext uivc) {
+        script.addValidator( (uivc) -> {
                 
-                final FileResource<?> file = script.getValue();
-                
-                if( file.isDirectory() ) {
-                    uivc.addValidationError(script, "the given script is a directory!. It must be a js file");
-                    return;
-                }
-                System.setProperty( "user.dir", file.getParent().getFullyQualifiedName() );
+            final FileResource<?> file = script.getValue();
+
+            if( file.isDirectory() ) {
+                uivc.addValidationError(script, "the given script is a directory!. It must be a js file");
+                return;
             }
+            // Set current directory
+            System.setProperty( "user.dir", file.getParent().getFullyQualifiedName() );
+
         });
+
         /*
         final Project project = Projects.getSelectedProject(getProjectFactory(),
                 builder.getUIContext());
