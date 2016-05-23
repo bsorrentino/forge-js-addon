@@ -29,7 +29,7 @@ import javax.script.ScriptEngineFactory;
 import javax.script.ScriptEngineManager;
 import static org.bsc.commands.AddonConstants.DEBUG;
 import static org.bsc.commands.AddonUtils.getOut;
-import org.bsc.script.rhino.RhinoScriptEngine;
+import org.bsc.script.rhino.ForgeRhinoScriptEngine;
 import org.bsc.script.rhino.npm.NPMRhinoScriptEngineFactory;
 import org.jboss.forge.addon.dependencies.DependencyResolver;
 import org.jboss.forge.addon.projects.ui.AbstractProjectCommand;
@@ -40,6 +40,9 @@ import org.jboss.forge.addon.ui.hints.InputType;
 import org.jboss.forge.addon.ui.input.InputComponentFactory;
 import org.jboss.forge.addon.ui.input.UIInput;
 import org.jboss.forge.addon.ui.metadata.WithAttributes;
+import static java.lang.String.format;
+import org.jboss.forge.addon.ui.context.UIValidationContext;
+import org.jboss.forge.addon.ui.validate.UIValidator;
 
 /**
  *
@@ -61,6 +64,16 @@ public abstract class AbstractJSProjectCommand extends AbstractProjectCommand {
     @Inject
     private InputComponentFactory componentFactory;
 
+    
+    public DependencyResolver getDependencyResolver() {
+        return dependencyResolver;
+    }
+
+    public InputComponentFactory getComponentFactory() {
+        return componentFactory;
+    }
+
+    
     @Inject
     @WithAttributes(label = "Script", required = true, type = InputType.FILE_PICKER)
     protected UIInput<FileResource<?>> script;
@@ -73,6 +86,68 @@ public abstract class AbstractJSProjectCommand extends AbstractProjectCommand {
     public void initializeUI(UIBuilder builder) throws Exception {
         builder.add(script);
         builder.add(verbose);
+        
+        script.addValidator( new UIValidator() {
+            @Override
+            public void validate(UIValidationContext uivc) {
+                
+                final FileResource<?> file = script.getValue();
+                
+                if( file.isDirectory() ) {
+                    uivc.addValidationError(script, "the given script is a directory!. It must be a js file");
+                    return;
+                }
+                System.setProperty( "user.dir", file.getParent().getFullyQualifiedName() );
+            }
+        });
+        /*
+        final Project project = Projects.getSelectedProject(getProjectFactory(),
+                builder.getUIContext());
+
+        debug( builder, "root [%s]\n", project.getRoot());
+                
+        script.setCompleter(new UICompleter<FileResource<?>>() {
+
+            @SuppressWarnings("unchecked")
+            @Override
+            public Iterable<FileResource<?>> getCompletionProposals(
+                    UIContext context,
+                    InputComponent<?, FileResource<?>> input, String value) {
+
+                List<Resource<?>> result = listResources(
+                        project.getRoot(), new ArrayList<Resource<?>>());
+
+                final java.io.File root = (java.io.File) project.getRoot().getUnderlyingResourceObject();
+
+                final java.io.File resourcesDirs[] = {
+                    new java.io.File(root, "src/main/resources"),
+                    new java.io.File(root, "src/test/resources")
+                };
+
+                for (java.io.File resourcesDir : resourcesDirs) {
+                    if (resourcesDir.exists()) {
+
+                        Resource<?> resourcesRes = resFactory.create(resourcesDir);
+
+                        listResources(resourcesRes, result);
+
+                    }
+                }
+
+                Collections.sort(result, new Comparator<Resource<?>>() {
+
+                    @Override
+                    public int compare(Resource<?> o1, Resource<?> o2) {
+                        return o1.getFullyQualifiedName().compareTo(
+                                o2.getFullyQualifiedName());
+                    }
+                });
+
+                return (Iterable<FileResource<?>>) (List<?>) result;
+            }
+        });
+        */
+        
     }
 
     
@@ -112,9 +187,9 @@ public abstract class AbstractJSProjectCommand extends AbstractProjectCommand {
         }   
     }
     
-    protected <T extends UIContextProvider> RhinoScriptEngine getScriptEngine( T context ) {
+    protected <T extends UIContextProvider> ForgeRhinoScriptEngine getScriptEngine( T context ) {
         
-        RhinoScriptEngine scriptEngine = null;
+        ForgeRhinoScriptEngine scriptEngine = null;
         
         for( ScriptEngineFactory f : manager.getEngineFactories() ) {
                 
@@ -122,10 +197,8 @@ public abstract class AbstractJSProjectCommand extends AbstractProjectCommand {
             if( f instanceof NPMRhinoScriptEngineFactory ) {
                 try {
                     
-                    scriptEngine = (RhinoScriptEngine)f.getScriptEngine();
-                    
-                    scriptEngine.put("componentFactory", componentFactory);
-                    scriptEngine.put("dependencyResolver", dependencyResolver);
+                    scriptEngine = (ForgeRhinoScriptEngine)f.getScriptEngine();
+                    scriptEngine.put("self", this);
                     
                 }
                 catch( Throwable t ) {
@@ -145,4 +218,5 @@ public abstract class AbstractJSProjectCommand extends AbstractProjectCommand {
         
         return scriptEngine;
     }
+    
 }

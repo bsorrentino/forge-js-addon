@@ -48,6 +48,11 @@ import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.Undefined;
 import org.mozilla.javascript.Wrapper;
 import static java.lang.String.format;
+import org.jboss.forge.addon.resource.DirectoryResource;
+import org.jboss.forge.addon.resource.FileResource;
+import org.jboss.forge.addon.script.ScriptContextBuilder;
+import static java.lang.String.format;
+import static java.lang.String.format;
 
 
 /**
@@ -55,7 +60,7 @@ import static java.lang.String.format;
  * @author softphone
  *
  */
-public class RhinoScriptEngine extends javax.script.AbstractScriptEngine implements Invocable {
+public class ForgeRhinoScriptEngine extends javax.script.AbstractScriptEngine implements Invocable {
 
 	public final ContextFactory contextFactory = new ContextFactory();
 	
@@ -77,14 +82,14 @@ public class RhinoScriptEngine extends javax.script.AbstractScriptEngine impleme
 		
 		@Override
 		public void contextCreated(Context cx) {
-			//logger.debug(format( "[%s] Context Created!\n", RhinoScriptEngine.class  ));
+			//logger.debug(format( "[%s] Context Created!\n", ForgeRhinoScriptEngine.class  ));
 			cx.setOptimizationLevel(-1);
 						
 		}
 		
 		@Override
 		public void contextReleased(Context cx) {
-			//logger.debug(format( "[%s] Context Released!\n", RhinoScriptEngine.class  ));
+			//logger.debug(format( "[%s] Context Released!\n", ForgeRhinoScriptEngine.class  ));
 		}
 		
 	};
@@ -94,7 +99,7 @@ public class RhinoScriptEngine extends javax.script.AbstractScriptEngine impleme
 	 * @param classloader
 	 * @param factory
 	 */
-	public RhinoScriptEngine(ClassLoader classloader, Fn2<Context,javax.script.ScriptEngine,ScriptableObject> factory)  {
+	public ForgeRhinoScriptEngine(ClassLoader classloader, Fn2<Context,javax.script.ScriptEngine,ScriptableObject> factory)  {
 		super();
 		if (factory == null)
 			throw new java.lang.IllegalArgumentException("factory is null!");
@@ -114,18 +119,69 @@ public class RhinoScriptEngine extends javax.script.AbstractScriptEngine impleme
 		
 	}
 
+        /**
+         * 
+         * @param <T>
+         * @param factory
+         * @param f
+         * @return 
+         */
 	@SuppressWarnings("unchecked")
 	public static final <T> T callInContext( ContextFactory factory, Fn<Context,T> f ) {
 		
-		return (T)factory.call( (cx) -> {
-			return f.f(cx);						
-		});
+            return (T)factory.call( (cx) -> {
+                    return f.f(cx);						
+            });
+		
+	}
+        
+        /**
+         * 
+         * @param <T>
+         * @param f
+         * @return 
+         */
+	public final <T> T callInContext( Fn<Context,T> f ) {
+                
+            return callInContext( contextFactory, f );
 		
 	}
 	
-	public final <T> T callInContext( Fn<Context,T> f ) {
-	
-		return callInContext( contextFactory, f );
+        
+        /**
+         * 
+         * @param <T>
+         * @param ctx
+         * @param f
+         * @return 
+         */
+	public final <T> T callInContext( final ScriptContext ctx, Fn2<Context,String,T> f ) {
+                
+                if( ctx == null || ctx.getAttribute(ScriptContextBuilder.CURRENT_RESOURCE_ATTRIBUTE)==null ) {
+                    return (T)contextFactory.call( (cx) -> {
+                            return f.f(cx, "unknown");						
+                    });
+                }
+
+                final FileResource<?> js = (FileResource<?>) ctx.getAttribute(ScriptContextBuilder.CURRENT_RESOURCE_ATTRIBUTE);
+
+                // final DirectoryResource dir = js.getParent();
+
+                // final String curDir = System.getProperty("user.dir");
+
+                // System.setProperty("user.dir", dir.getFullyQualifiedName());
+                
+                try {
+
+                    return (T)contextFactory.call( (cx) -> {
+                            return f.f(cx, js.getName());						
+                    });
+                }
+                finally {
+
+                    // System.setProperty("user.dir", curDir);
+
+                }	
 		
 	}
 	
@@ -198,13 +254,14 @@ public class RhinoScriptEngine extends javax.script.AbstractScriptEngine impleme
 		return new javax.script.SimpleBindings();
 	}
 	
+        
 	@Override
 	public Object eval(final String source, final ScriptContext ctx) throws ScriptException {
 		if( null==source ) throw new IllegalArgumentException( "parameter reader is null" );
 		
-		return callInContext( (context) -> {
+		return callInContext( ctx, (context, sourceName) -> {
  
-                        return context.evaluateString(topLevel, source, "", 1, null);
+                        return context.evaluateString(topLevel, source, sourceName, 1, null);
                     } 
 			
 		) ;
@@ -215,13 +272,13 @@ public class RhinoScriptEngine extends javax.script.AbstractScriptEngine impleme
 		
 		if( null==source ) throw new IllegalArgumentException( "parameter reader is null" );
 		
-		return callInContext( (context) -> {
+		return callInContext( ctx, (context, sourceName) -> {
 
-				try {
-					return context.evaluateReader(topLevel, source, "", 1, null);
-				} catch (IOException e) {
-					throw new RuntimeScriptException( new ScriptException(e) );
-				}
+                    try {
+                            return context.evaluateReader(topLevel, source, sourceName, 1, null);
+                    } catch (IOException e) {
+                            throw new RuntimeScriptException( new ScriptException(e) );
+                    }
 			
 		}) ;
 	}
@@ -287,7 +344,7 @@ public class RhinoScriptEngine extends javax.script.AbstractScriptEngine impleme
                 throw new NoSuchMethodException("no such method: " + name);
             }
           
-            return callInContext( (cx) -> {
+            return callInContext( getContext(), (cx,sourceName) -> {
                 final Function func = (Function) obj;
                 
                 Scriptable parentScope = func.getParentScope();
@@ -309,7 +366,7 @@ public class RhinoScriptEngine extends javax.script.AbstractScriptEngine impleme
         }
         
         try {
-	        return callInContext( (cx) -> {
+	        return callInContext( getContext(), (cx,sourceName) -> {
 	        	
 	            final Scriptable localScope = cx.newObject(topLevel);
 	            localScope.setPrototype(topLevel);

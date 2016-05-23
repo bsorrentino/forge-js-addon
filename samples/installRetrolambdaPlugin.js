@@ -1,99 +1,17 @@
-var facets = require("facets")();
+var installPlugin = require("./installPlugin");
 
-var MavenPluginBuilder = org.jboss.forge.addon.maven.plugins.MavenPluginBuilder;
-var CoordinateBuilder = org.jboss.forge.addon.dependencies.builder.CoordinateBuilder;
-var ConfigurationBuilder = org.jboss.forge.addon.maven.plugins.ConfigurationBuilder;
-var ConfigurationElementBuilder = org.jboss.forge.addon.maven.plugins.ConfigurationElementBuilder;
-var ExecutionBuilder = org.jboss.forge.addon.maven.plugins.ExecutionBuilder;
 
 print("Install Plugin executing ....");
 
-var String = java.lang.String;
 
-var attrs = {};
+function initializeUI( builder ) {
 
-attrs.gid = self.componentFactory.createInput("coordinate", String);
-attrs.gid.label = "Coordinate GroupId:ArtifactId[:version]";
-attrs.gid.required = true;
-attrs.gid.defaultValue = 'net.orfjackal.retrolambda:retrolambda-maven-plugin';
-
-
-function initializeUI(builder) {
-
-    print("initialize UI");
-    for (m in attrs) {
-        builder.add(attrs[m]);
-    }
-    print("UI initialized!")
+    installPlugin.initializeUI( builder, 'net.orfjackal.retrolambda:retrolambda-maven-plugin' );
 
 }
 
+function execute( context ) {
 
-
-var result = "";
-
-function installPlugin(cc) {
-    try {
-
-
-        var pb = MavenPluginBuilder.create()
-                .setCoordinate(cc)
-                .addExecution(
-                        ExecutionBuilder.create()
-                        .addGoal("process-main")
-                        .addGoal("process-test")
-                        )
-                ;
-
-
-
-        if (facets.MavenPluginFacet.hasPlugin(cc)) {
-            print("updating ...." + cc);
-            facets.MavenPluginFacet.updatePlugin(pb)
-        }
-        else {
-            print("adding ...." + cc);
-            facets.MavenPluginFacet.addPlugin(pb)
-        }
-
-    }
-    catch (e) {
-
-        print(e);
-    }
-
+    installPlugin.execute( context );
 }
 
-function execute(context) {
-
-    var dps = require("dependencies");
-
-    var list = dps.resolve("" + attrs.gid.value);
-
-    if (list) {
-        
-        var i ;
-        if( context.getUIContext().getProvider().isGUI() ) {
-            i = list.size() - 1;
-        }
-        else {
-            i = -1;
-            var d = list.iterator();
-
-            while (d.hasNext()) {
-                print("[" + (++i) + "] " + d.next());
-            }
-
-            result = context.prompt.prompt("Choose dependency [" + i + "]");
-
-            //for( var m in facets ) { print(""+m); }
-            if (result)
-                i = parseInt(result);
-        }
-        var cc = list.get(i);
-
-        installPlugin(cc);
-    }
-}
-
-result;

@@ -1,10 +1,20 @@
 /**
  * New node file
  */
-var facets = require("facets")();
 
-print( facets.mavenfacet.localRepositoryDirectory );
+var facets = require("forge/facets");
+var project = require("forge/project");
 
-//facets.mavenfacet.executeMaven( ["clean"] );
+function initializeUI( builder ) {   
+}
 
-facets.mavenfacet.executeMaven( ["clean",  "package"] );
+function execute( context ) {
+
+    var mvn = project.facet( factes.MavenFacet );
+
+    print( mvn.localRepositoryDirectory );
+
+    mvn.executeMaven( ["clean",  "package"] );
+
+    return "OK ";
+}

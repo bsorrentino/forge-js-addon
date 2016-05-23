@@ -25,7 +25,7 @@ import org.jboss.forge.addon.ui.wizard.UIWizard;
 
 import static org.bsc.commands.AddonUtils.*;
 import static org.bsc.commands.AddonConstants.*;
-import org.bsc.script.rhino.RhinoScriptEngine;
+import org.bsc.script.rhino.ForgeRhinoScriptEngine;
 import org.jboss.forge.addon.script.ScriptContextBuilder;
 import org.jboss.forge.addon.ui.command.AbstractUICommand;
 import org.jboss.forge.addon.ui.context.UIContextProvider;
@@ -33,6 +33,7 @@ import static java.lang.String.format;
 import org.bsc.script.rhino.npm.NPMRhinoScriptEngineFactory;
 import org.jboss.forge.addon.projects.ProjectFactory;
 import org.jboss.forge.addon.ui.command.UICommand;
+import static java.lang.String.format;
 
 /**
  * Evaluate a script
@@ -74,7 +75,7 @@ public class JSEval extends AbstractJSProjectCommand implements UIWizard {
         
         final FileResource<?> js = script.getValue();
         
-        final RhinoScriptEngine scriptEngine = super.getScriptEngine(context);
+        final ForgeRhinoScriptEngine scriptEngine = super.getScriptEngine(context);
 
         scriptEngine.setContext(ScriptContextBuilder.create()
                 .currentResource(js)
@@ -83,7 +84,7 @@ public class JSEval extends AbstractJSProjectCommand implements UIWizard {
                 .build());
 
         final File file = js.getUnderlyingResourceObject();
-
+     
         try ( java.io.Reader r = new java.io.FileReader(file) ) {
 
             debug( context, "scriptEngine.eval(%s)", js );

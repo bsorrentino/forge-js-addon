@@ -40,12 +40,14 @@ import org.jboss.forge.addon.ui.wizard.UIWizard;
 import static org.bsc.commands.AddonUtils.*;
 import org.jboss.forge.addon.script.ScriptContextBuilder;
 import static org.bsc.commands.AddonConstants.*;
-import org.bsc.script.rhino.RhinoScriptEngine;
+import org.bsc.script.rhino.ForgeRhinoScriptEngine;
 import org.jboss.forge.addon.dependencies.DependencyResolver;
 import org.jboss.forge.addon.environment.Environment;
 import org.jboss.forge.addon.projects.ProjectFactory;
 import org.jboss.forge.addon.projects.ui.AbstractProjectCommand;
+import org.jboss.forge.addon.ui.context.UIValidationContext;
 import org.jboss.forge.addon.ui.input.InputComponentFactory;
+import org.jboss.forge.addon.ui.validate.UIValidator;
 import org.jboss.forge.furnace.manager.maven.MavenContainer;
 
 /**
@@ -103,51 +105,6 @@ public class JSEvalInProject extends AbstractJSProjectCommand implements UIWizar
 
         debug( builder, "JSEvalInProject.initializeUI");
 
-        final Project project = Projects.getSelectedProject(getProjectFactory(),
-                builder.getUIContext());
-
-        debug( builder, "root [%s]\n", project.getRoot());
-
-        script.setCompleter(new UICompleter<FileResource<?>>() {
-
-            @SuppressWarnings("unchecked")
-            @Override
-            public Iterable<FileResource<?>> getCompletionProposals(
-                    UIContext context,
-                    InputComponent<?, FileResource<?>> input, String value) {
-
-                List<Resource<?>> result = listResources(
-                        project.getRoot(), new ArrayList<Resource<?>>());
-
-                final java.io.File root = (java.io.File) project.getRoot().getUnderlyingResourceObject();
-
-                final java.io.File resourcesDirs[] = {
-                    new java.io.File(root, "src/main/resources"),
-                    new java.io.File(root, "src/test/resources")
-                };
-
-                for (java.io.File resourcesDir : resourcesDirs) {
-                    if (resourcesDir.exists()) {
-
-                        Resource<?> resourcesRes = resFactory.create(resourcesDir);
-
-                        listResources(resourcesRes, result);
-
-                    }
-                }
-
-                Collections.sort(result, new Comparator<Resource<?>>() {
-
-                    @Override
-                    public int compare(Resource<?> o1, Resource<?> o2) {
-                        return o1.getFullyQualifiedName().compareTo(
-                                o2.getFullyQualifiedName());
-                    }
-                });
-
-                return (Iterable<FileResource<?>>) (List<?>) result;
-            }
-        });
         super.initializeUI(builder);
 
     }
@@ -170,7 +127,7 @@ public class JSEvalInProject extends AbstractJSProjectCommand implements UIWizar
 
         final Project project = super.getSelectedProject(context);
 
-        final RhinoScriptEngine scriptEngine = getScriptEngine(context);
+        final ForgeRhinoScriptEngine scriptEngine = getScriptEngine(context);
         
         scriptEngine.setContext(ScriptContextBuilder.create()
                 .currentResource(js)
@@ -178,7 +135,7 @@ public class JSEvalInProject extends AbstractJSProjectCommand implements UIWizar
                 .stderr(getOut(context).err())
                 .build());
         scriptEngine.put("project", project);
-
+        
         final File file = js.getUnderlyingResourceObject();
 
         try(java.io.Reader r = new java.io.FileReader(file)) {

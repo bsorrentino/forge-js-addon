@@ -40,61 +40,71 @@ fi
 
 */
 
-var facets = require("facets")();
-var shell = require("shell");
+var facets = require("forge/facets");
+var project = require("forge/project");
+var shell = require("forge/shell");
 
 var String = java.lang.String;
 var Boolean = java.lang.Boolean;
 
-shell.cd( project.root.fullyQualifiedName );
 
 var input = {};
 
 input.params = self.componentFactory.createInput("params", String );
 input.params.label = "mvn parameters";
-input.params.defaultValue ="-e";
+input.params.setDefaultValue( "-e" );
+//input.params.required = true;
 
 input.dlr = self.componentFactory.createInput("dlr", Boolean );
 input.dlr.label = "Delete project's artifacts from local repo?";
-input.dlr.defaultValue = true;
+input.dlr.required = true;
 
 input.dld = self.componentFactory.createInput("dld", Boolean );
 input.dld.label = "Delete project's dependencies from local repo ?";
-input.dld.defaultValue = true;
+input.dld.required = true;
 
 function initializeUI( builder ) {
-	
-	for( m in input ) {
-		builder.add( input[m] );
-	}
+    
+    builder.add( input.params );
+    builder.add( input.dlr );
+    builder.add( input.dld );
+   
 }
 
 function execute( context ) {
 
-	facets.mavenfacet.executeMaven( ["clean",  "-o", input.params.value ] );
-	
-	if( input.dlr.value == true ) {
-		print( "deleting project's artifact");
-		facets.mavenfacet.executeMaven( 
-				 ["org.codehaus.mojo:build-helper-maven-plugin:1.8:remove-project-artifact", 
-				 "-Dbuildhelper.failOnError=false",
-				 "-Dbuildhelper.removeAll=true",
-				 "-fn", "-T2", "-o",  
-				 input.params.value
-				  ] );		 
-	}
-	if( input.dld.value == true ) {
-		print( "deleting project's dependencies");
-		facets.mavenfacet.executeMaven( 
-				["org.apache.maven.plugins:maven-dependency-plugin:2.8:purge-local-repository", 
-				 "-DreResolve=false",
-				 "-DsnapshotsOnly=false",
-				 "-Dverbose=false",
-				 "-fn", "-T2", "-o",
-				 input.params.value
-				  ] );		 
-	}
-	return "OK ";
+   
+    shell.cd( project.root.fullyQualifiedName );
+
+    var mvn = project.facet( facets.MavenFacet );
+    
+    mvn.executeMaven( ["clean",  "-o", input.params.value ] );
+
+    if( input.dlr.value ) {
+    
+        print( "deleting project's artifact");
+            mvn.executeMaven( 
+                             ["org.codehaus.mojo:build-helper-maven-plugin:1.8:remove-project-artifact", 
+                             "-Dbuildhelper.failOnError=false",
+                             "-Dbuildhelper.removeAll=true",
+                             "-fn", "-T2", "-o",  
+                             input.params.value
+                              ] );		 
+    }
+    
+    if( input.dld.value ) {
+            print( "deleting project's dependencies");
+            mvn.executeMaven( 
+                            ["org.apache.maven.plugins:maven-dependency-plugin:2.8:purge-local-repository", 
+                             "-DreResolve=false",
+                             "-DsnapshotsOnly=false",
+                             "-Dverbose=false",
+                             "-fn", "-T2", "-o",
+                             input.params.value
+                              ] );		 
+    }
+   
+    return "OK ";
 }
 
 

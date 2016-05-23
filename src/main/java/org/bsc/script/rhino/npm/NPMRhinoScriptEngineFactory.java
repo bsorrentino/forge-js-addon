@@ -29,7 +29,7 @@ import java.util.List;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineFactory;
 import org.bsc.script.rhino.AbstractRhinoScriptEngineFactory;
-import org.bsc.script.rhino.RhinoScriptEngine;
+import org.bsc.script.rhino.ForgeRhinoScriptEngine;
 import org.bsc.script.rhino.RootTopLevel;
 
 import org.kohsuke.MetaInfServices;
@@ -47,7 +47,7 @@ public class NPMRhinoScriptEngineFactory  extends AbstractRhinoScriptEngineFacto
 	public ScriptEngine getScriptEngine() {
 		
 		final ClassLoader cl = null; // getClass().getClassLoader()
-		final RhinoScriptEngine service = new RhinoScriptEngine( cl, (cx, engine) -> {
+		final ForgeRhinoScriptEngine service = new ForgeRhinoScriptEngine( cl, (cx, engine) -> {
 			
 			final RootTopLevel root =  new RootTopLevel(cx, false, engine);
                         

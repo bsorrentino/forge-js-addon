@@ -2,7 +2,6 @@
  * New node file
  */
 
-var InputComponents = org.jboss.forge.addon.ui.util.InputComponents
 var String = java.lang.String;
 
 print( "addon loaded!");
@@ -19,18 +18,17 @@ attrs.ic2.required = true;
 
 function initializeUI( builder ) {
 
-	print( "initialize UI");
-	for( m in attrs ) {
-		builder.add( attrs[m] );
-	}
-	print( "UI initialized!")
+    print( "initialize UI");
+    builder.add( attrs.ic );
+    builder.add( attrs.ic2 );
+    print( "UI initialized!")
 
 }
 
 function execute( context ) {
 
-	print( "executeJS " );
-	
-	return "OK " +  attrs.ic.value;
+    print( "executeJS " );
+
+    return "OK " +  attrs.ic.value;
 }
 

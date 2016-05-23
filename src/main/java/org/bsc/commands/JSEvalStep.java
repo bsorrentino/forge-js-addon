@@ -4,7 +4,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import static org.bsc.commands.AddonUtils.getAttribute;
 import static org.bsc.commands.AddonUtils.getOut;
-import org.bsc.script.rhino.RhinoScriptEngine;
+import org.bsc.script.rhino.ForgeRhinoScriptEngine;
 
 import org.jboss.forge.addon.ui.command.AbstractUICommand;
 import org.jboss.forge.addon.ui.context.UIBuilder;
@@ -36,7 +36,7 @@ public class JSEvalStep extends AbstractUICommand implements UIWizardStep {
 	public Result execute(UIExecutionContext context) throws Exception {
 		if(Boolean.TRUE.equals(getAttribute(context,"verbose"))) getOut(context).out().println("EvalStep.execute");
 
-                final RhinoScriptEngine scriptEngine = (RhinoScriptEngine)getAttribute(context, ScriptEngine.class.getName());
+                final ForgeRhinoScriptEngine scriptEngine = (ForgeRhinoScriptEngine)getAttribute(context, ScriptEngine.class.getName());
 
                 final Object result = scriptEngine.invokeFunction("execute", context);
 
@@ -47,7 +47,7 @@ public class JSEvalStep extends AbstractUICommand implements UIWizardStep {
 	public void initializeUI(UIBuilder builder) throws Exception {
 
             
-                final RhinoScriptEngine scriptEngine = (RhinoScriptEngine)getAttribute(builder, ScriptEngine.class.getName());
+                final ForgeRhinoScriptEngine scriptEngine = (ForgeRhinoScriptEngine)getAttribute(builder, ScriptEngine.class.getName());
 
                 if(Boolean.TRUE.equals(getAttribute(builder,"verbose"))) getOut(builder).out().println("EvalStep.initializeUI");
 
