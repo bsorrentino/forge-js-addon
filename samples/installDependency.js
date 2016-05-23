@@ -27,36 +27,39 @@ function initializeUI(builder ) {
 
 function installDependency(coord) {
     
+    print( coord.version );
+    
     var mvn = project.facet( facets.MavenFacet );
     
     try {
 
         var model = mvn.getModel();
         
-        var db = DependencyBuilder.create()
-                .setCoordinate(coord)
-                ;
-        var c = db.coordinate;
-        
-        var dep = model.dependencies.toArray().find( function(d) {
+        var md = model.dependencies.toArray().find( function(d) {
             
-            return d.groupId == c.groupId && d.artifactId == c.artifactId ;
+            return d.groupId == coord.groupId && d.artifactId == coord.artifactId ;
         });        
         
-        if( dep != null ) {
+        if( md != null ) {
             print("updating ....", coord);
         
-            model.removeDependency( dep );
+            model.removeDependency( md );
             
-            dep.version = db.version;
+            md.version = coord.version;
             
-            model.addDependency( dep );
+            model.addDependency( md );
         }
         else {
-            print("adding ....", coord);
+           var db = DependencyBuilder.create()
+                .setCoordinate(coord)
+                ;
+        
+            print("adding ....", coord );
             
             model.addDependency( new MavenDependencyAdapter(db) );
-        }    
+        }
+        
+        mvn.setModel( model );
     }
     catch (e) {
 
