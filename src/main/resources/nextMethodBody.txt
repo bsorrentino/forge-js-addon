@@ -18,7 +18,7 @@
 
         try (java.io.Reader r = new java.io.InputStreamReader(is)) {
                 final Object result = scriptEngine.eval(r);
-                debug(context, "result = [%s]\n", String.valueOf(result));
+                debug(context, "result = [%%s]\n", String.valueOf(result));
         } catch (java.lang.LinkageError e) {
                 error(context, "linkage error [%%s]", e.getMessage(), e);
         } catch (Exception e) {

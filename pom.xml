@@ -7,7 +7,7 @@
     <version>4</version>
   </parent>
   <artifactId>dynjs-addon</artifactId>
-  <version>3.0.0</version>
+  <version>3.0.2</version>
   <name>FORGE::DynJS Addon</name>
   <description>Develop a JBoss Forge Addon using Javascript</description>
   <url>https://github.com/bsorrentino/forge-addon/tree/master/dynjs-addon</url>

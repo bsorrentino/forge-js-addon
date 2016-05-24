@@ -81,18 +81,19 @@ exports.execute = function( context ) {
     }
     else {
 
-        i = -1;
+        i = 0;
         list.forEach( function(d) {
             print("[" + (++i) + "] " + d);        
         });
 
-        var result = context.prompt.prompt("Choose dependency [" + i + "]");
+        var result = context.prompt.prompt("Choose dependency [" + i + "] 0 to skip");
 
         if (result) {
             i = parseInt(result);
+            if( i == 0 ) return "skipped!";
         }
 
-        exports.installPlugin(list[i]);
+        exports.installPlugin(list[--i]);
     }
 }
 

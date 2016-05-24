@@ -102,7 +102,7 @@ function execute( context ) {
             if( i == 0 ) return "skipped!";
         }
         
-        installDependency(list[i]);
+        installDependency(list[--i]);
     }
 }
 

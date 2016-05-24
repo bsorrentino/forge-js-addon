@@ -39,13 +39,20 @@ import org.jboss.forge.addon.projects.ui.AbstractProjectCommand;
 
 import static java.lang.String.format;
 import org.jboss.forge.addon.resource.DirectoryResource;
+import static java.lang.String.format;
+import static java.lang.String.format;
+import static java.lang.String.format;
+import static java.lang.String.format;
+import static java.lang.String.format;
+import static java.lang.String.format;
+import static java.lang.String.format;
 
 /**
  *
  * @author bsorrentino
  *
  */
-public class NewDynjsAddonCommand extends
+public class NewJSAddonCommand extends
         AbstractJavaSourceCommand<JavaClassSource> {
 
     @Inject
@@ -72,7 +79,7 @@ public class NewDynjsAddonCommand extends
 
     @Override
     public UICommandMetadata getMetadata(UIContext context) {
-        return Metadata.forCommand(NewDynjsAddonCommand.class)
+        return Metadata.forCommand(NewJSAddonCommand.class)
                 .name("addon-new-js-command")
                 .category(CATEGORY)
                 .description("Create a addon from a script");
@@ -112,31 +119,34 @@ public class NewDynjsAddonCommand extends
         return IOUtils.toString(is);
     }
 
-    private void addAbstractProjectCommandImpl(JavaClassSource command) {
+    private void addAbstractProjectCommandImpl(JavaClassSource source) {
 
         if( isRequireProjectSet() ) {
             //@Inject
             //private ProjectFactory projectFactory;
-            command.addField("projectFactory")
-                    .setType(ProjectFactory.class)
+            
+            source.addField()
                     .setPrivate()
-                    .addAnnotation(Inject.class)
-
-                    ;
+                    .setName("projectFactory")
+                    .setType(ProjectFactory.class)
+                    .addAnnotation(Inject.class);
+            
         }
 
-        final MethodSource<JavaClassSource> isProjectRequired = command.addMethod().setPublic()
+        
+        source.addMethod()
+                .setPublic()
                 .setName("isProjectRequired")
-                .setReturnType(Boolean.TYPE)
+                .setReturnType("boolean")
                 .setBody( isRequireProjectSet() ? "return true;" : "resturn false;" )
-                ;       
-        isProjectRequired.addAnnotation(Override.class);
+                .addAnnotation(Override.class);
 
-        final MethodSource<JavaClassSource> getProjectFactory = command.addMethod().setPublic()
+        source.addMethod()
+                .setPublic()
                 .setName("getProjectFactory")
                 .setReturnType(ProjectFactory.class)
-                .setBody( isRequireProjectSet() ? "return projectFactory;" : "return null;");
-        getProjectFactory.addAnnotation(Override.class);
+                .setBody( isRequireProjectSet() ? "return projectFactory;" : "return null;")
+                .addAnnotation(Override.class);
 
     }
 
@@ -261,14 +271,14 @@ public class NewDynjsAddonCommand extends
      *
      * @param context
      * @param project
-     * @param command
+     * @param source
      * @return
      * @throws Exception
      */
     @Override
     public JavaClassSource decorateSource(UIExecutionContext context,
-            Project project, JavaClassSource command) throws Exception {
-
+            Project project, JavaClassSource source) throws Exception {
+       
         final Manifest mf = getManifest();
 
         final String version = getVersion(mf);
@@ -283,25 +293,26 @@ public class NewDynjsAddonCommand extends
                     .getName()));
         }
 
-        command.setSuperType(AbstractJSProjectCommand.class);
+        addImports(source);
 
-        command.addInterface(UIWizard.class);
+        source.setSuperType(AbstractJSProjectCommand.class);
 
-        addImports(command);
-        
-        addGetMetdataMethod(command);
+        source.addInterface(UIWizard.class);
 
-        addInitializeUIMethod(command);
+        addGetMetdataMethod(source);
 
-        addExecuteMethod(command);
+        addInitializeUIMethod(source);
 
-        addNextMethod(command);
-        
-        addAbstractProjectCommandImpl(command);
+        addExecuteMethod(source);
 
-        return command;
+        addNextMethod(source);
+
+        addAbstractProjectCommandImpl(source);
+
+        return source;
     }
 
+    
     @Override
     protected String calculateDefaultPackage(UIContext context) {
 
