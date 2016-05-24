@@ -1,27 +1,40 @@
+        if( nextCalls++ > 0 ) { // FIX ISSUE : MULTI INVOCATION
+            return Results.navigateTo(JSEvalStep.class);
+        }
 
-DynJS dynjs = getAttribute(context, DynJS.class.getName());
-
-if( dynjs == null ) {
+        debug( context, "Eval.next" );
         
-        final JSObject globalObject = new DynObject();
-                    
-        globalObject.put( null /*context*/, "self", %s.this, true /*shouldThrow*/);
+        final FileResource<?> js = script.getValue();
+        
+        final ForgeRhinoScriptEngine scriptEngine = super.getScriptEngine(context);
 
-	dynjs = newDynJS(context, globalObject);
+        scriptEngine.setContext(ScriptContextBuilder.create()
+                .currentResource(js)
+                .stdout(getOut(context).out())
+                .stderr(getOut(context).err())
+                .build());
 
-	final Manifest mf = getManifest();
+        final File file = js.getUnderlyingResourceObject();
+     
+        try ( java.io.Reader r = new java.io.FileReader(file) ) {
 
-	try {
-		/*Object result = */runnerFromClasspath( dynjs, "%s", mf).evaluate();
-		
-	}
-	catch( Exception e) {
-		//getOut(context).err().println( String.valueOf( e.getMessage()));
-						
-		throw e;
-	}
-	putAttribute( context, DynJS.class.getName(), dynjs );
+            debug( context, "scriptEngine.eval(%%s)", js );
 
-}
+            final Object result =  scriptEngine.eval(r);
 
-return Results.navigateTo( EvalStep.class);
+            debug( context, "scriptEngine.eval()=%%s", result );
+
+        } catch (java.lang.LinkageError e) {
+            error( context, "linkage error [%%s]", e.getMessage(), e);
+
+        } catch (Exception e) {
+
+            error( context, "exception [%%s]", e.getMessage(), e);
+
+            throw e;
+        }
+
+        putAttribute(context, ScriptEngine.class.getName(), scriptEngine);
+        putAttribute(context, "verbose", verbose.getValue());
+
+        return Results.navigateTo(JSEvalStep.class);

@@ -50,14 +50,6 @@ import org.jboss.forge.addon.ui.validate.UIValidator;
  */
 public abstract class AbstractJSProjectCommand extends AbstractProjectCommand {
 
-    /*
-    @Inject
-    private MavenContainer container;
-
-    @Inject
-    private Environment environment;
-    */
-
     @Inject
     protected DependencyResolver dependencyResolver;
 
@@ -74,31 +66,18 @@ public abstract class AbstractJSProjectCommand extends AbstractProjectCommand {
     }
 
     
-    @Inject
-    @WithAttributes(label = "Script", required = true, type = InputType.FILE_PICKER)
-    protected UIInput<FileResource<?>> script;
+    protected int nextCalls = 0;
+
     
     @Inject
     @WithAttributes(label = "Verbose", required = true, type = InputType.CHECKBOX,defaultValue = "false")
     protected UIInput<Boolean> verbose;
 
+    
     @Override
     public void initializeUI(UIBuilder builder) throws Exception {
-        builder.add(script);
-        builder.add(verbose);
         
-        script.addValidator( (uivc) -> {
-                
-            final FileResource<?> file = script.getValue();
-
-            if( file.isDirectory() ) {
-                uivc.addValidationError(script, "the given script is a directory!. It must be a js file");
-                return;
-            }
-            // Set current directory
-            System.setProperty( "user.dir", file.getParent().getFullyQualifiedName() );
-
-        });
+        builder.add(verbose);
 
         /*
         final Project project = Projects.getSelectedProject(getProjectFactory(),

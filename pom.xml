@@ -67,7 +67,7 @@
     <dependency>
       <groupId>org.mozilla</groupId>
       <artifactId>rhino</artifactId>
-    </dependency>    
+    </dependency>
 
   </dependencies>
   <build>

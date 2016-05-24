@@ -1,22 +1,15 @@
 package org.bsc.commands;
 
 import java.io.File;
-import java.util.jar.Manifest;
-
 import javax.inject.Inject;
 import javax.script.ScriptEngine;
-import javax.script.ScriptEngineFactory;
-import javax.script.ScriptEngineManager;
 
 import org.jboss.forge.addon.resource.FileResource;
 import org.jboss.forge.addon.ui.context.UIBuilder;
 import org.jboss.forge.addon.ui.context.UIContext;
 import org.jboss.forge.addon.ui.context.UIExecutionContext;
 import org.jboss.forge.addon.ui.context.UINavigationContext;
-import org.jboss.forge.addon.ui.hints.InputType;
-import org.jboss.forge.addon.ui.input.UIInput;
 import org.jboss.forge.addon.ui.metadata.UICommandMetadata;
-import org.jboss.forge.addon.ui.metadata.WithAttributes;
 import org.jboss.forge.addon.ui.result.NavigationResult;
 import org.jboss.forge.addon.ui.result.Result;
 import org.jboss.forge.addon.ui.result.Results;
@@ -27,15 +20,10 @@ import static org.bsc.commands.AddonUtils.*;
 import static org.bsc.commands.AddonConstants.*;
 import org.bsc.script.rhino.ForgeRhinoScriptEngine;
 import org.jboss.forge.addon.script.ScriptContextBuilder;
-import org.jboss.forge.addon.ui.command.AbstractUICommand;
-import org.jboss.forge.addon.ui.context.UIContextProvider;
-import static java.lang.String.format;
-import org.bsc.script.rhino.npm.NPMRhinoScriptEngineFactory;
 import org.jboss.forge.addon.projects.ProjectFactory;
-import org.jboss.forge.addon.ui.command.UICommand;
-import static java.lang.String.format;
-import static java.lang.String.format;
-import static java.lang.String.format;
+import org.jboss.forge.addon.ui.hints.InputType;
+import org.jboss.forge.addon.ui.input.UIInput;
+import org.jboss.forge.addon.ui.metadata.WithAttributes;
 
 /**
  * Evaluate a script
@@ -45,6 +33,10 @@ import static java.lang.String.format;
  */
 public class JSEval extends AbstractJSProjectCommand implements UIWizard {
         
+    @Inject
+    @WithAttributes(label = "Script", required = true, type = InputType.FILE_PICKER)
+    protected UIInput<FileResource<?>> script;
+    
 
     @Override
     public UICommandMetadata getMetadata(UIContext context) {
@@ -56,9 +48,26 @@ public class JSEval extends AbstractJSProjectCommand implements UIWizard {
 
     @Override
     public void initializeUI(UIBuilder builder) throws Exception {
-        debug( builder, "Eval.initializeUI verbose=%b", verbose);
-        
+       
+        debug( builder, "Eval.initializeUI " );
+
         super.initializeUI(builder);
+
+        script.addValidator( (uivc) -> {
+            
+            final FileResource<?> file = script.getValue();
+
+            if( file.isDirectory() ) {
+                uivc.addValidationError(script, "the given script is a directory!. It must be a js file");
+                return;
+            }
+            // Set current directory
+            System.setProperty( "user.dir", file.getParent().getFullyQualifiedName() );
+
+        });
+        
+        builder.add(script);
+        
     }
 
     @Override
@@ -70,8 +79,6 @@ public class JSEval extends AbstractJSProjectCommand implements UIWizard {
         return Results.success();
     }
 
-    private int nextCalls = 0;
-    
     @Override
     public NavigationResult next(UINavigationContext context) throws Exception {
 

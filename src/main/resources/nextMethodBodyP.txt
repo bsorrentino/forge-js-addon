@@ -1,29 +1,41 @@
+        if( nextCalls++ > 0 ) { // FIX ISSUE : MULTI INVOCATION
+            return Results.navigateTo(JSEvalStep.class);
+        }
+        
+        debug(context, "EvalP.next");
 
-		DynJS dynjs = getAttribute(context, DynJS.class.getName());
-		
-		if( dynjs == null ) {
-			final Project project = super.getSelectedProject(context);
-			
-                        final JSObject globalObject = new DynObject();
-                        
-                        globalObject.put( null /*context*/, "self", %s.this, true /*shouldThrow*/);
-                        globalObject.put( null /*context*/, "project", project, true /*shouldThrow*/);
-	
-			dynjs = newDynJS(context, factory);
-	
-			final Manifest mf = getManifest();
-	
-			try {
-				/*Object result = */runnerFromClasspath( dynjs, "%s", mf).evaluate();
-				
-			}
-			catch( Exception e) {
-				//getOut(context).err().println( String.valueOf( e.getMessage()));
-								
-				throw e;
-			}
-			putAttribute( context, DynJS.class.getName(), dynjs );
+        final FileResource<?> js = script.getValue();
 
-		}
-		
-		return Results.navigateTo( EvalStep.class);
+        final Project project = super.getSelectedProject(context);
+
+        final ForgeRhinoScriptEngine scriptEngine = getScriptEngine(context);
+        
+        scriptEngine.setContext(ScriptContextBuilder.create()
+                .currentResource(js)
+                .stdout(getOut(context).out())
+                .stderr(getOut(context).err())
+                .build());
+        scriptEngine.put("project", project);
+        
+        final File file = js.getUnderlyingResourceObject();
+
+        try(java.io.Reader r = new java.io.FileReader(file)) {
+
+            final Object result =  scriptEngine.eval(r);
+
+            debug( context,"result = [%%s]\n", String.valueOf(result));
+
+        } catch (java.lang.LinkageError e) {
+            error( context, "linkage error [%%s]", e.getMessage(), e);
+
+        } catch (Exception e) {
+
+            error( context, "exception [%%s]", e.getMessage(), e);
+
+            throw e;
+        }
+
+        putAttribute(context, ScriptEngine.class.getName(), scriptEngine);
+        putAttribute(context, "verbose", verbose.getValue());
+
+        return Results.navigateTo(JSEvalStep.class);
