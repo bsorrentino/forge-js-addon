@@ -43,27 +43,34 @@ public final class NPMTopLevel extends ScriptableObject {
 	 * @throws IOException
 	 */
 	public static NPMTopLevel createNPMTopLevel( final Context cx, final RootTopLevel topLevel ) {
+                return createNPMTopLevel(cx, topLevel, MODULE_NAME);
+        }
+	
+        public static NPMTopLevel createNPMTopLevel( final Context cx, final RootTopLevel topLevel, String jvm_npm_module_name ) {
 		if (topLevel == null)
 			throw new java.lang.IllegalArgumentException("topLevel is null!");
 		if (cx == null)
 			throw new java.lang.IllegalArgumentException("cx is null!");
+		if (jvm_npm_module_name == null)
+			throw new java.lang.IllegalArgumentException("jvm_npm_module_name is null!");
 
-
+                final String module = "scripting/" + jvm_npm_module_name ;
+                
 		final NPMTopLevel npm = new NPMTopLevel(topLevel);
 		
 		//cx.initStandardObjects(npm); Note: this call throws java.lang.IllegalArgumentException
 		
-		final java.io.InputStream is = NPMTopLevel.class.getClassLoader().getResourceAsStream(MODULE);
+		final java.io.InputStream is = NPMTopLevel.class.getClassLoader().getResourceAsStream(module);
 		
 		if( is == null ) {
-                    throw new RuntimeException( format( "resource [%s] not found!", MODULE));
+                    throw new RuntimeException( format( "resource [%s] not found!", module));
 		}
 		
                 try {
-			cx.evaluateReader(npm, new java.io.InputStreamReader(is), MODULE_NAME, 0, null);
+			cx.evaluateReader(npm, new java.io.InputStreamReader(is), jvm_npm_module_name, 0, null);
                         
 		} catch (IOException e) {
-			throw new RuntimeException( format( "error evaluating [%s]!", MODULE), e);
+			throw new RuntimeException( format( "error evaluating [%s]!", module), e);
 		}
                     return npm;
                 }

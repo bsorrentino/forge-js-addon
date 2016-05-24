@@ -41,6 +41,8 @@ import org.jboss.forge.addon.ui.input.InputComponentFactory;
 import org.jboss.forge.addon.ui.input.UIInput;
 import org.jboss.forge.addon.ui.metadata.WithAttributes;
 import static java.lang.String.format;
+import org.bsc.script.rhino.RootTopLevel;
+import org.bsc.script.rhino.npm.NPMTopLevel;
 import org.jboss.forge.addon.ui.context.UIValidationContext;
 import org.jboss.forge.addon.ui.validate.UIValidator;
 
@@ -166,36 +168,32 @@ public abstract class AbstractJSProjectCommand extends AbstractProjectCommand {
         }   
     }
     
+    protected <T extends UIContextProvider> ForgeRhinoScriptEngine getScriptEngineEmbedded( T context ) {
+        
+        final ClassLoader cl = null; // getClass().getClassLoader()
+        final ForgeRhinoScriptEngine service = new ForgeRhinoScriptEngine( cl, (cx, engine) -> {
+
+                final RootTopLevel root =  new RootTopLevel(cx, false, engine);
+
+                return NPMTopLevel.createNPMTopLevel(cx, root, "jvm-npm-cl.js");
+        });
+
+        service.put( "self", this );
+        return service;
+    }
+    
     protected <T extends UIContextProvider> ForgeRhinoScriptEngine getScriptEngine( T context ) {
         
-        ForgeRhinoScriptEngine scriptEngine = null;
-        
-        for( ScriptEngineFactory f : manager.getEngineFactories() ) {
-                
-            //debug( context, "factory [%s]\n%s", f.getEngineName(), String.valueOf(f.getNames()));
-            if( f instanceof NPMRhinoScriptEngineFactory ) {
-                try {
-                    
-                    scriptEngine = (ForgeRhinoScriptEngine)f.getScriptEngine();
-                    scriptEngine.put("self", this);
-                    
-                }
-                catch( Throwable t ) {
-                    error( context, "error %s]", t.getMessage());
-                }
-            }
-        }
-        
-        if( scriptEngine == null ) {
-            
-            final String msg = format("script engine %s not found!", "rhino-npm");
-            error( context, msg );
-            
-            throw new RuntimeException(msg);
-            
-        }
-        
-        return scriptEngine;
+        final ClassLoader cl = null; // getClass().getClassLoader()
+        final ForgeRhinoScriptEngine service = new ForgeRhinoScriptEngine( cl, (cx, engine) -> {
+
+                final RootTopLevel root =  new RootTopLevel(cx, false, engine);
+
+                return NPMTopLevel.createNPMTopLevel(cx, root);
+        });
+
+        service.put( "self", this );
+        return service;
     }
     
 }

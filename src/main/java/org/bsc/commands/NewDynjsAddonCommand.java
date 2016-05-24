@@ -152,7 +152,10 @@ public class NewDynjsAddonCommand extends
             final String bodyTemplate
                     = loadTextResource(isRequireProjectSet() ? "nextMethodBodyP.txt" : "nextMethodBody.txt");
 
-            method.setBody(format(bodyTemplate, command.getName(), script.getValue().getName()));
+            final FileResource<?> file = script.getValue();
+            
+            
+            method.setBody(format(bodyTemplate, file.getName(), command.getName() ));
         } catch (IOException e) {
 
             method.setBody("// ERROR READING BODY TEMPLATE");

@@ -1,41 +1,33 @@
-        if( nextCalls++ > 0 ) { // FIX ISSUE : MULTI INVOCATION
-            return Results.navigateTo(JSEvalStep.class);
+        if (nextCalls++ > 0) {
+                return Results.navigateTo(JSEvalStep.class);
         }
-        
         debug(context, "EvalP.next");
 
-        final FileResource<?> js = script.getValue();
+        //final FileResource<?> js = script.getValue();
 
         final Project project = super.getSelectedProject(context);
-
-        final ForgeRhinoScriptEngine scriptEngine = getScriptEngine(context);
-        
+        final ForgeRhinoScriptEngine scriptEngine = getScriptEngineEmbedded(context);
         scriptEngine.setContext(ScriptContextBuilder.create()
-                .currentResource(js)
-                .stdout(getOut(context).out())
-                .stderr(getOut(context).err())
-                .build());
+                        //.currentResource(js)
+                        .stdout(getOut(context).out())
+                        .stderr(getOut(context).err())
+                        .build());
         scriptEngine.put("project", project);
-        
-        final File file = js.getUnderlyingResourceObject();
+        //final File file = js.getUnderlyingResourceObject();
 
-        try(java.io.Reader r = new java.io.FileReader(file)) {
+        java.io.InputStream is = getClass().getClassLoader().getResourceAsStream("%s");
 
-            final Object result =  scriptEngine.eval(r);
-
-            debug( context,"result = [%%s]\n", String.valueOf(result));
-
+        try (java.io.Reader r = new java.io.InputStreamReader(is)) {
+                final Object result = scriptEngine.eval(r);
+                debug(context, "result = [%s]\n", String.valueOf(result));
         } catch (java.lang.LinkageError e) {
-            error( context, "linkage error [%%s]", e.getMessage(), e);
-
+                error(context, "linkage error [%%s]", e.getMessage(), e);
         } catch (Exception e) {
-
-            error( context, "exception [%%s]", e.getMessage(), e);
-
-            throw e;
+                error(context, "exception [%%s]", e.getMessage(), e);
+                throw e;
         }
-
         putAttribute(context, ScriptEngine.class.getName(), scriptEngine);
         putAttribute(context, "verbose", verbose.getValue());
-
         return Results.navigateTo(JSEvalStep.class);
+
+
