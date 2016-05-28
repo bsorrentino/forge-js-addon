@@ -75,7 +75,7 @@ module = (typeof module == 'undefined') ? {} :  module;
 
   function Require(id, parent) {
     
-    if( id[0] === '.' ) parent = undefined;
+    if( id.startsWith('.') ) parent = undefined; // FIX
     
     var core, native, file = Require.resolve(id, parent);
 
