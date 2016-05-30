@@ -11,7 +11,23 @@ function initializeUI( builder ) {
 }
 
 function execute( context ) {
+    var MavenPluginBuilder = org.jboss.forge.addon.maven.plugins.MavenPluginBuilder,
+        ExecutionBuilder   = org.jboss.forge.addon.maven.plugins.ExecutionBuilder
+        ;
 
-    installPlugin.execute( context );
+    installPlugin.execute( context, function( cc ) {
+ 
+        var pb = MavenPluginBuilder.create()
+                .setCoordinate(cc)
+                .addExecution(
+                        ExecutionBuilder.create()
+                        .addGoal("process-main")
+                        .addGoal("process-test")
+                        )
+                ;
+
+        return pb;
+        
+    });
 }
 

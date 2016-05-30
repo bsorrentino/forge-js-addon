@@ -29,23 +29,17 @@ exports.initializeUI = function(builder, defaultValue ) {
 
 }
 
-exports.installPlugin = function(cc) {
+/**
+ * 
+ * @param {type} cc
+ * @param {type} pb - Plugin
+ * 
+ */
+exports.installPlugin = function(cc, pb) {
     
     var mvn = project.facet( facets.MavenPluginFacet );
     
     try {
-
-
-        var pb = MavenPluginBuilder.create()
-                .setCoordinate(cc)
-                .addExecution(
-                        ExecutionBuilder.create()
-                        .addGoal("process-main")
-                        .addGoal("process-test")
-                        )
-                ;
-
-
 
         if (mvn.hasPlugin(cc)) {
             print("updating ....", cc);
@@ -64,7 +58,13 @@ exports.installPlugin = function(cc) {
 
 }
 
-exports.execute = function( context ) {
+/**
+ * 
+ * @param {type} context
+ * @param {type} pb - callback function: ( coordinate ) -> Plugin
+ * 
+ */
+exports.execute = function( context, cb ) {
 
     var dps = require("dependencies");
 
@@ -93,7 +93,8 @@ exports.execute = function( context ) {
             if( i == 0 ) return "skipped!";
         }
 
-        exports.installPlugin(list[--i]);
+        var cc = list[--i];
+        exports.installPlugin( cc, cb(cc) );
     }
 }
 

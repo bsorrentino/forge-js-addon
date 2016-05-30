@@ -46,7 +46,12 @@ public class NPMRhinoScriptEngineFactory  extends AbstractRhinoScriptEngineFacto
 	@Override
 	public ScriptEngine getScriptEngine() {
 		
-		final ClassLoader cl = null; // getClass().getClassLoader()
+		return newScriptEngine(null);
+		
+	}		
+	
+	public static final ForgeRhinoScriptEngine newScriptEngine(final ClassLoader cl) {
+		
 		final ForgeRhinoScriptEngine service = new ForgeRhinoScriptEngine( cl, (cx, engine) -> {
 			
 			final RootTopLevel root =  new RootTopLevel(cx, false, engine);
@@ -57,6 +62,5 @@ public class NPMRhinoScriptEngineFactory  extends AbstractRhinoScriptEngineFacto
 		return service;
 		
 	}		
-	
-	   
+        
 }

@@ -184,15 +184,13 @@ public abstract class AbstractJSProjectCommand extends AbstractProjectCommand {
     
     protected <T extends UIContextProvider> ForgeRhinoScriptEngine getScriptEngine( T context ) {
         
-        final ClassLoader cl = null; // getClass().getClassLoader()
-        final ForgeRhinoScriptEngine service = new ForgeRhinoScriptEngine( cl, (cx, engine) -> {
-
-                final RootTopLevel root =  new RootTopLevel(cx, false, engine);
-
-                return NPMTopLevel.createNPMTopLevel(cx, root);
-        });
+        final ClassLoader cl = Thread.currentThread().getContextClassLoader();
+        
+        
+        final ForgeRhinoScriptEngine service = NPMRhinoScriptEngineFactory.newScriptEngine(cl);
 
         service.put( "self", this );
+        
         return service;
     }
     
