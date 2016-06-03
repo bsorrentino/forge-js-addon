@@ -170,13 +170,9 @@ public abstract class AbstractJSProjectCommand extends AbstractProjectCommand {
     
     protected <T extends UIContextProvider> ForgeRhinoScriptEngine getScriptEngineEmbedded( T context ) {
         
-        final ClassLoader cl = null; // getClass().getClassLoader()
-        final ForgeRhinoScriptEngine service = new ForgeRhinoScriptEngine( cl, (cx, engine) -> {
-
-                final RootTopLevel root =  new RootTopLevel(cx, false, engine);
-
-                return NPMTopLevel.createNPMTopLevel(cx, root, "jvm-npm-cl.js");
-        });
+        final ClassLoader cl = Thread.currentThread().getContextClassLoader();
+          
+        final ForgeRhinoScriptEngine service = NPMRhinoScriptEngineFactory.newScriptEngine(cl, "jvm-cl-npm.js");
 
         service.put( "self", this );
         return service;
@@ -185,9 +181,8 @@ public abstract class AbstractJSProjectCommand extends AbstractProjectCommand {
     protected <T extends UIContextProvider> ForgeRhinoScriptEngine getScriptEngine( T context ) {
         
         final ClassLoader cl = Thread.currentThread().getContextClassLoader();
-        
-        
-        final ForgeRhinoScriptEngine service = NPMRhinoScriptEngineFactory.newScriptEngine(cl);
+          
+        final ForgeRhinoScriptEngine service = NPMRhinoScriptEngineFactory.newScriptEngine(cl, "jvm-npm.js");
 
         service.put( "self", this );
         

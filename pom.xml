@@ -7,7 +7,7 @@
     <version>4</version>
   </parent>
   <artifactId>dynjs-addon</artifactId>
-  <version>3.0.4</version>
+  <version>3.0.5</version>
   <name>FORGE::DynJS Addon - ${project.version}</name>
   <description>Develop a JBoss Forge Addon using Javascript</description>
   <url>https://github.com/bsorrentino/forge-addon/tree/master/dynjs-addon</url>
@@ -124,10 +124,49 @@
           </execution>
         </executions>
       </plugin>
-      
-      
-      
-      
+        <plugin>
+            <groupId>com.googlecode.maven-download-plugin</groupId>
+            <artifactId>download-maven-plugin</artifactId>
+            <version>1.3.0</version>
+            <executions>
+                <execution>
+                    <id>install-jvm-rhino-npm</id>
+                    <phase>generate-sources</phase>
+                    <goals>
+                        <goal>wget</goal>
+                    </goals>
+                    <configuration>
+                        <url>https://raw.githubusercontent.com/bsorrentino/jvm-npm/master/src/main/typescript/dist/jvm-rhino-npm.js</url>
+                        <outputDirectory>${basedir}/src/main/resources/scripting</outputDirectory>
+                        <overwrite>false</overwrite>
+                    </configuration>
+                </execution>
+                <execution>
+                    <id>install-jvm-rhino-cl-npm</id>
+                    <phase>generate-sources</phase>
+                    <goals>
+                        <goal>wget</goal>
+                    </goals>
+                    <configuration>
+                        <url>https://raw.githubusercontent.com/bsorrentino/jvm-npm/master/src/main/typescript/dist/jvm-rhino-cl-npm.js</url>
+                        <outputDirectory>${basedir}/src/main/resources/scripting</outputDirectory>
+                        <overwrite>false</overwrite>
+                    </configuration>
+                </execution>
+                <execution>
+                    <id>install-jvm-jasmine</id>
+                    <phase>generate-sources</phase>
+                    <goals>
+                        <goal>wget</goal>
+                    </goals>
+                    <configuration>
+                        <url>https://raw.githubusercontent.com/bsorrentino/jvm-npm/master/src/test/javascript/jvm-jasmine.js</url>
+                        <outputDirectory>${basedir}/src/test/resources</outputDirectory>
+                        <overwrite>false</overwrite>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
     </plugins>
   </build>
   

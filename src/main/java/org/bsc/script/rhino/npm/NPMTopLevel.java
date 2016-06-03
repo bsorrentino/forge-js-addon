@@ -12,18 +12,13 @@ import org.mozilla.javascript.ScriptableObject;
 @SuppressWarnings("serial")
 public final class NPMTopLevel extends ScriptableObject {
 
-	private static final String MODULE_NAME = "jvm-npm.js";
-	private static final String MODULE = "scripting/" + MODULE_NAME;
-
 
 	/**
 	 * 
 	 * @param topLevel
 	 */
-	public NPMTopLevel( RootTopLevel topLevel ) {
+	protected NPMTopLevel( RootTopLevel topLevel ) {
 		super( topLevel, ScriptableObject.getObjectPrototype(topLevel));
-
-	
 	}
 
 	/**
@@ -34,18 +29,6 @@ public final class NPMTopLevel extends ScriptableObject {
 		return "jvm-npm";
 	}
 
-
-	/**
-	 * 
-	 * @param cx
-	 * @param topLevel
-	 * @return
-	 * @throws IOException
-	 */
-	public static NPMTopLevel createNPMTopLevel( final Context cx, final RootTopLevel topLevel ) {
-                return createNPMTopLevel(cx, topLevel, MODULE_NAME);
-        }
-	
         public static NPMTopLevel createNPMTopLevel( final Context cx, final RootTopLevel topLevel, String jvm_npm_module_name ) {
 		if (topLevel == null)
 			throw new java.lang.IllegalArgumentException("topLevel is null!");
