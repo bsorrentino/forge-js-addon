@@ -39,7 +39,16 @@ describe("require test with relative path ./", function() {
   });
   
   it("moduleA ", function() {
-    require('moduleA');
+    var ma = require('moduleA');
+    expect(ma).toBeDefined();
+    
+  });
+
+  it("moduleB ", function() {
+    var mb = require('moduleB');
+    expect(mb).toBeDefined();
+    expect(mb).toEqual( "ModuleB ModuleB.1");
+    
     
   });
   
