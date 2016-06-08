@@ -1,15 +1,18 @@
 package org.bsc.script.rhino;
 
 import java.io.IOException;
+import static java.lang.String.format;
 
 import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
+import org.javascript.rhino.RhinoTopLevel;
 
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
 import org.mozilla.javascript.ImporterTopLevel;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
+import static java.lang.String.format;
 
 @SuppressWarnings("serial")
 public final class RootTopLevel extends ImporterTopLevel {
@@ -21,7 +24,7 @@ public final class RootTopLevel extends ImporterTopLevel {
      * @param args
      * @return
      */
-    private static String printBuffer(Object[] args) {
+    private static String _print(Object[] args) {
         final StringBuilder printBuffer = new StringBuilder();
         int row = 0;
         for (Object arg : args) {
@@ -48,7 +51,7 @@ public final class RootTopLevel extends ImporterTopLevel {
             return;
         }
 
-        final String buffer = printBuffer(args);
+        final String buffer = _print(args);
 
         if (thisObj instanceof RootTopLevel) {
 
@@ -76,6 +79,95 @@ public final class RootTopLevel extends ImporterTopLevel {
         System.out.println(buffer);
     }
 
+    private static RootTopLevel deref( Scriptable thisObj ) {
+        if( thisObj != null ) {
+            if( thisObj instanceof RootTopLevel ) {
+                return (RootTopLevel) thisObj;
+            }
+
+            final Scriptable protoObj = thisObj.getPrototype();
+            if( protoObj instanceof RootTopLevel ) {
+                return (RootTopLevel) thisObj;
+            }   
+        }    
+        
+        return null;
+        
+    }
+    
+    /**
+     * Load and execute a set of JavaScript source files.
+     *
+     * This method is defined as a JavaScript function.
+     *
+     */
+    public static void load(Context cx, Scriptable thisObj, Object[] args, Function funObj) throws Exception {
+        if (args == null) {
+            return;
+        }
+        
+        RootTopLevel _this = deref(thisObj);
+        
+        if( _this == null ) _this = deref( thisObj.getParentScope() );
+        
+        if( _this == null ) throw new IllegalStateException( "cannot deref thisObj to  RhinoTopLevel!");
+
+        for (Object a : args) {
+
+            final String module = Context.toString(a);
+
+            _this._load(cx, module);
+        }
+    }
+
+    private final java.util.Set<String> moduleCache = new java.util.HashSet<>();
+
+    private void _load(Context cx, String module) {
+
+        if( moduleCache.contains(module)) {
+            return;
+        }
+
+        final ClassLoader cl = Thread.currentThread().getContextClassLoader();
+
+        final java.io.InputStream is = cl.getResourceAsStream(module);
+
+        if (is != null) {
+
+            try {
+                cx.evaluateReader(this, new java.io.InputStreamReader(is), module, 0, null);
+
+                moduleCache.add( module );
+
+            } catch (IOException e) {
+                throw new RuntimeException(format("error evaluating module [%s]", module), e);
+            }
+
+        } else { // Fallback
+
+            java.io.File file = new java.io.File(module);
+
+            if (!file.exists()) {
+                throw new RuntimeException(format("module [%s] doesn't exist!", module));
+            }
+            if (!file.isFile()) {
+                throw new RuntimeException(format("module [%s] is not a file exist!", module));
+            }
+
+            try {
+                final java.io.FileReader reader = new java.io.FileReader(file);
+
+                cx.evaluateReader(this, reader, module, 0, null);
+
+                moduleCache.add( module );
+
+            } catch (IOException e) {
+                throw new RuntimeException(format("error evaluating module [%s]", module), e);
+            }
+
+        }
+    }
+    
     /**
      *
      * @param cx
@@ -108,7 +200,7 @@ public final class RootTopLevel extends ImporterTopLevel {
 
     public void initStandardObjects(Context cx, boolean sealed) {
         super.initStandardObjects(cx, sealed);
-        final String[] names = {"print"};
+        final String[] names = {"print", "load"};
 
         defineFunctionProperties(names, getClass(), ScriptableObject.DONTENUM);
 

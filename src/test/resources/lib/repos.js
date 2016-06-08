@@ -1,4 +1,4 @@
-var rr = require('introspection');
+var rr = require('./introspection');
 
 var RepositoryUtils = org.jboss.forge.addon.maven.projects.util.RepositoryUtils;
 var MavenRepositorySystemUtils = org.apache.maven.repository.internal.MavenRepositorySystemUtils;

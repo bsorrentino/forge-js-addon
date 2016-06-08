@@ -8,7 +8,7 @@ module.exports = {
 
     printC:function( name, o ) {
         if( o ) {
-            print( name + ": " + o.class.name );
+            print( name, o.class.name );
         }
     },
     _printM:function( methods ) {
