@@ -4,37 +4,19 @@
   <parent>
     <groupId>org.bsc</groupId>
     <artifactId>forge-addon</artifactId>
-    <version>3</version>
+    <version>4</version>
   </parent>
   <artifactId>dynjs-addon</artifactId>
-  <version>2.19.2</version>
-  <name>FORGE::DynJS Addon</name>
+  <version>3.0.7</version>
+  <name>FORGE::DynJS Addon - ${project.version}</name>
   <description>Develop a JBoss Forge Addon using Javascript</description>
   <url>https://github.com/bsorrentino/forge-addon/tree/master/dynjs-addon</url>
+  
   <prerequisites>
     <maven>3.2.5</maven>
   </prerequisites>
-  <properties>
-    <version.furnace>2.19.2.Final</version.furnace>
-    <version.furnace.maven>2.19.0.Final</version.furnace.maven>
-  </properties>
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>org.jboss.forge</groupId>
-        <artifactId>forge-bom</artifactId>
-        <version>${version.furnace}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.jboss.forge.addon</groupId>
-        <artifactId>core</artifactId>
-        <version>${version.furnace}</version>
-        <classifier>forge-addon</classifier>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
+
+    
   <dependencies>
     <dependency>
       <groupId>org.jboss.forge.furnace.container</groupId>
@@ -71,41 +53,28 @@
       <classifier>forge-addon</classifier>
     </dependency>
     <dependency>
-      <groupId>org.dynjs</groupId>
-      <artifactId>dynjs</artifactId>
-      <version>0.3.1</version>
-      <scope>compile</scope>
-    </dependency>
-    
+       <groupId>org.jboss.forge.addon</groupId>
+       <artifactId>script</artifactId>
+       <classifier>forge-addon</classifier>
+    </dependency>    
     
     <dependency>
-      <groupId>org.jboss.forge.roaster</groupId>
-      <artifactId>roaster-jdt</artifactId>
-      <version>2.13.1.Final</version>
-      <scope>test</scope>
+      <groupId>org.kohsuke.metainf-services</groupId>
+      <artifactId>metainf-services</artifactId>
+      <optional>true</optional>
     </dependency>
+
     <dependency>
-      <groupId>org.jboss.forge.addon</groupId>
-      <artifactId>ui-test-harness</artifactId>
-      <classifier>forge-addon</classifier>
-      <scope>test</scope>
+      <groupId>org.mozilla</groupId>
+      <artifactId>rhino</artifactId>
     </dependency>
+    
     <dependency>
-      <groupId>org.jboss.forge.furnace.test</groupId>
-      <artifactId>furnace-test-harness</artifactId>
-      <scope>test</scope>
+        <groupId>org.bsc</groupId>
+        <artifactId>jvm-npm</artifactId>
+        <version>1.0.0-SNAPSHOT</version>        
     </dependency>
-    <dependency>
-      <groupId>org.jboss.forge.furnace.test</groupId>
-      <artifactId>arquillian-furnace-classpath</artifactId>
-      <scope>test</scope>
-    </dependency>
-      <dependency>
-         <groupId>org.jboss.forge.addon</groupId>
-         <artifactId>shell-test-harness</artifactId>
-         <classifier>forge-addon</classifier>
-         <scope>test</scope>
-      </dependency>    
+
   </dependencies>
   <build>
     <finalName>dynjs-addon</finalName>
@@ -118,23 +87,6 @@
           <target>1.8</target>
         </configuration>
        </plugin>  
-      <plugin>
-        <groupId>org.jboss.forge.furnace</groupId>
-        <artifactId>furnace-maven-plugin</artifactId>
-        <version>${version.furnace.maven}</version>
-        <executions>
-          <execution>
-            <id>generate-dot</id>
-            <phase>prepare-package</phase>
-            <goals>
-              <goal>generate-dot</goal>
-            </goals>
-            <configuration>
-              <attach>true</attach>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>
         <executions>
@@ -165,19 +117,137 @@
           <additionalparam>-Xdoclint:none</additionalparam>
         </configuration>
       </plugin>
-      <plugin>
-        <groupId>net.orfjackal.retrolambda</groupId>
-        <artifactId>retrolambda-maven-plugin</artifactId>
-        <version>2.0.2</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>process-main</goal>
-              <goal>process-test</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
+        <plugin>
+           <groupId>org.apache.maven.plugins</groupId>
+           <artifactId>maven-surefire-plugin</artifactId>
+           <configuration>
+               <threadCount>2</threadCount>
+               <parallel>methods</parallel>
+               <parallelTestsTimeoutForcedInSeconds>5</parallelTestsTimeoutForcedInSeconds>
+               <parallelTestsTimeoutInSeconds>5</parallelTestsTimeoutInSeconds>
+           </configuration>
+        </plugin>
+      
+        <plugin>
+            <groupId>com.googlecode.maven-download-plugin</groupId>
+            <artifactId>download-maven-plugin</artifactId>
+            <version>1.3.0</version>
+            <executions>
+                <execution>
+                    <id>install-jvm-rhino-npm</id>
+                    <phase>generate-sources</phase>
+                    <goals>
+                        <goal>wget</goal>
+                    </goals>
+                    <configuration>
+                        <url>https://raw.githubusercontent.com/bsorrentino/jvm-npm/develop/src/main/typescript/dist/jvm-rhino-npm.js</url>
+                        <outputDirectory>${basedir}/src/main/resources/scripting</outputDirectory>
+                        <overwrite>false</overwrite>
+                    </configuration>
+                </execution>
+                <execution>
+                    <id>install-jvm-rhino-cl-npm</id>
+                    <phase>generate-sources</phase>
+                    <goals>
+                        <goal>wget</goal>
+                    </goals>
+                    <configuration>
+                        <url>https://raw.githubusercontent.com/bsorrentino/jvm-npm/develop/src/main/typescript/dist/jvm-rhino-cl-npm.js</url>
+                        <outputDirectory>${basedir}/src/main/resources/scripting</outputDirectory>
+                        <overwrite>false</overwrite>
+                    </configuration>
+                </execution>
+                <execution>
+                    <id>install-jvm-jasmine</id>
+                    <phase>generate-sources</phase>
+                    <goals>
+                        <goal>wget</goal>
+                    </goals>
+                    <configuration>
+                        <url>https://raw.githubusercontent.com/bsorrentino/jvm-npm/develop/src/test/javascript/jvm-jasmine.js</url>
+                        <outputDirectory>${basedir}/src/test/resources</outputDirectory>
+                        <overwrite>false</overwrite>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
+               
     </plugins>
   </build>
+  
+  <profiles>
+      <profile>
+          <id>java7</id>
+          
+          <build>
+              <plugins>
+                        
+                  <plugin>
+                      <groupId>net.orfjackal.retrolambda</groupId>
+                      <artifactId>retrolambda-maven-plugin</artifactId>
+                      <version>2.3.0</version>
+                      <executions>
+                          <execution>
+                              <goals>
+                                  <goal>process-main</goal>
+                                  <goal>process-test</goal>
+                              </goals>
+                          </execution>
+                      </executions>
+                  </plugin>
+      
+
+              </plugins>
+              
+          </build>
+      </profile>
+
+    <profile>
+      <id>release</id>
+      <activation />
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.jboss.forge.furnace</groupId>
+            <artifactId>furnace-maven-plugin</artifactId>
+            <version>${version.furnace}</version>
+            <executions>
+              <execution>
+                <id>generate-dot</id>
+                <phase>prepare-package</phase>
+                <goals>
+                  <goal>generate-dot</goal>
+                </goals>
+                <configuration>
+                  <attach>true</attach>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+  
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.kohsuke.metainf-services</groupId>
+        <artifactId>metainf-services</artifactId>
+        <version>1.7</version>
+      </dependency>
+      <dependency>
+        <groupId>org.mozilla</groupId>
+        <artifactId>rhino</artifactId>
+        <version>1.7.7.1</version>
+      </dependency>
+      <dependency>
+        <groupId>org.bsc</groupId>
+        <artifactId>dynjs-addon</artifactId>
+        <version>true</version>
+        <scope>compile</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
 </project>

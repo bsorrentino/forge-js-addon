@@ -1,97 +1,100 @@
-var facets = require("facets")();
-var MavenPluginBuilder = org.jboss.forge.addon.maven.plugins.MavenPluginBuilder;
-var CoordinateBuilder = org.jboss.forge.addon.dependencies.builder.CoordinateBuilder;
-var ConfigurationBuilder = org.jboss.forge.addon.maven.plugins.ConfigurationBuilder;
-var ConfigurationElementBuilder = org.jboss.forge.addon.maven.plugins.ConfigurationElementBuilder;
-var ExecutionBuilder = org.jboss.forge.addon.maven.plugins.ExecutionBuilder;
+var facets = require("forge/facets");
+var project = require("forge/project");
 
-print( "Install Plugin executing ....");
+var MavenPluginBuilder          = org.jboss.forge.addon.maven.plugins.MavenPluginBuilder;
+var CoordinateBuilder           = org.jboss.forge.addon.dependencies.builder.CoordinateBuilder;
+var ConfigurationBuilder        = org.jboss.forge.addon.maven.plugins.ConfigurationBuilder;
+var ConfigurationElementBuilder = org.jboss.forge.addon.maven.plugins.ConfigurationElementBuilder;
+var ExecutionBuilder            = org.jboss.forge.addon.maven.plugins.ExecutionBuilder;
 
 var String = java.lang.String;
 
 var attrs = {};
 
-attrs.gid = self.componentFactory.createInput("coordinate", String );
+attrs.gid = self.componentFactory.createInput("coordinate", String);
 attrs.gid.label = "Coordinate GroupId:ArtifactId[:version]";
 attrs.gid.required = true;
-//attrs.gid.defaultValue = '<add plugin coordinate>';
 
+ 
 
-function initializeUI( builder ) {
+exports.initializeUI = function(builder, defaultValue ) {
 
-	print( "initialize UI");
-	for( m in attrs ) {
-		builder.add( attrs[m] );
-	}
-	print( "UI initialized!")
-
-}
-
-
-
-var result = "";
-
-function installPlugin( cc ) {
-	try {
-
-
-			var pb = MavenPluginBuilder.create()
-								.setCoordinate(cc)
-// ADD PLUGIN CONFIGURATION HERE
-/*
-								.addExecution(
-									ExecutionBuilder.create()
-										.addGoal("process-main")
-										.addGoal("process-test")
-									)
-*/
-								;
-
-			if( facets.mavenpluginfacet.hasPlugin(cc)) {
-					print( "updating ...." + cc );
-					facets.mavenpluginfacet.updatePlugin(pb)
-			}
-			else {
-					print( "adding ...." + cc );
-					facets.mavenpluginfacet.addPlugin(pb)
-			}
-
-	}
-	catch(e) {
-
-		print(e);
-	}
+    if( defaultValue ) {
+        attrs.gid.setDefaultValue(defaultValue);
+    }
+    
+    print("initialize UI");
+    builder.add(attrs.gid);
+    print("UI initialized!")
 
 }
 
-function execute( context ) {
+/**
+ * 
+ * @param {type} cc
+ * @param {type} pb - Plugin
+ * 
+ */
+exports.installPlugin = function(cc, pb) {
+    
+    var mvn = project.facet( facets.MavenPluginFacet );
+    
+    try {
 
-  var dps = require("dependencies");
+        if (mvn.hasPlugin(cc)) {
+            print("updating ....", cc);
+            mvn.updatePlugin(pb)
+        }
+        else {
+            print("adding ....", cc);
+            mvn.addPlugin(pb)
+        }
 
-  var list = dps.resolve("" + attrs.gid.value );
+    }
+    catch (e) {
 
-  if( list ) {
-	var i = -1;
-	var d = list.iterator();
-
-    while( d.hasNext() ) {
-
-      print( "[" + (++i) + "] " + d.next() );
+        print(e);
     }
 
-    result = context.prompt.prompt( "Choose dependency [" + i + "]" );
-
-    //for( var m in facets ) { print(""+m); }
-
-
-    if(result ) i = parseInt(result);
-
-    var cc = list.get(i);
-
-		installPlugin( cc );
-
-
-  }
 }
 
-result;
+/**
+ * 
+ * @param {type} context
+ * @param {type} pb - callback function: ( coordinate ) -> Plugin
+ * 
+ */
+exports.execute = function( context, cb ) {
+
+    var dps = require("dependencies");
+
+    var list = dps.resolve("" + attrs.gid.value);
+
+    if( list.length == 0 ) {
+        print( "dependency not found!", attrs.gid.value);
+        return;
+    }
+    
+    var i ;
+    if( context.getUIContext().getProvider().isGUI() ) {
+        i = list.length - 1;
+    }
+    else {
+
+        i = 0;
+        list.forEach( function(d) {
+            print("[" + (++i) + "] " + d);        
+        });
+
+        var result = context.prompt.prompt("Choose dependency [" + i + "] 0 to skip");
+
+        if (result) {
+            i = parseInt(result);
+            if( i == 0 ) return "skipped!";
+        }
+
+        var cc = list[--i];
+        exports.installPlugin( cc, cb(cc) );
+    }
+}
+

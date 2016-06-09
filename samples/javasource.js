@@ -6,17 +6,11 @@ function initializeUI( builder ) {
 
 function execute( context ) {
 
-var facets = require("facets")();
+var facets = require("forge/facets");
+var project = require("forge/project");
 
-
-for( m in facets ) {
-
-  print( "facet: " + m );
-
-}
 
 var Roaster = org.jboss.forge.roaster.Roaster;
-var JavaSourceFacet =  org.jboss.forge.addon.parser.java.facets.JavaSourceFacet;
 
 var JavaClassSource = org.jboss.forge.roaster.model.source.JavaClassSource;
 
@@ -32,9 +26,11 @@ var c = Roaster.create( JavaClassSource )
 
 print( "Class " + c );
 
-facets.MavenJavaSourceFacet.saveJavaSource( c );
-print( "getBasePackageDirectory " + facets.MavenJavaSourceFacet.getBasePackageDirectory() );
-print( "getBasePackage " + facets.MavenJavaSourceFacet.getBasePackage() );
+var jsf = project.facet( facets.JavaSourceFacet );
+
+jsf.saveJavaSource( c );
+print( "getBasePackageDirectory " + jsf.getBasePackageDirectory() );
+print( "getBasePackage " + jsf.getBasePackage() );
 
 return "OK";
 

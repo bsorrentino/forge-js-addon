@@ -1,27 +1,31 @@
+        if (nextCalls++ > 0) {
+                return Results.navigateTo(JSEvalStep.class);
+        }
+        debug(context, "Eval.next");
 
-DynJS dynjs = getAttribute(context, DynJS.class.getName());
+        //final FileResource<?> js = script.getValue();
 
-if( dynjs == null ) {
-        
-        final JSObject globalObject = new DynObject();
-                    
-        globalObject.put( null /*context*/, "self", %s.this, true /*shouldThrow*/);
+        final ForgeRhinoScriptEngine scriptEngine = getScriptEngineEmbedded(context);
+        scriptEngine.setContext(ScriptContextBuilder.create()
+                        //.currentResource(js)
+                        .stdout(getOut(context).out())
+                        .stderr(getOut(context).err())
+                        .build());
 
-	dynjs = newDynJS(context, globalObject);
+        //final File file = js.getUnderlyingResourceObject();
 
-	final Manifest mf = getManifest();
+        java.io.InputStream is = getClass().getClassLoader().getResourceAsStream("%s");
 
-	try {
-		/*Object result = */runnerFromClasspath( dynjs, "%s", mf).evaluate();
-		
-	}
-	catch( Exception e) {
-		//getOut(context).err().println( String.valueOf( e.getMessage()));
-						
-		throw e;
-	}
-	putAttribute( context, DynJS.class.getName(), dynjs );
+        try (java.io.Reader r = new java.io.InputStreamReader(is)) {
+                final Object result = scriptEngine.eval(r);
+                debug(context, "result = [%%s]\n", String.valueOf(result));
+        } catch (java.lang.LinkageError e) {
+                error(context, "linkage error [%%s]", e.getMessage(), e);
+        } catch (Exception e) {
+                error(context, "exception [%%s]", e.getMessage(), e);
+                throw e;
+        }
+        putAttribute(context, ScriptEngine.class.getName(), scriptEngine);
+        putAttribute(context, "verbose", verbose.getValue());
+        return Results.navigateTo(JSEvalStep.class);
 
-}
-
-return Results.navigateTo( EvalStep.class);
