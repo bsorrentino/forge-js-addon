@@ -34,6 +34,7 @@ import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ContextAction;
 import org.mozilla.javascript.ContextFactory;
 import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.ScriptableObject;
 
 public class NPMRhinoTest {
     
@@ -41,7 +42,7 @@ public class NPMRhinoTest {
     @Ignore
     public void dummy() {}
     
-
+    private static boolean LOOKUP_IN_CLASSLOADER = true;
 
     @Test
     @Ignore
@@ -59,8 +60,11 @@ public class NPMRhinoTest {
                 newScope.setPrototype(topLevel);
                 //newScope.setParentScope(null);
 
+                ScriptableObject.putProperty(newScope, "lookup_in_classloader", LOOKUP_IN_CLASSLOADER);
+                
                 loadModule(cx, newScope, "src/test/resources/spec.js");
 
+                
                 return newScope;
            }
         });
@@ -69,6 +73,7 @@ public class NPMRhinoTest {
     }
     
     @Test
+    //@Ignore
     public void rhino_addon_test() throws ScriptException {
 
         final ClassLoader cl = Thread.currentThread().getContextClassLoader();
@@ -82,6 +87,7 @@ public class NPMRhinoTest {
                 return npm;
         });
 
+        service.put( "lookup_in_classloader", LOOKUP_IN_CLASSLOADER );
         service.eval( "load('src/test/resources/spec.js');" );
     }
     
