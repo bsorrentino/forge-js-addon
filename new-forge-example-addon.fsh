@@ -1,6 +1,8 @@
 
 # Example Forge Script - Generates a JS Command
 
+addon-build-and-install
+
 # Clear the screen;
 clear;
 
@@ -9,7 +11,7 @@ rm -rf forge-example
 #
 # Create a new project in the current directory;
 #
-project-new --named forge-example --topLevelPackage org.bsc --type forge-addon --version 0.1.2 --targetLocation .
+project-new --named forge-example --topLevelPackage org.bsc --type forge-addon --version 0.1.7 --targetLocation .
 
 #
 # Create InstallDepCommand command

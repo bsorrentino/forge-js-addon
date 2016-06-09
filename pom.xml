@@ -7,7 +7,7 @@
     <version>4</version>
   </parent>
   <artifactId>dynjs-addon</artifactId>
-  <version>3.0.5</version>
+  <version>3.0.7</version>
   <name>FORGE::DynJS Addon - ${project.version}</name>
   <description>Develop a JBoss Forge Addon using Javascript</description>
   <url>https://github.com/bsorrentino/forge-addon/tree/master/dynjs-addon</url>
@@ -140,7 +140,7 @@
                         <goal>wget</goal>
                     </goals>
                     <configuration>
-                        <url>https://raw.githubusercontent.com/bsorrentino/jvm-npm/master/src/main/typescript/dist/jvm-rhino-npm.js</url>
+                        <url>https://raw.githubusercontent.com/bsorrentino/jvm-npm/develop/src/main/typescript/dist/jvm-rhino-npm.js</url>
                         <outputDirectory>${basedir}/src/main/resources/scripting</outputDirectory>
                         <overwrite>false</overwrite>
                     </configuration>
@@ -152,7 +152,7 @@
                         <goal>wget</goal>
                     </goals>
                     <configuration>
-                        <url>https://raw.githubusercontent.com/bsorrentino/jvm-npm/master/src/main/typescript/dist/jvm-rhino-cl-npm.js</url>
+                        <url>https://raw.githubusercontent.com/bsorrentino/jvm-npm/develop/src/main/typescript/dist/jvm-rhino-cl-npm.js</url>
                         <outputDirectory>${basedir}/src/main/resources/scripting</outputDirectory>
                         <overwrite>false</overwrite>
                     </configuration>
@@ -164,7 +164,7 @@
                         <goal>wget</goal>
                     </goals>
                     <configuration>
-                        <url>https://raw.githubusercontent.com/bsorrentino/jvm-npm/master/src/test/javascript/jvm-jasmine.js</url>
+                        <url>https://raw.githubusercontent.com/bsorrentino/jvm-npm/develop/src/test/javascript/jvm-jasmine.js</url>
                         <outputDirectory>${basedir}/src/test/resources</outputDirectory>
                         <overwrite>false</overwrite>
                     </configuration>

@@ -37,9 +37,6 @@ import org.kohsuke.MetaInfServices;
 @MetaInfServices(ScriptEngineFactory.class)
 public class NPMRhinoScriptEngineFactory  extends AbstractRhinoScriptEngineFactory {
 
-	private static final String DEFAULT_MODULE_NAME = "jvm-npm.js";
-
-
 	@Override
 	public List<String> getNames() {
 		return Arrays.asList( "rhino-npm" );
@@ -53,16 +50,12 @@ public class NPMRhinoScriptEngineFactory  extends AbstractRhinoScriptEngineFacto
 	}	
         
 	public static final ForgeRhinoScriptEngine newScriptEngine(final ClassLoader cl) {
-            return newScriptEngine(cl, DEFAULT_MODULE_NAME);
-        }
-	
-	public static final ForgeRhinoScriptEngine newScriptEngine(final ClassLoader cl, final String jvm_npm_module_name) {
 		
 		final ForgeRhinoScriptEngine service = new ForgeRhinoScriptEngine( cl, (cx, engine) -> {
 			
 			final RootTopLevel root =  new RootTopLevel(cx, false, engine);
                         
-                        return NPMTopLevel.createNPMTopLevel(cx, root, jvm_npm_module_name);
+                        return NPMTopLevel.createNPMTopLevel(cx, root);
 		});
 
 		return service;

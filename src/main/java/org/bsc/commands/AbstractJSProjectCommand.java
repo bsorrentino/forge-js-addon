@@ -23,28 +23,20 @@
  */
 package org.bsc.commands;
 
-import static java.lang.String.format;
 import javax.inject.Inject;
-import javax.script.ScriptEngineFactory;
 import javax.script.ScriptEngineManager;
-import static org.bsc.commands.AddonConstants.DEBUG;
+import javax.script.ScriptException;
 import static org.bsc.commands.AddonUtils.getOut;
 import org.bsc.script.rhino.ForgeRhinoScriptEngine;
 import org.bsc.script.rhino.npm.NPMRhinoScriptEngineFactory;
 import org.jboss.forge.addon.dependencies.DependencyResolver;
 import org.jboss.forge.addon.projects.ui.AbstractProjectCommand;
-import org.jboss.forge.addon.resource.FileResource;
 import org.jboss.forge.addon.ui.context.UIBuilder;
 import org.jboss.forge.addon.ui.context.UIContextProvider;
 import org.jboss.forge.addon.ui.hints.InputType;
 import org.jboss.forge.addon.ui.input.InputComponentFactory;
 import org.jboss.forge.addon.ui.input.UIInput;
 import org.jboss.forge.addon.ui.metadata.WithAttributes;
-import static java.lang.String.format;
-import org.bsc.script.rhino.RootTopLevel;
-import org.bsc.script.rhino.npm.NPMTopLevel;
-import org.jboss.forge.addon.ui.context.UIValidationContext;
-import org.jboss.forge.addon.ui.validate.UIValidator;
 
 /**
  *
@@ -172,9 +164,16 @@ public abstract class AbstractJSProjectCommand extends AbstractProjectCommand {
         
         final ClassLoader cl = Thread.currentThread().getContextClassLoader();
           
-        final ForgeRhinoScriptEngine service = NPMRhinoScriptEngineFactory.newScriptEngine(cl, "jvm-cl-npm.js");
+        final ForgeRhinoScriptEngine service = NPMRhinoScriptEngineFactory.newScriptEngine(cl);
 
-        service.put( "self", this );
+        try {
+            service.put( "self", this );
+            service.eval( "load('scripting/jvm-rhino-cl-npm.js');");
+            service.eval( "require.debug = true;");
+            
+        } catch (ScriptException ex) {
+            throw new RuntimeException(ex);
+        }
         return service;
     }
     
@@ -182,9 +181,14 @@ public abstract class AbstractJSProjectCommand extends AbstractProjectCommand {
         
         final ClassLoader cl = Thread.currentThread().getContextClassLoader();
           
-        final ForgeRhinoScriptEngine service = NPMRhinoScriptEngineFactory.newScriptEngine(cl, "jvm-npm.js");
+        final ForgeRhinoScriptEngine service = NPMRhinoScriptEngineFactory.newScriptEngine(cl);
 
-        service.put( "self", this );
+        try {
+            service.put( "self", this );
+            service.eval("load('scripting/jvm-rhino-npm.js');");
+        } catch (ScriptException ex) {
+            throw new RuntimeException(ex);
+        }
         
         return service;
     }

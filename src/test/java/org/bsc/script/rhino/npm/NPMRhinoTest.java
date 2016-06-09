@@ -62,7 +62,11 @@ public class NPMRhinoTest {
 
                 ScriptableObject.putProperty(newScope, "lookup_in_classloader", LOOKUP_IN_CLASSLOADER);
                 
-                loadModule(cx, newScope, "src/test/resources/spec.js");
+                cx.evaluateString(newScope, (LOOKUP_IN_CLASSLOADER) ? 
+                        "load('scripting/jvm-rhino-cl-npm.js');" :
+                        "load('scripting/jvm-rhino-npm.js');", "", 0, null);
+                
+                loadModule(cx, newScope, "src/test/resources/jasmine/spec.js");
 
                 
                 return newScope;
@@ -77,18 +81,19 @@ public class NPMRhinoTest {
     public void rhino_addon_test() throws ScriptException {
 
         final ClassLoader cl = Thread.currentThread().getContextClassLoader();
-          
-        final ForgeRhinoScriptEngine service = new ForgeRhinoScriptEngine( cl, (cx, engine) -> {
+        
+        final ForgeRhinoScriptEngine service = NPMRhinoScriptEngineFactory.newScriptEngine(cl);
 
-                final RootTopLevel root =  new RootTopLevel(cx, false, engine);
+        service.put( "self", this );
+        
+        service.eval( (LOOKUP_IN_CLASSLOADER) ? 
+                        "load('scripting/jvm-rhino-cl-npm.js');" :
+                        "load('scripting/jvm-rhino-npm.js');"
+        );
 
-                final NPMTopLevel npm =  NPMTopLevel.createNPMTopLevel(cx, root);
-                
-                return npm;
-        });
 
         service.put( "lookup_in_classloader", LOOKUP_IN_CLASSLOADER );
-        service.eval( "load('src/test/resources/spec.js');" );
+        service.eval( "load('src/test/resources/jasmine/spec.js');" );
     }
     
 }
