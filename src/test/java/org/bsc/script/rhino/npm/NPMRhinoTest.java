@@ -40,11 +40,13 @@ public class NPMRhinoTest {
     @Test
     @Ignore
     public void dummy() {}
+    
+
 
     @Test
     @Ignore
     public void rhino_jvm_npm_test() 
-    {
+    {       
         final ContextFactory contextFactory = new ContextFactory();
 
         contextFactory.call( new ContextAction() {
@@ -68,6 +70,7 @@ public class NPMRhinoTest {
     
     @Test
     public void rhino_addon_test() throws ScriptException {
+
         final ClassLoader cl = Thread.currentThread().getContextClassLoader();
           
         final ForgeRhinoScriptEngine service = new ForgeRhinoScriptEngine( cl, (cx, engine) -> {

@@ -24,7 +24,6 @@
 
 package org.bsc.script.rhino;
 
-import static java.lang.String.format;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -47,11 +46,8 @@ import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.Undefined;
 import org.mozilla.javascript.Wrapper;
-import static java.lang.String.format;
-import org.jboss.forge.addon.resource.DirectoryResource;
 import org.jboss.forge.addon.resource.FileResource;
 import org.jboss.forge.addon.script.ScriptContextBuilder;
-import static java.lang.String.format;
 import static java.lang.String.format;
 
 
