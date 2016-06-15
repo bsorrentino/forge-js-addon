@@ -11,7 +11,7 @@ rm -rf forge-example
 #
 # Create a new project in the current directory;
 #
-project-new --named forge-example --topLevelPackage org.bsc --type forge-addon --version 0.1.7 --targetLocation .
+project-new --named forge-example --topLevelPackage org.bsc --type forge-addon --version 0.1.8 --targetLocation .
 
 #
 # Create InstallDepCommand command
@@ -43,5 +43,13 @@ addon-new-js-command \
     --target-package org.bsc \
     --require-project \
     --script './samples/installRetrolambdaPlugin.js'
+
+addon-new-js-command \
+    --named PurgeDependenciesCommand \
+    --categories test \
+    --command-name purgedeps \
+    --target-package org.bsc \
+    --require-project \
+    --script './samples/purgedeps.js'
 
 addon-build-and-install --projectRoot ./forge-example

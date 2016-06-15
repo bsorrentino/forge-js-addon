@@ -40,13 +40,12 @@ fi
 
 */
 
-var facets = require("forge/facets");
+var facets  = require("forge/facets");
 var project = require("forge/project");
-var shell = require("forge/shell");
+var shell   = require("forge/shell");
 
-var String = java.lang.String;
+var String  = java.lang.String;
 var Boolean = java.lang.Boolean;
-
 
 var input = {};
 
@@ -72,7 +71,6 @@ function initializeUI( builder ) {
 }
 
 function execute( context ) {
-
    
     shell.cd( project.root.fullyQualifiedName );
 
@@ -80,28 +78,27 @@ function execute( context ) {
     
     mvn.executeMaven( ["clean",  "-o", input.params.value ] );
 
-    if( input.dlr.value ) {
-    
+    if( input.dlr.value ) {    
         print( "deleting project's artifact");
-            mvn.executeMaven( 
-                             ["org.codehaus.mojo:build-helper-maven-plugin:1.8:remove-project-artifact", 
-                             "-Dbuildhelper.failOnError=false",
-                             "-Dbuildhelper.removeAll=true",
-                             "-fn", "-T2", "-o",  
-                             input.params.value
-                              ] );		 
+        mvn.executeMaven( 
+                        ["org.codehaus.mojo:build-helper-maven-plugin:1.8:remove-project-artifact", 
+                        "-Dbuildhelper.failOnError=false",
+                        "-Dbuildhelper.removeAll=true",
+                        "-fn", "-T2", "-o",  
+                        input.params.value
+                         ] );		 
     }
     
     if( input.dld.value ) {
-            print( "deleting project's dependencies");
-            mvn.executeMaven( 
-                            ["org.apache.maven.plugins:maven-dependency-plugin:2.8:purge-local-repository", 
-                             "-DreResolve=false",
-                             "-DsnapshotsOnly=false",
-                             "-Dverbose=false",
-                             "-fn", "-T2", "-o",
-                             input.params.value
-                              ] );		 
+        print( "deleting project's dependencies");
+        mvn.executeMaven( 
+                        ["org.apache.maven.plugins:maven-dependency-plugin:2.8:purge-local-repository", 
+                         "-DreResolve=false",
+                         "-DsnapshotsOnly=false",
+                         "-Dverbose=false",
+                         "-fn", "-T2", "-o",
+                         input.params.value
+                          ] );		 
     }
    
     return "OK ";
