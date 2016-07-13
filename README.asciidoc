@@ -1,0 +1,276 @@
+## DynJS addon
+
+===============================
+Addon that allow to develop a http://forge.jboss.org/addons[forge addon] using http://dynjs.org/[DynJS javascript engine].
+
+===============================
+
+### Available Commands
+
+[options="header",cols="<m,<",width="60%"]
+|=======================
+| Command       | Description
+| js-eval       |Evaluate a script
+| js-eval-in-project | Evaluate a script in project's scope
+| js-install-module | Install a new common module
+| js-install-modules | Install common modules from a directory
+| addon-new-js-command | Create a addon command (_java code_) from a script |
+|=======================
+
+### > js-eval
+====
+Evaluate a script
+====
+
+#### Parameters
+
+[options="header",cols="<m,<",width="60%"]
+|=======================
+| param        | Description
+| --script      | script's full path
+|=======================
+
+#### Implicit Object(s)
+
+////
+[NOTE]
+////
+====
+Object(s) Available in the script
+====
+
+[options="header",cols="<m,<",width="60%"]
+|=======================
+| object        | Description
+| self          | the current http://bsorrentino.github.io/forge-addon/dynjs-addon/apidocs/org/bsc/commands/Eval.html[command] instance
+|=======================
+
+
+### > js-eval-in-project
+====
+Evaluate a script in project's scope
+====
+
+#### Parameters
+[options="header",cols="<m,<",width="60%"]
+|=======================
+| param        | Description
+| --script      | *script's full path*
+|=======================
+
+#### Implicit Object(s)
+////
+[NOTE]
+////
+====
+Object(s) Available in the script
+====
+
+[options="header",cols="<m,<",width="60%"]
+|=======================
+| object        | Description
+| self          | the current http://bsorrentino.github.io/forge-addon/dynjs-addon/apidocs/org/bsc/commands/EvalInProject.html[command] instance
+| project       | the current http://docs.jboss.org/forge/javadoc/2.6.1-SNAPSHOT/org/jboss/forge/addon/projects/Project.html[project] instance
+|=======================
+
+### > js-install-module
+====
+Install a new common module. After installation such module will be available to script using **require** command
+====
+
+#### Parameters
+
+[options="header",cols="<m,<",width="60%"]
+|=======================
+| param        | Description
+| --script      | script's full path
+|=======================
+
+### > js-install-modules
+====
+Install common modules from a directory. After installation such modules will be available to script using **require** command
+====
+
+#### Parameters
+
+[options="header",cols="<m,<",width="60%"]
+|=======================
+| param        | Description
+| --scriptDir      | directory's full path
+|=======================
+
+### > addon-new-dynjs-command
+====
+Creates a addon command from a script. This command is very similar to *addon-new-ui-command* but it adds all required classes and dependencies to run the given script. So, this useful command, allows to wrap a script within a standard Forge command
+====
+
+#### Parameters
+
+[options="header",cols="<m,<",width="60%"]
+|=======================
+| param        | Description
+| --named  | class name
+| --script      | script's full path
+| --requireProject | whether the generated command require project is required
+| --targetPackage  | command target package
+| --commandName  | command name
+| --categories | command categories
+|=======================
+
+
+### Getting started
+
+#### Install
+
+##### From GITHUB
+
+`> addon-install-from-git --url https://github.com/bsorrentino/forge-dynjs-addon.git --coordinate org.bsc:dynjs-addon`
+
+##### From MAVEN
+
+`> forge --install org.bsc:dynjs-addon,2.16.0`
+
+All available version http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22org.bsc%22%20AND%20a%3A%22dynjs-addon%22[here]
+
+#### Create new script command example (using CLI)
+```
+forge> project-new --named forge-test1
+                   --type addon
+                   --topLevelPackage org.bsc
+                   --targetLocation _MY_OUTPUT_PATH_
+
+forge> addon-new-dynjs-command
+          --named MyTest
+          --targetPackage org.bsc
+          --category test
+          --requireProject
+          --script _MY_SOURCE_PATH_/forge-dynjs-addon/samples/purgedeps.js
+
+forge> addon-build-and-install --projectRoot _MY_OUTPUT_PATH_/forge-test1
+
+```
+
+
+#### Javascript basic template
+```javascript
+var input = {}; // object containing the UIInput(s)
+
+function initializeUI( builder ) { // Initialize UI & fill input object
+
+  print( "initialize UI");
+
+}
+
+function execute( context ) { // perform task using the input values
+
+  print( "executeJS " );
+}
+
+```
+
+### Examples
+
+#### Print the values of required inputs
+```javascript
+var String = java.lang.String;
+var Boolean = java.lang.Boolean;
+
+print( "addon loaded!");
+
+var input = {};
+
+// initialize an UIInput (String)
+input.string0 = self.componentFactory.createInput("string0", String );
+input.string0.label = "Give me a string";
+input.string0.required = true;
+
+// initialize an UIInput (Boolean)
+input.bool0 = self.componentFactory.createInput("bool0", Boolean );
+input.bool0.label = "Give me boolean";
+input.bool0.DefaultValue = true;
+
+function initializeUI( builder ) {
+
+	print( "initialize UI");
+	for( m in input ) {
+		builder.add( input[m] );
+	}
+	print( "UI initialized!")
+
+}
+
+function execute( context ) {
+
+	print( "executeJS " );
+
+	return "OK " +
+         input.string0.value +
+         " - " +
+         input.bool0.value;
+}
+```
+
+#### Require module(s)
+```javascript
+
+
+var facets = require("facets")(); // facets is a built-in module
+// Other modules can be shared using 'installModule' command
+
+print( "addon loaded!");
+
+
+function initializeUI( builder ) {
+
+}
+
+function execute( context ) {
+
+  // Perform clean,package on current open project
+  facets.mavenfacet.executeMaven( ["clean",  "package"] );
+}
+```
+
+#### Develop a Module
+```javascript
+
+/**
+Simple module that provide pwd & cd functions
+
+install from cli:
+=================
+
+> installmodule --script <full script path>
+
+Usage within script:
+====================
+
+var shell = require("shell");
+
+*/
+
+var OSUtils = org.jboss.forge.furnace.util.OperatingSystemUtils;
+var System = java.lang.System;
+
+module.exports = {
+
+		pwd:function() {
+			return OSUtils.getWorkingDir();
+		},
+		cd:function( dir ) {
+			return System.setProperty("user.dir", dir);
+		}
+
+
+}
+
+```
+
+### Example
+
+////
+[TIP]
+////
+====
+Checkout more examples from link:samples[here]
+====
