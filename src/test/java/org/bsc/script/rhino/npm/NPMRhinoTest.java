@@ -23,76 +23,42 @@
  */
 package org.bsc.script.rhino.npm;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineFactory;
 import javax.script.ScriptException;
-import org.bsc.script.rhino.ForgeRhinoScriptEngine;
-import org.bsc.script.rhino.RootTopLevel;
-import org.javascript.rhino.RhinoTopLevel;
-import static org.javascript.rhino.RhinoTopLevel.loadModule;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.ContextAction;
-import org.mozilla.javascript.ContextFactory;
-import org.mozilla.javascript.Scriptable;
-import org.mozilla.javascript.ScriptableObject;
 
 public class NPMRhinoTest {
-    
+    final ScriptEngineFactory factory = new org.javascript.rhino.JSR223RhinoScriptEngineFactory();
+
     @Test
     @Ignore
     public void dummy() {}
     
-    private static boolean LOOKUP_IN_CLASSLOADER = true;
-
     @Test
-    @Ignore
-    public void rhino_jvm_npm_test() 
-    {       
-        final ContextFactory contextFactory = new ContextFactory();
-
-        contextFactory.call( new ContextAction() {
-
-            @Override
-            public Object run(Context cx) {
-                final RhinoTopLevel topLevel = new RhinoTopLevel(cx);
-
-                Scriptable newScope = cx.newObject(topLevel);
-                newScope.setPrototype(topLevel);
-                //newScope.setParentScope(null);
-
-                ScriptableObject.putProperty(newScope, "lookup_in_classloader", LOOKUP_IN_CLASSLOADER);
-                
-                cx.evaluateString(newScope, (LOOKUP_IN_CLASSLOADER) ? 
-                        "load('scripting/jvm-rhino-cl-npm.js');" :
-                        "load('scripting/jvm-rhino-npm.js');", "", 0, null);
-                
-                loadModule(cx, newScope, "src/test/resources/jasmine/spec.js");
-
-                
-                return newScope;
-           }
-        });
-
-
-    }
-    
-    @Test
-    //@Ignore
-    public void rhino_addon_test() throws ScriptException {
-
-        final ClassLoader cl = Thread.currentThread().getContextClassLoader();
+    public void rhino_test() throws ScriptException {
         
-        final ForgeRhinoScriptEngine service = NPMRhinoScriptEngineFactory.newScriptEngine(cl);
+        final ScriptEngine service = factory.getScriptEngine();
 
         service.put( "self", this );
         
-        service.eval( (LOOKUP_IN_CLASSLOADER) ? 
-                        "load('scripting/jvm-rhino-cl-npm.js');" :
-                        "load('scripting/jvm-rhino-npm.js');"
-        );
+        service.eval( "load('scripting/jvm-rhino-npm.js');" );
+ 
+        service.put( "lookup_in_classloader", false );
+        service.eval( "load('src/test/resources/jasmine/spec.js');" );
+    }
+    
+    @Test
+    public void rhino_classloader_test() throws ScriptException {
+        
+        final ScriptEngine service = factory.getScriptEngine();
 
+        service.put( "self", this );
+        
+        service.eval( "load('scripting/jvm-rhino-cl-npm.js');" );
 
-        service.put( "lookup_in_classloader", LOOKUP_IN_CLASSLOADER );
+        service.put( "lookup_in_classloader", true );
         service.eval( "load('src/test/resources/jasmine/spec.js');" );
     }
     

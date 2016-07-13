@@ -12,7 +12,6 @@ import org.jboss.forge.addon.resource.DirectoryResource;
 import org.jboss.forge.addon.resource.FileResource;
 import org.jboss.forge.addon.resource.Resource;
 import org.jboss.forge.addon.resource.ResourceFactory;
-import org.jboss.forge.addon.resource.ResourceFilter;
 import org.jboss.forge.addon.ui.context.UIBuilder;
 import org.jboss.forge.addon.ui.context.UIContext;
 import org.jboss.forge.addon.ui.context.UIExecutionContext;
@@ -27,7 +26,6 @@ import org.jboss.forge.addon.ui.wizard.UIWizard;
 import static org.bsc.commands.AddonUtils.*;
 import org.jboss.forge.addon.script.ScriptContextBuilder;
 import static org.bsc.commands.AddonConstants.*;
-import org.bsc.script.rhino.ForgeRhinoScriptEngine;
 import org.jboss.forge.addon.projects.ProjectFactory;
 import org.jboss.forge.addon.ui.hints.InputType;
 import org.jboss.forge.addon.ui.input.UIInput;
@@ -105,7 +103,7 @@ public class JSEvalInProject extends AbstractJSProjectCommand implements UIWizar
 
         final Project project = super.getSelectedProject(context);
 
-        final ForgeRhinoScriptEngine scriptEngine = getScriptEngine(context);
+        final ScriptEngine scriptEngine = getScriptEngine(context);
         
         scriptEngine.setContext(ScriptContextBuilder.create()
                 .currentResource(js)

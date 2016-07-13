@@ -5,7 +5,7 @@
 
         //final FileResource<?> js = script.getValue();
 
-        final ForgeRhinoScriptEngine scriptEngine = getScriptEngineEmbedded(context);
+        final javax.script.ScriptEngine scriptEngine = getScriptEngineEmbedded(context);
         scriptEngine.setContext(ScriptContextBuilder.create()
                         //.currentResource(js)
                         .stdout(getOut(context).out())
