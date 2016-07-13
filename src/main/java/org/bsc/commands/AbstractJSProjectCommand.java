@@ -24,11 +24,11 @@
 package org.bsc.commands;
 
 import javax.inject.Inject;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineFactory;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import static org.bsc.commands.AddonUtils.getOut;
-import org.bsc.script.rhino.ForgeRhinoScriptEngine;
-import org.bsc.script.rhino.npm.NPMRhinoScriptEngineFactory;
 import org.jboss.forge.addon.dependencies.DependencyResolver;
 import org.jboss.forge.addon.projects.ui.AbstractProjectCommand;
 import org.jboss.forge.addon.ui.context.UIBuilder;
@@ -159,12 +159,31 @@ public abstract class AbstractJSProjectCommand extends AbstractProjectCommand {
             
         }   
     }
+
+    final ScriptEngineFactory factory = new org.javascript.rhino.JSR223RhinoScriptEngineFactory();
     
-    protected <T extends UIContextProvider> ForgeRhinoScriptEngine getScriptEngineEmbedded( T context ) {
+    private final ScriptEngine getScriptEngine() {
+        //final ClassLoader cl = Thread.currentThread().getContextClassLoader();
+
+        //final ScriptEngineManager manager = new ScriptEngineManager(cl);        
+        //final ScriptEngine service = manager.getEngineByName("rhino-npm");
+
+        //final ForgeRhinoScriptEngine service = NPMRhinoScriptEngineFactory.newScriptEngine(cl);
         
-        final ClassLoader cl = Thread.currentThread().getContextClassLoader();
-          
-        final ForgeRhinoScriptEngine service = NPMRhinoScriptEngineFactory.newScriptEngine(cl);
+        final ScriptEngine service = factory.getScriptEngine();
+        
+        return service;
+    }
+    
+    /**
+     * 
+     * @param <T>
+     * @param context
+     * @return 
+     */
+    protected <T extends UIContextProvider> ScriptEngine getScriptEngineEmbedded( T context ) {
+                
+        final ScriptEngine service = getScriptEngine();
 
         try {
             service.put( "self", this );
@@ -177,11 +196,16 @@ public abstract class AbstractJSProjectCommand extends AbstractProjectCommand {
         return service;
     }
     
-    protected <T extends UIContextProvider> ForgeRhinoScriptEngine getScriptEngine( T context ) {
+    /**
+     * 
+     * @param <T>
+     * @param context
+     * @return 
+     */
+    protected <T extends UIContextProvider> ScriptEngine getScriptEngine( T context ) {
         
-        final ClassLoader cl = Thread.currentThread().getContextClassLoader();
+        final ScriptEngine service = factory.getScriptEngine();
           
-        final ForgeRhinoScriptEngine service = NPMRhinoScriptEngineFactory.newScriptEngine(cl);
 
         try {
             service.put( "self", this );

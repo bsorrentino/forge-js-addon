@@ -35,16 +35,7 @@ import org.jboss.forge.roaster.model.source.MethodSource;
 import static org.bsc.commands.AddonUtils.*;
 
 import org.jboss.forge.addon.projects.ProjectFactory;
-import org.jboss.forge.addon.projects.ui.AbstractProjectCommand;
-
-import static java.lang.String.format;
 import org.jboss.forge.addon.resource.DirectoryResource;
-import static java.lang.String.format;
-import static java.lang.String.format;
-import static java.lang.String.format;
-import static java.lang.String.format;
-import static java.lang.String.format;
-import static java.lang.String.format;
 import static java.lang.String.format;
 
 /**
@@ -257,11 +248,10 @@ public class NewJSAddonCommand extends
         command.addImport(org.jboss.forge.addon.ui.wizard.UIWizard.class);
         command.addImport(org.jboss.forge.addon.ui.util.Categories.class);
         command.addImport(org.jboss.forge.addon.script.ScriptContextBuilder.class);
-        command.addImport(org.bsc.script.rhino.ForgeRhinoScriptEngine.class);
         command.addImport(org.jboss.forge.addon.projects.ProjectFactory.class);
 
-        command.addImport( AbstractJSProjectCommand.class);
-        command.addImport( JSEvalStep.class  );
+        command.addImport(AbstractJSProjectCommand.class);
+        command.addImport(JSEvalStep.class  );
         command.addImport(AddonUtils.class.getName().concat(".*")).setStatic(true);
         command.addImport(AddonConstants.class.getName().concat(".*")).setStatic(true);
 

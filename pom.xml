@@ -7,7 +7,7 @@
     <version>4</version>
   </parent>
   <artifactId>dynjs-addon</artifactId>
-  <version>3.0.7</version>
+  <version>3.1.1</version>
   <name>FORGE::DynJS Addon - ${project.version}</name>
   <description>Develop a JBoss Forge Addon using Javascript</description>
   <url>https://github.com/bsorrentino/forge-addon/tree/master/dynjs-addon</url>
@@ -72,7 +72,8 @@
     <dependency>
         <groupId>org.bsc</groupId>
         <artifactId>jvm-npm</artifactId>
-        <version>1.0.0-SNAPSHOT</version>        
+        <version>1.0.0-SNAPSHOT</version>
+      <type>jar</type>
     </dependency>
 
   </dependencies>

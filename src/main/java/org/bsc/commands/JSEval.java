@@ -18,7 +18,6 @@ import org.jboss.forge.addon.ui.wizard.UIWizard;
 
 import static org.bsc.commands.AddonUtils.*;
 import static org.bsc.commands.AddonConstants.*;
-import org.bsc.script.rhino.ForgeRhinoScriptEngine;
 import org.jboss.forge.addon.script.ScriptContextBuilder;
 import org.jboss.forge.addon.projects.ProjectFactory;
 import org.jboss.forge.addon.ui.hints.InputType;
@@ -90,7 +89,7 @@ public class JSEval extends AbstractJSProjectCommand implements UIWizard {
         
         final FileResource<?> js = script.getValue();
         
-        final ForgeRhinoScriptEngine scriptEngine = super.getScriptEngine(context);
+        final ScriptEngine scriptEngine = super.getScriptEngine(context);
 
         scriptEngine.setContext(ScriptContextBuilder.create()
                 .currentResource(js)
