@@ -24,39 +24,63 @@
 package org.bsc.script.rhino.npm;
 
 import javax.script.ScriptEngine;
-import javax.script.ScriptEngineFactory;
+import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
+import org.hamcrest.core.IsNull;
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-public class NPMRhinoTest {
-    final ScriptEngineFactory factory = new org.javascript.rhino.JSR223RhinoScriptEngineFactory();
+public class NashornTest {
+    final ScriptEngineManager manager = new ScriptEngineManager();
 
+    ScriptEngine service;
+    
+    @Before
+    public void initScriptEngine() {
+        service = manager.getEngineByName("nashorn");
+        
+        Assert.assertThat(service, IsNull.notNullValue());
+        
+    }
+    
     @Test
     @Ignore
     public void dummy() {}
     
-    @Test
-    public void rhino_test() throws ScriptException {
-        
-        final ScriptEngine service = factory.getScriptEngine();
+    
+    
+    /**
 
+*   require test with relative path ./
+        should be defined ....passed
+        introspection should be defined ....passed
+        moduleA  ....passed
+        moduleB  ....error
+        
+        >>>
+        cannot load module moduleB
+        <<<
+        
+     */
+    @Test @Ignore
+    public void nashorn_test() throws ScriptException {
+        
         service.put( "self", this );
         
-        service.eval( "load('scripting/jvm-rhino-npm.js');" );
+        service.eval( "load('classpath:scripting/jvm-rhino-npm.js');" );
  
         service.put( "lookup_in_classloader", false );
         service.eval( "load('src/test/resources/jasmine/spec.js');" );
     }
     
     @Test
-    public void rhino_classloader_test() throws ScriptException {
+    public void nashorn_classloader_test() throws ScriptException {
         
-        final ScriptEngine service = factory.getScriptEngine();
-
         service.put( "self", this );
         
-        service.eval( "load('scripting/jvm-rhino-cl-npm.js');" );
+        service.eval( "load('classpath:scripting/jvm-rhino-cl-npm.js');" );
 
         service.put( "lookup_in_classloader", true );
         service.eval( "load('src/test/resources/jasmine/spec.js');" );

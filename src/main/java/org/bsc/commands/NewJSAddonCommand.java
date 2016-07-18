@@ -354,7 +354,7 @@ public class NewJSAddonCommand extends
     private void installDependencies(Project project, String version) {
 
         final DependencyBuilder dep = DependencyBuilder.create(
-                String.format("org.bsc:dynjs-addon:%s", version)).setScopeType("compile");
+                String.format("org.bsc:forge-js-addon:%s", version)).setScopeType("compile");
 
         depInstaller.install(project, dep);
 

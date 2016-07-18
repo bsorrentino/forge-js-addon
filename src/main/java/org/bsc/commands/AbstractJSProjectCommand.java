@@ -23,9 +23,9 @@
  */
 package org.bsc.commands;
 
+import static java.lang.String.format;
 import javax.inject.Inject;
 import javax.script.ScriptEngine;
-import javax.script.ScriptEngineFactory;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import static org.bsc.commands.AddonUtils.getOut;
@@ -124,8 +124,6 @@ public abstract class AbstractJSProjectCommand extends AbstractProjectCommand {
     }
 
     
-    final ScriptEngineManager manager = new ScriptEngineManager(Thread.currentThread().getContextClassLoader());
-
     protected <T extends UIContextProvider> void info( T cx, String format, Object...args ) {
         
         final java.io.PrintStream s = getOut(cx).out();
@@ -160,17 +158,18 @@ public abstract class AbstractJSProjectCommand extends AbstractProjectCommand {
         }   
     }
 
-    final ScriptEngineFactory factory = new org.javascript.rhino.JSR223RhinoScriptEngineFactory();
-    
+    private static final String JS_ENGINE_NAME = "rhino-npm";
+    //private static final String JS_ENGINE_NAME = "nashorn";
+
+    final ScriptEngineManager manager = new ScriptEngineManager();
+
     private final ScriptEngine getScriptEngine() {
-        //final ClassLoader cl = Thread.currentThread().getContextClassLoader();
-
-        //final ScriptEngineManager manager = new ScriptEngineManager(cl);        
-        //final ScriptEngine service = manager.getEngineByName("rhino-npm");
-
-        //final ForgeRhinoScriptEngine service = NPMRhinoScriptEngineFactory.newScriptEngine(cl);
         
-        final ScriptEngine service = factory.getScriptEngine();
+        final ScriptEngine service = manager.getEngineByName(JS_ENGINE_NAME);
+        
+        if( service == null ) {
+            throw new IllegalStateException(format("[%s] javascript engine not found!", JS_ENGINE_NAME));
+        }
         
         return service;
     }
@@ -187,8 +186,7 @@ public abstract class AbstractJSProjectCommand extends AbstractProjectCommand {
 
         try {
             service.put( "self", this );
-            service.eval( "load('scripting/jvm-rhino-cl-npm.js');");
-            service.eval( "require.debug = true;");
+            service.eval( "load('scripting/jvm-rhino-cl-npm.js'); require.debug = true;");
             
         } catch (ScriptException ex) {
             throw new RuntimeException(ex);
@@ -204,7 +202,7 @@ public abstract class AbstractJSProjectCommand extends AbstractProjectCommand {
      */
     protected <T extends UIContextProvider> ScriptEngine getScriptEngine( T context ) {
         
-        final ScriptEngine service = factory.getScriptEngine();
+        final ScriptEngine service = getScriptEngine();
           
 
         try {

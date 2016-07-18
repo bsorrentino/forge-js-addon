@@ -11,7 +11,7 @@ rm -rf forge-example
 #
 # Create a new project in the current directory;
 #
-project-new --named forge-example --topLevelPackage org.bsc --type forge-addon --version 0.1.10 --targetLocation .
+project-new --named forge-example --topLevelPackage org.bsc --type forge-addon --version 0.1.12 --targetLocation .
 
 #
 # Create InstallDepCommand command

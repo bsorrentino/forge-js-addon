@@ -3,16 +3,16 @@
     "mvnPlugin": java.lang.Class.forName('org.jboss.forge.addon.maven.projects.MavenPluginFacet')
 */
 
-if( typeof project === "undefined" ) {	
+if( typeof $project === "undefined" ) {	
         print( "WARN: project is undefined!");
         throw "project is undefined!";
 }
 
-exports.root = project.root;
+exports.root = $project.root;
 
 exports.forEachFacet = function( cb ) {
     
-    var i = project.getFacets().iterator();
+    var i = $project.getFacets().iterator();
 
     while( i.hasNext() ) {
         cb( i.next() );
@@ -22,10 +22,10 @@ exports.forEachFacet = function( cb ) {
 
 exports.facet = function( facetClass ) {
     
-    if( !project.hasFacet( facetClass ) ) {
+    if( !$project.hasFacet( facetClass ) ) {
         throw "project doesn't support facet " + facetClass;
     }
-    return project.getFacet( facetClass );
+    return $project.getFacet( facetClass );
     
 }
 
@@ -35,7 +35,7 @@ function _facets() {
 
     var pattern = /^([A-Za-z]+)/;
 
-    var i = project.getFacets().iterator();
+    var i = $project.getFacets().iterator();
 
     while( i.hasNext() ) {
 

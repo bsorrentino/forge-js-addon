@@ -23,4 +23,9 @@ public interface Functional {
         R f( P1 param1, P2 param2 );
     }
 
+    public interface C1<P1> {
+
+        void accept( P1 param1 );
+    }
+
 }

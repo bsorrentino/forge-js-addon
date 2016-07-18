@@ -6,11 +6,11 @@
     <artifactId>forge-addon</artifactId>
     <version>4</version>
   </parent>
-  <artifactId>dynjs-addon</artifactId>
-  <version>3.1.1</version>
-  <name>FORGE::DynJS Addon - ${project.version}</name>
+  <artifactId>forge-js-addon</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <name>FORGE::JS Addon - ${project.version}</name>
   <description>Develop a JBoss Forge Addon using Javascript</description>
-  <url>https://github.com/bsorrentino/forge-addon/tree/master/dynjs-addon</url>
+  <url>https://github.com/bsorrentino/forge-addon/tree/master/forge-js-addon</url>
   
   <prerequisites>
     <maven>3.2.5</maven>
@@ -65,11 +65,6 @@
     </dependency>
 
     <dependency>
-      <groupId>org.mozilla</groupId>
-      <artifactId>rhino</artifactId>
-    </dependency>
-    
-    <dependency>
         <groupId>org.bsc</groupId>
         <artifactId>jvm-npm</artifactId>
         <version>1.0.0-SNAPSHOT</version>
@@ -78,7 +73,7 @@
 
   </dependencies>
   <build>
-    <finalName>dynjs-addon</finalName>
+    <finalName>forge-js-addon</finalName>
     <plugins>
         <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -179,7 +174,6 @@
   <profiles>
       <profile>
           <id>java7</id>
-          
           <build>
               <plugins>
                         
@@ -236,17 +230,6 @@
         <groupId>org.kohsuke.metainf-services</groupId>
         <artifactId>metainf-services</artifactId>
         <version>1.7</version>
-      </dependency>
-      <dependency>
-        <groupId>org.mozilla</groupId>
-        <artifactId>rhino</artifactId>
-        <version>1.7.7.1</version>
-      </dependency>
-      <dependency>
-        <groupId>org.bsc</groupId>
-        <artifactId>dynjs-addon</artifactId>
-        <version>true</version>
-        <scope>compile</scope>
       </dependency>
     </dependencies>
   </dependencyManagement>
