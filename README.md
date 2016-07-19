@@ -163,21 +163,26 @@ function execute( context ) {
 #### Require module(s)
 ```javascript
 
-
-var facets = require("facets")(); // facets is a built-in module
-// Other modules can be shared using 'installModule' command
+var project = require("forge/project"); // "forge/project" is a built-in module
 
 print( "addon loaded!");
-
 
 function initializeUI( builder ) {
 
 }
 
 function execute( context ) {
+  project.forEachFacet( function(f) {
+      print( 'facet:', f);
+  });
 
-  // Perform clean,package on current open project
-  facets.mavenfacet.executeMaven( ["clean",  "package"] );
+  var facets = project.facets;
+  if( facets.mavenfacet ) {
+
+    // Perform clean,package on current open project
+    facets.mavenfacet.executeMaven( ["clean",  "package"] );
+
+  }
 }
 ```
 
@@ -186,11 +191,6 @@ function execute( context ) {
 
 /**
 Simple module that provide pwd & cd functions
-
-install from cli:
-=================
-
-> installmodule --script <full script path>
 
 Usage within script:
 ====================
@@ -202,16 +202,12 @@ var shell = require("shell");
 var OSUtils = org.jboss.forge.furnace.util.OperatingSystemUtils;
 var System = java.lang.System;
 
-module.exports = {
-
-		pwd:function() {
+exports.pwd = function() {
 			return OSUtils.getWorkingDir();
-		},
-		cd:function( dir ) {
+}
+
+exports.cd = function( dir ) {
 			return System.setProperty("user.dir", dir);
-		}
-
-
 }
 
 ```
