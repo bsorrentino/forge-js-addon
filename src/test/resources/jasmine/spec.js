@@ -25,7 +25,7 @@ else  {
 require.root = cwd;
 require.paths = [];
 
-load('src/test/resources/jasmine/jvm-jasmine.js');
+load('classpath:jvm-jasmine.js');
 
 beforeEach( function() {
   require.debug = false;

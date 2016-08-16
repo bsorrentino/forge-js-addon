@@ -43,7 +43,7 @@ public class RhinoNPMTest {
 
         service.put( "self", this );
         
-        service.eval( "load('scripting/jvm-rhino-npm.js');" );
+        service.eval( "load('classpath:jvm-rhino-npm.js');" );
  
         service.put( "lookup_in_classloader", false );
         service.eval( "load('src/test/resources/jasmine/spec.js');" );
@@ -56,7 +56,7 @@ public class RhinoNPMTest {
 
         service.put( "self", this );
         
-        service.eval( "load('scripting/jvm-rhino-cl-npm.js');" );
+        service.eval( "load('classpath:jvm-rhino-cl-npm.js');" );
 
         service.put( "lookup_in_classloader", true );
         service.eval( "load('src/test/resources/jasmine/spec.js');" );

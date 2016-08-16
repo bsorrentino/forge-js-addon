@@ -18,8 +18,6 @@
 
   <properties>
   	<jvmnpm.version>1.0.0-SNAPSHOT</jvmnpm.version>
-  	<jvmnpm.ts.dist>https://raw.githubusercontent.com/bsorrentino/jvm-npm/develop/jvm-npm-core/src/main/typescript/dist</jvmnpm.ts.dist>
-  	<jvmnpm.jasmine.dist>https://raw.githubusercontent.com/bsorrentino/jvm-npm/develop/jvm-npm-core/src/test/javascript</jvmnpm.jasmine.dist>
   </properties>
     
   <dependencies>
@@ -156,49 +154,6 @@
            </configuration>
         </plugin>
       
-        <plugin>
-            <groupId>com.googlecode.maven-download-plugin</groupId>
-            <artifactId>download-maven-plugin</artifactId>
-            <version>1.3.0</version>
-            <executions>
-                <execution>
-                    <id>install-jvm-rhino-npm</id>
-                    <phase>generate-sources</phase>
-                    <goals>
-                        <goal>wget</goal>
-                    </goals>
-                    <configuration>
-                        <url>${jvmnpm.ts.dist}/jvm-rhino-npm.js</url>
-                        <outputDirectory>${basedir}/src/main/resources/scripting</outputDirectory>
-                        <overwrite>false</overwrite>
-                    </configuration>
-                </execution>
-                <execution>
-                    <id>install-jvm-rhino-cl-npm</id>
-                    <phase>generate-sources</phase>
-                    <goals>
-                        <goal>wget</goal>
-                    </goals>
-                    <configuration>
-                        <url>${jvmnpm.ts.dist}/jvm-rhino-cl-npm.js</url>
-                        <outputDirectory>${basedir}/src/main/resources/scripting</outputDirectory>
-                        <overwrite>false</overwrite>
-                    </configuration>
-                </execution>
-                <execution>
-                    <id>install-jvm-jasmine</id>
-                    <phase>generate-sources</phase>
-                    <goals>
-                        <goal>wget</goal>
-                    </goals>
-                    <configuration>
-                        <url>${jvmnpm.jasmine.dist}/jvm-jasmine.js</url>
-                        <outputDirectory>${basedir}/src/test/resources/jasmine</outputDirectory>
-                        <overwrite>false</overwrite>
-                    </configuration>
-                </execution>
-            </executions>
-        </plugin>
                
     </plugins>
   </build>
@@ -254,6 +209,62 @@
         </plugins>
       </build>
     </profile>
+
+	<profile>
+		<id>wget</id>
+		<properties>
+		  	<jvmnpm.ts.dist>https://raw.githubusercontent.com/bsorrentino/jvm-npm/develop/jvm-npm-core/src/main/typescript/dist</jvmnpm.ts.dist>
+		  	<jvmnpm.jasmine.dist>https://raw.githubusercontent.com/bsorrentino/jvm-npm/develop/jvm-npm-core/src/test/javascript</jvmnpm.jasmine.dist>
+		</properties>		
+		<build>
+			<plugins>
+				<plugin>
+					<groupId>com.googlecode.maven-download-plugin</groupId>
+					<artifactId>download-maven-plugin</artifactId>
+					<version>1.3.0</version>
+					<executions>
+						<execution>
+							<id>install-jvm-rhino-npm</id>
+							<phase>generate-sources</phase>
+							<goals>
+								<goal>wget</goal>
+							</goals>
+							<configuration>
+								<url>${jvmnpm.ts.dist}/jvm-rhino-npm.js</url>
+								<outputDirectory>${basedir}/src/main/resources/scripting</outputDirectory>
+								<overwrite>false</overwrite>
+							</configuration>
+						</execution>
+						<execution>
+							<id>install-jvm-rhino-cl-npm</id>
+							<phase>generate-sources</phase>
+							<goals>
+								<goal>wget</goal>
+							</goals>
+							<configuration>
+								<url>${jvmnpm.ts.dist}/jvm-rhino-cl-npm.js</url>
+								<outputDirectory>${basedir}/src/main/resources/scripting</outputDirectory>
+								<overwrite>false</overwrite>
+							</configuration>
+						</execution>
+						<execution>
+							<id>install-jvm-jasmine</id>
+							<phase>generate-sources</phase>
+							<goals>
+								<goal>wget</goal>
+							</goals>
+							<configuration>
+								<url>${jvmnpm.jasmine.dist}/jvm-jasmine.js</url>
+								<outputDirectory>${basedir}/src/test/resources/jasmine</outputDirectory>
+								<overwrite>false</overwrite>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+
+			</plugins>
+		</build>
+	</profile>
   </profiles>
   
   <dependencyManagement>
