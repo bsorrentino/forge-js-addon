@@ -118,7 +118,7 @@ public class JSEvalInProject extends AbstractJSProjectCommand implements UIWizar
 
             final Object result =  scriptEngine.eval(r);
 
-            debug( context,"result = [%s]\n", String.valueOf(result));
+            debug( context,"EvalP.next result = [%s]\n", String.valueOf(result));
 
         } catch (java.lang.LinkageError e) {
             error( context, "linkage error [%s]", e.getMessage(), e);
@@ -149,7 +149,7 @@ public class JSEvalInProject extends AbstractJSProjectCommand implements UIWizar
         return true;
     }
     
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked","unused"})
     private List<Resource<?>> listResources(Resource<?> res, final List<Resource<?>> result) {
 
         final List<?> r = res.listResources((f) -> {

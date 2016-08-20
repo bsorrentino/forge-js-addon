@@ -186,7 +186,7 @@ public abstract class AbstractJSProjectCommand extends AbstractProjectCommand {
 
         try {
             service.put( "self", this );
-            service.eval( "load('scripting/jvm-rhino-cl-npm.js'); require.debug = true;");
+            service.eval( "load('classpath:scripting/jvm-rhino-cl-npm.js'); require.debug = true;");
             
         } catch (ScriptException ex) {
             throw new RuntimeException(ex);
@@ -204,10 +204,9 @@ public abstract class AbstractJSProjectCommand extends AbstractProjectCommand {
         
         final ScriptEngine service = getScriptEngine();
           
-
         try {
             service.put( "self", this );
-            service.eval("load('scripting/jvm-rhino-npm.js');");
+            service.eval("load('classpath:scripting/jvm-rhino-npm.js');");
         } catch (ScriptException ex) {
             throw new RuntimeException(ex);
         }
