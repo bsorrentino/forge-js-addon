@@ -72,11 +72,13 @@
         <artifactId>jvm-npm-core</artifactId>
         <version>${jvmnpm.version}</version>
     </dependency>
+    
     <dependency>
         <groupId>org.bsc</groupId>
         <artifactId>jvm-npm-rhino</artifactId>
         <version>${jvmnpm.version}</version>
     </dependency>
+    
 
   </dependencies>
   <build>

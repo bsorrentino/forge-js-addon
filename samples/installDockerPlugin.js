@@ -1,10 +1,11 @@
+var System = java.lang.System;
+
+print("Install Plugin executing ....", System.getProperty("user.dir"));
+
 var installPlugin = require("./installPlugin");
 
-
-print("Install Plugin executing ....");
-
-
 function initializeUI( builder ) {
+    print( "initializeUI" );
 
     installPlugin.initializeUI( builder, 'io.fabric8:docker-maven-plugin' );
 
@@ -35,12 +36,6 @@ function execute( context ) {
         
     });
     
-    return {
-    	
-    	 initializeUI:function( builder ) {
-    	 }, 
-    	 execute:function( context ) {
-    	 }
-    }
+    return "OK";
 }
 
