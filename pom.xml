@@ -207,8 +207,7 @@
 					        <fileset>
 					          <directory>${basedir}/src/main/resources/scripting</directory>
 					          <includes>
-					            <include>jvm-rhino-npm.js</include>
-					            <include>jvm-rhino-cl-npm.js</include>
+					            <include>*.js</include>
 					          </includes>
 					        </fileset>
 					        <fileset>
@@ -227,25 +226,25 @@
 					<version>1.3.0</version>
 					<executions>
 						<execution>
-							<id>install-jvm-rhino-npm</id>
+							<id>install-jvm-npm</id>
 							<phase>generate-sources</phase>
 							<goals>
 								<goal>wget</goal>
 							</goals>
 							<configuration>
-								<url>${jvmnpm.ts.dist}/jvm-rhino-npm.js</url>
+								<url>${jvmnpm.ts.dist}/jvm-npm.js</url>
 								<outputDirectory>${basedir}/src/main/resources/scripting</outputDirectory>
 								<overwrite>false</overwrite>
 							</configuration>
 						</execution>
 						<execution>
-							<id>install-jvm-rhino-cl-npm</id>
+							<id>install-jvm-cl-npm</id>
 							<phase>generate-sources</phase>
 							<goals>
 								<goal>wget</goal>
 							</goals>
 							<configuration>
-								<url>${jvmnpm.ts.dist}/jvm-rhino-cl-npm.js</url>
+								<url>${jvmnpm.ts.dist}/jvm-cl-npm.js</url>
 								<outputDirectory>${basedir}/src/main/resources/scripting</outputDirectory>
 								<overwrite>false</overwrite>
 							</configuration>
