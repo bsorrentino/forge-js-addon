@@ -44,7 +44,9 @@ import org.jboss.forge.addon.ui.metadata.WithAttributes;
  */
 public abstract class AbstractJSProjectCommand extends AbstractProjectCommand {
 
-    @Inject
+    private static final String JVM_NPM_DEBUG = "jvm-npm.debug";
+
+	@Inject
     protected DependencyResolver dependencyResolver;
 
     @Inject
@@ -185,8 +187,11 @@ public abstract class AbstractJSProjectCommand extends AbstractProjectCommand {
         final ScriptEngine service = getScriptEngine();
 
         try {
-            service.put( "self", this );
-            service.eval( "load('classpath:scripting/jvm-cl-npm.js');");
+
+        	System.setProperty(JVM_NPM_DEBUG, String.valueOf(verbose.getValue().booleanValue()));
+
+        	service.put( "self", this );
+            service.eval( "load('classpath:jvm-cl-npm.js');");
             
         } catch (ScriptException ex) {
             throw new RuntimeException(ex);
@@ -203,10 +208,13 @@ public abstract class AbstractJSProjectCommand extends AbstractProjectCommand {
     protected <T extends UIContextProvider> ScriptEngine getScriptEngine( T context ) {
         
         final ScriptEngine service = getScriptEngine();
-          
+        
         try {
+        
+        	System.setProperty(JVM_NPM_DEBUG, String.valueOf(verbose.getValue().booleanValue()));
+        	
             service.put( "self", this );
-            service.eval("load('classpath:scripting/jvm-npm.js');");
+            service.eval( "load('classpath:jvm-npm.js');");
         } catch (ScriptException ex) {
             throw new RuntimeException(ex);
         }
