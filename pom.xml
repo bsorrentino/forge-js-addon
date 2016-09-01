@@ -17,7 +17,7 @@
   </prerequisites>
 
   <properties>
-  	<jvmnpm.version>0.3.1-SNAPSHOT</jvmnpm.version>
+  	<jvmnpm.version>0.3.1</jvmnpm.version>
   </properties>
     
   <dependencies>
