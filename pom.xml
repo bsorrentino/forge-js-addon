@@ -238,18 +238,6 @@
 							</configuration>
 						</execution>
 						<execution>
-							<id>install-jvm-cl-npm</id>
-							<phase>generate-sources</phase>
-							<goals>
-								<goal>wget</goal>
-							</goals>
-							<configuration>
-								<url>${jvmnpm.ts.dist}/jvm-cl-npm.js</url>
-								<outputDirectory>${basedir}/src/main/resources/scripting</outputDirectory>
-								<overwrite>false</overwrite>
-							</configuration>
-						</execution>
-						<execution>
 							<id>install-jvm-jasmine</id>
 							<phase>generate-sources</phase>
 							<goals>
