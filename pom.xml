@@ -20,7 +20,7 @@
 <!-- 
   	<jvmnpm.version>0.3.1</jvmnpm.version>
  --> 
-  	<jvmnpm.version>1.0.0-SNAPSHOT</jvmnpm.version>
+  	<jvmnpm.version>1.0.0</jvmnpm.version>
   </properties>
     
   <dependencies>
