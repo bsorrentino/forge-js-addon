@@ -7,7 +7,7 @@
     <version>4</version>
   </parent>
   <artifactId>forge-js-addon</artifactId>
-  <version>1.0.1-SNAPSHOT</version>
+  <version>1.0.0-SNAPSHOT</version>
   <name>FORGE::JS Addon - ${project.version}</name>
   <description>Develop a JBoss Forge Addon using Javascript</description>
   <url>https://github.com/bsorrentino/forge-addon/tree/master/forge-js-addon</url>
