@@ -56,7 +56,7 @@ public class RhinoNPMTest {
 
         service.put( "self", this );
         
-        service.eval( "load('classpath:jvm-cl-npm.js');" );
+        service.eval( "load('classpath:jvm-npm.js');" );
 
         service.put( "lookup_in_classloader", true );
         service.eval( "load('src/test/resources/jasmine/spec.js');" );

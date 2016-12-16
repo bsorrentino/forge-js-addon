@@ -3,8 +3,6 @@ package org.bsc.commands;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.jar.Manifest;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;

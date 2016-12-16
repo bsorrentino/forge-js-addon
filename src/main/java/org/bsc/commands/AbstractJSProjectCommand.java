@@ -182,21 +182,9 @@ public abstract class AbstractJSProjectCommand extends AbstractProjectCommand {
      * @param context
      * @return 
      */
-    protected <T extends UIContextProvider> ScriptEngine getScriptEngineEmbedded( T context ) {
-                
-        final ScriptEngine service = getScriptEngine();
-
-        try {
-
-        	System.setProperty(JVM_NPM_DEBUG, String.valueOf(verbose.getValue().booleanValue()));
-
-        	service.put( "self", this );
-            service.eval( "load('classpath:jvm-cl-npm.js');");
-            
-        } catch (ScriptException ex) {
-            throw new RuntimeException(ex);
-        }
-        return service;
+    @Deprecated
+    protected <T extends UIContextProvider> ScriptEngine getScriptEngineEmbedded( T context ) {     
+    	return getScriptEngine(context);
     }
     
     /**
