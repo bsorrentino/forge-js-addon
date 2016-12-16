@@ -1,0 +1,33 @@
+        if (nextCalls++ > 0) {
+                return Results.navigateTo(JSEvalStep.class);
+        }
+        debug(context, "EvalP.next");
+
+        //final FileResource<?> js = script.getValue();
+
+        final Project project = super.getSelectedProject(context);
+        final javax.script.ScriptEngine scriptEngine = getScriptEngineEmbedded(context);
+        scriptEngine.setContext(ScriptContextBuilder.create()
+                        //.currentResource(js)
+                        .stdout(getOut(context).out())
+                        .stderr(getOut(context).err())
+                        .build());
+        scriptEngine.put("$project", project);
+        //final File file = js.getUnderlyingResourceObject();
+
+        java.io.InputStream is = getClass().getClassLoader().getResourceAsStream("%s");
+
+        try (java.io.Reader r = new java.io.InputStreamReader(is)) {
+                final Object result = scriptEngine.eval(r);
+                debug(context, "result = [%%s]\n", String.valueOf(result));
+        } catch (java.lang.LinkageError e) {
+                error(context, "linkage error [%%s]", e.getMessage(), e);
+        } catch (Exception e) {
+                error(context, "exception [%%s]", e.getMessage(), e);
+                throw e;
+        }
+        putAttribute(context, ScriptEngine.class.getName(), scriptEngine);
+        putAttribute(context, "verbose", verbose.getValue());
+        return Results.navigateTo(JSEvalStep.class);
+
+
