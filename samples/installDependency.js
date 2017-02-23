@@ -1,5 +1,5 @@
-var facets = require("forge/facets");
-var project = require("forge/project");
+var facets	= require("forge/facets");
+var project	= require("forge/project");
 
 var DependencyBuilder           = org.jboss.forge.addon.dependencies.builder.DependencyBuilder
 var CoordinateBuilder           = org.jboss.forge.addon.dependencies.builder.CoordinateBuilder;
@@ -12,9 +12,9 @@ var String = java.lang.String;
 
 var attrs = {};
 
-attrs.coord = self.componentFactory.createInput("coordinate", String);
-attrs.coord.label = "Coordinate GroupId:ArtifactId[:version]";
-attrs.coord.required = true;
+attrs.coord				= self.componentFactory.createInput("coordinate", String);
+attrs.coord.label 		= "Coordinate GroupId:ArtifactId[:version]";
+attrs.coord.required	= true;
 
 print( "load");
 
@@ -77,7 +77,6 @@ function execute( context ) {
     var v = attrs.coord.value;
     
     var list = dps.resolve("" + v);
-    //var list = dps.resolve("junit:junit");
     
     if( list.length == 0 ) {
         print( "dependency not found!", v);
