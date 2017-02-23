@@ -5,6 +5,8 @@ Addon that allow to develop a [forge addon](http://forge.jboss.org/addons) using
 > **Nashorn** coming soon ...
 
 
+<a href="http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22forge-js-addon"><img src="https://img.shields.io/maven-central/v/org.bsc/forge-js-addon.svg"></a>
+
 ## Available Commands
 
 Command | Description
