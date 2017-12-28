@@ -9,20 +9,20 @@ var ExecutionBuilder            = org.jboss.forge.addon.maven.plugins.ExecutionB
 
 var String = java.lang.String;
 
-var attrs = {};
+var attrs:any = {};
 
 attrs.gid = self.componentFactory.createInput("coordinate", String);
 attrs.gid.label = "Coordinate GroupId:ArtifactId[:version]";
 attrs.gid.required = true;
 
- 
+
 
 exports.initializeUI = function(builder, defaultValue ) {
 
     if( defaultValue ) {
         attrs.gid.setDefaultValue(defaultValue);
     }
-    
+
     print("initialize UI");
     builder.add(attrs.gid);
     print("UI initialized!")
@@ -30,15 +30,15 @@ exports.initializeUI = function(builder, defaultValue ) {
 }
 
 /**
- * 
+ *
  * @param {type} cc
  * @param {type} pb - Plugin
- * 
+ *
  */
 exports.installPlugin = function(cc, pb) {
-    
+
     var mvn = project.facet( facets.MavenPluginFacet );
-    
+
     try {
 
         if (mvn.hasPlugin(cc)) {
@@ -59,10 +59,10 @@ exports.installPlugin = function(cc, pb) {
 }
 
 /**
- * 
+ *
  * @param {type} context
  * @param {type} pb - callback function: ( coordinate ) -> Plugin
- * 
+ *
  */
 exports.execute = function( context, cb ) {
 
@@ -74,7 +74,7 @@ exports.execute = function( context, cb ) {
         print( "dependency not found!", attrs.gid.value);
         return;
     }
-    
+
     var i ;
     if( context.getUIContext().getProvider().isGUI() ) {
         i = list.length - 1;
@@ -83,7 +83,7 @@ exports.execute = function( context, cb ) {
 
         i = 0;
         list.forEach( function(d) {
-            print("[" + (++i) + "] " + d);        
+            print("[" + (++i) + "] " + d);
         });
 
         var result = context.prompt.prompt("Choose dependency [" + i + "] 0 to skip");
@@ -97,4 +97,3 @@ exports.execute = function( context, cb ) {
         exports.installPlugin( cc, cb(cc) );
     }
 }
-

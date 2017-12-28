@@ -2,13 +2,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	
+
 	<parent>
 		<groupId>org.bsc</groupId>
 		<artifactId>forge-addon</artifactId>
 		<version>4</version>
 	</parent>
-	
+
 	<artifactId>forge-js-addon</artifactId>
 	<version>1.0.1</version>
 	<name>FORGE::JS Addon - ${project.version}</name>
@@ -42,12 +42,6 @@
 			<version>${jvmnpm.version}</version>
 		</dependency>
 
-		<dependency>
-			<groupId>org.bsc</groupId>
-			<artifactId>jvm-npm-rhino</artifactId>
-			<version>${jvmnpm.version}</version>
-		</dependency>
-
 
 		<!-- JBOSS FORGE -->
 		<dependency>
@@ -72,40 +66,40 @@
 			<classifier>forge-addon</classifier>
 		</dependency>
 
-		<!-- 
-		
-		<dependency> 
-			<groupId>org.jboss.forge.addon</groupId> 
-			<artifactId>addon-manager</artifactId> 
-			<classifier>forge-addon</classifier> 
-			<scope>provided</scope> 
-		</dependency> 
-		
-		<dependency> 
-			<groupId>org.jboss.forge.addon</groupId> 
-			<artifactId>addons</artifactId> 
-			<classifier>forge-addon</classifier> 
-			<scope>provided</scope> 
-		</dependency> 
-		
-		<dependency> 
-			<groupId>org.jboss.forge.addon</groupId> 
-			<artifactId>configuration</artifactId> 
-			<classifier>forge-addon</classifier> 
-			<scope>provided</scope> 
-		</dependency> 
-		 
-		<dependency> 
-			<groupId>org.jboss.forge.addon</groupId> 
-			<artifactId>templates</artifactId> 
-			<classifier>forge-addon</classifier> 
-		</dependency> 
-		
-		<dependency> 
-			<groupId>org.jboss.forge.addon</groupId> 
-			<artifactId>script</artifactId> 
-			<classifier>forge-addon</classifier> 
-		</dependency> 
+		<!--
+
+		<dependency>
+			<groupId>org.jboss.forge.addon</groupId>
+			<artifactId>addon-manager</artifactId>
+			<classifier>forge-addon</classifier>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jboss.forge.addon</groupId>
+			<artifactId>addons</artifactId>
+			<classifier>forge-addon</classifier>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jboss.forge.addon</groupId>
+			<artifactId>configuration</artifactId>
+			<classifier>forge-addon</classifier>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jboss.forge.addon</groupId>
+			<artifactId>templates</artifactId>
+			<classifier>forge-addon</classifier>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jboss.forge.addon</groupId>
+			<artifactId>script</artifactId>
+			<classifier>forge-addon</classifier>
+		</dependency>
 
         -->
 		<dependency>
@@ -118,7 +112,7 @@
     </dependencies>
 
     <dependencyManagement>
-	
+
         <dependencies>
             <dependency>
                 <groupId>org.kohsuke.metainf-services</groupId>
@@ -126,7 +120,7 @@
                 <version>1.7</version>
             </dependency>
 
-            <!-- JBOSS FORGE -->		
+            <!-- JBOSS FORGE -->
             <dependency>
                 <groupId>org.jboss.forge</groupId>
                 <artifactId>forge-bom</artifactId>
@@ -134,7 +128,7 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-			
+
             <dependency>
                 <groupId>org.jboss.spec</groupId>
                 <artifactId>jboss-javaee-6.0</artifactId>
@@ -143,14 +137,14 @@
                 <scope>import</scope>
             </dependency>
         </dependencies>
-		
+
     </dependencyManagement>
 
 
     <build>
-		
+
         <finalName>forge-js-addon</finalName>
-		
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -163,7 +157,6 @@
                     <compilerArgument>-proc:none</compilerArgument>
                 </configuration>
             </plugin>
-
             <plugin>
               <groupId>org.bsc.maven</groupId>
               <artifactId>maven-processor-plugin</artifactId>
@@ -176,11 +169,11 @@
                   </goals>
                   <phase>generate-sources</phase>
                   <configuration>
-                      <outputDirectory>${project.build.directory}</outputDirectory>   
+                      <outputDirectory>${project.build.directory}</outputDirectory>
                    <options>
                         <ts.outfile>forge.d.ts</ts.outfile>
-                   </options>      
-                  </configuration> 
+                   </options>
+                  </configuration>
                 </execution>
               </executions>
             </plugin>
@@ -207,7 +200,7 @@
                     </archive>
                 </configuration>
             </plugin>
-			
+
             <plugin>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <configuration>
@@ -216,7 +209,7 @@
                     <additionalparam>-Xdoclint:none</additionalparam>
                 </configuration>
             </plugin>
-			
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -225,19 +218,42 @@
                     <parallel>methods</parallel>
                     <parallelTestsTimeoutForcedInSeconds>5</parallelTestsTimeoutForcedInSeconds>
                     <parallelTestsTimeoutInSeconds>5</parallelTestsTimeoutInSeconds>
+										<excludes>
+											<exclude>**/RhinoNPMTest.java</exclude>
+										</excludes>
                 </configuration>
             </plugin>
 
         </plugins>
-		
+
     </build>
 
     <profiles>
-	
+
         <profile>
             <id>java7</id>
+
+            <dependencies>
+
+				<dependency>
+					<groupId>org.bsc</groupId>
+					<artifactId>jvm-npm-rhino</artifactId>
+					<version>${jvmnpm.version}</version>
+				</dependency>
+
+            </dependencies>
             <build>
                 <plugins>
+			      <plugin>
+			        <groupId>org.apache.maven.plugins</groupId>
+			        <artifactId>maven-surefire-plugin</artifactId>
+			        <configuration>
+			          <excludes>
+			            <exclude>**/NashornTest.java</exclude>
+			          </excludes>
+			        </configuration>
+			      </plugin>
+
                     <plugin>
                         <groupId>net.orfjackal.retrolambda</groupId>
                         <artifactId>retrolambda-maven-plugin</artifactId>
