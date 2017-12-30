@@ -1,3 +1,4 @@
+"use strict";
 var System = java.lang.System;
 print("Install Plugin executing ....", System.getProperty("user.dir"));
 var installPlugin = require("./installPlugin");
