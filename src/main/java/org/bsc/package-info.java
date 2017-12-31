@@ -3,7 +3,7 @@
 @Type(org.jboss.forge.addon.dependencies.Coordinate.class),
 @Type(org.jboss.forge.addon.dependencies.Dependency.class),
 @Type(org.jboss.forge.addon.dependencies.DependencyRepository.class),
-@Type(org.jboss.forge.addon.dependencies.builder.DependencyBuilder.class),
+@Type(value=org.jboss.forge.addon.dependencies.builder.DependencyBuilder.class, export=true),
 @Type(org.jboss.forge.addon.dependencies.builder.CoordinateBuilder.class),
 @Type(org.jboss.forge.addon.dependencies.builder.DependencyQueryBuilder.class),
 
