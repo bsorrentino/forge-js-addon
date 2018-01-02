@@ -89,13 +89,7 @@ public class JSEval extends AbstractJSProjectCommand implements UIWizard {
         
         final FileResource<?> js = script.getValue();
         
-        final ScriptEngine scriptEngine = super.getScriptEngine(context);
-
-        scriptEngine.setContext(ScriptContextBuilder.create()
-                .currentResource(js)
-                .stdout(getOut(context).out())
-                .stderr(getOut(context).err())
-                .build());
+        final ScriptEngine scriptEngine = super.getScriptEngine(context,js);
 
         final File file = js.getUnderlyingResourceObject();
      

@@ -31,6 +31,8 @@ import javax.script.ScriptException;
 import static org.bsc.commands.AddonUtils.getOut;
 import org.jboss.forge.addon.dependencies.DependencyResolver;
 import org.jboss.forge.addon.projects.ui.AbstractProjectCommand;
+import org.jboss.forge.addon.resource.FileResource;
+import org.jboss.forge.addon.script.ScriptContextBuilder;
 import org.jboss.forge.addon.ui.context.UIBuilder;
 import org.jboss.forge.addon.ui.context.UIContextProvider;
 import org.jboss.forge.addon.ui.hints.InputType;
@@ -160,8 +162,8 @@ public abstract class AbstractJSProjectCommand extends AbstractProjectCommand {
         }   
     }
 
-    private static final String JS_ENGINE_NAME = "rhino-npm";
-    //private static final String JS_ENGINE_NAME = "nashorn";
+    //private static final String JS_ENGINE_NAME = "rhino-npm";
+    private static final String JS_ENGINE_NAME = "nashorn";
 
     final ScriptEngineManager manager = new ScriptEngineManager();
 
@@ -182,26 +184,19 @@ public abstract class AbstractJSProjectCommand extends AbstractProjectCommand {
      * @param context
      * @return 
      */
-    @Deprecated
-    protected <T extends UIContextProvider> ScriptEngine getScriptEngineEmbedded( T context ) {     
-    	return getScriptEngine(context);
-    }
-    
-    /**
-     * 
-     * @param <T>
-     * @param context
-     * @return 
-     */
-    protected <T extends UIContextProvider> ScriptEngine getScriptEngine( T context ) {
+    protected <T extends UIContextProvider> ScriptEngine getScriptEngine( T context, final FileResource<?> js ) {
         
         final ScriptEngine service = getScriptEngine();
-        
+        service.setContext(ScriptContextBuilder.create()
+                .currentResource(js)
+                .stdout(getOut(context).out())
+                .stderr(getOut(context).err())
+                .build());
+        service.put( "$self", this );
+
         try {
         
-        	System.setProperty(JVM_NPM_DEBUG, String.valueOf(verbose.getValue().booleanValue()));
-        	
-            service.put( "self", this );
+        		System.setProperty(JVM_NPM_DEBUG, String.valueOf(verbose.getValue().booleanValue()));        	
             service.eval( "load('classpath:jvm-npm.js');");
         } catch (ScriptException ex) {
             throw new RuntimeException(ex);

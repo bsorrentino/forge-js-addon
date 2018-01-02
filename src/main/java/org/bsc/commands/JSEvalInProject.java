@@ -103,13 +103,8 @@ public class JSEvalInProject extends AbstractJSProjectCommand implements UIWizar
 
         final Project project = super.getSelectedProject(context);
 
-        final ScriptEngine scriptEngine = getScriptEngine(context);
+        final ScriptEngine scriptEngine = getScriptEngine(context,js);
         
-        scriptEngine.setContext(ScriptContextBuilder.create()
-                .currentResource(js)
-                .stdout(getOut(context).out())
-                .stderr(getOut(context).err())
-                .build());
         scriptEngine.put("$project", project);
         
         final File file = js.getUnderlyingResourceObject();

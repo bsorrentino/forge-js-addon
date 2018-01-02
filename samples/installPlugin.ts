@@ -1,35 +1,37 @@
 import facets = require("forge/facets");
-import project = require("forge/project");
+import * as  dps from "./dependencies";
 
-var MavenPluginBuilder          = org.jboss.forge.addon.maven.plugins.MavenPluginBuilder;
-var CoordinateBuilder           = org.jboss.forge.addon.dependencies.builder.CoordinateBuilder;
-var ConfigurationBuilder        = org.jboss.forge.addon.maven.plugins.ConfigurationBuilder;
-var ConfigurationElementBuilder = org.jboss.forge.addon.maven.plugins.ConfigurationElementBuilder;
-var ExecutionBuilder            = org.jboss.forge.addon.maven.plugins.ExecutionBuilder;
+import {
+  MavenPluginBuilder,
+  CoordinateBuilder,
+  ConfigurationBuilder,
+  ConfigurationElementBuilder,
+  ExecutionBuilder,
+  String
+} from "./forge-types";
 
-var String = java.lang.String;
+class Attributes {
+  gid:org.jboss.forge.addon.ui.input.UIInput<any>  
 
-interface Attributes {
-  gid:org.jboss.forge.addon.ui.input.UIInput<any>;
+  constructor(  ) {
+    this.gid = $self.componentFactory.createInput("coordinate", String.class);
+    this.gid.setLabel( "Coordinate GroupId:ArtifactId[:version]" );
+    this.gid.setRequired( true );
+  }
 }
 
-var attrs:Attributes = {
-  gid:self.componentFactory.createInput("coordinate", String)
-};
-
-attrs.gid.setLabel( "Coordinate GroupId:ArtifactId[:version]" );
-attrs.gid.setRequired( true );
+var attrs = new Attributes();
 
 
+export function initializeUI(builder:org.jboss.forge.addon.ui.context.UIBuilder, defaultValue?:any ) {
 
-exports.initializeUI = function(builder:any, defaultValue:any ) {
-
+    print("installPlugin initialize UI ");
     if( defaultValue ) {
         attrs.gid.setDefaultValue(defaultValue);
     }
 
-    print("initialize UI");
     builder.add(attrs.gid);
+    
     print("UI initialized!")
 
 }
@@ -40,9 +42,10 @@ exports.initializeUI = function(builder:any, defaultValue:any ) {
  * @param {type} pb - Plugin
  *
  */
-exports.installPlugin = function(cc:any, pb:any) {
+export function installPlugin(cc:org.jboss.forge.addon.dependencies.Coordinate, pb:org.jboss.forge.addon.maven.plugins.MavenPlugin) {
+    print("installPlugin");
 
-    var mvn = project.facet( facets.MavenPluginFacet );
+    var mvn = $project.getFacet( facets.MavenPluginFacet ) as org.jboss.forge.addon.maven.projects.MavenPluginFacet;
 
     try {
 
@@ -58,7 +61,7 @@ exports.installPlugin = function(cc:any, pb:any) {
     }
     catch (e) {
 
-        print(e);
+        print("installPlugin", e);
     }
 
 }
@@ -69,36 +72,39 @@ exports.installPlugin = function(cc:any, pb:any) {
  * @param {type} pb - callback function: ( coordinate ) -> Plugin
  *
  */
-exports.execute = function( context:any, cb:any ) {
+export function execute(
+  context:org.jboss.forge.addon.ui.context.UIExecutionContext,
+  cb:(coordinate:org.jboss.forge.addon.dependencies.Coordinate) => org.jboss.forge.addon.maven.plugins.MavenPlugin )
+{
 
-    var dps = require("dependencies");
+    print("execute");
 
     var list = dps.resolve("" + attrs.gid.getValue());
 
-    if( list.length == 0 ) {
+    if( list.isEmpty() ) {
         print( "dependency not found!", attrs.gid.getValue());
         return;
     }
 
     var i = 0 ;
     if( context.getUIContext().getProvider().isGUI() ) {
-        i = list.length - 1;
+        i = list.size() - 1;
     }
     else {
 
         i = 0;
-        list.forEach( (d:any) => {
+        list.forEach( (d) => {
             print("[" + (++i) + "] " + d);
         });
 
-        var result = context.prompt.prompt("Choose dependency [" + i + "] 0 to skip");
+        var result = context.getPrompt().prompt("Choose dependency [" + i + "] 0 to skip");
 
         if (result) {
             i = parseInt(result);
             if( i == 0 ) return "skipped!";
         }
 
-        var cc = list[--i];
-        exports.installPlugin( cc, cb(cc) );
+        var cc = list.get(--i);
+        installPlugin( cc, cb(cc) );
     }
 }

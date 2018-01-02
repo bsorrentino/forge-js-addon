@@ -5,42 +5,9 @@
 
 /// <reference path="forge.d.ts"/>
 
-interface DependencyBuilderStatic {
-
-	create(  ):org.jboss.forge.addon.dependencies.builder.DependencyBuilder;
-	create( arg0:org.jboss.forge.addon.dependencies.Dependency ):org.jboss.forge.addon.dependencies.builder.DependencyBuilder;
-	create( arg0:string ):org.jboss.forge.addon.dependencies.builder.DependencyBuilder;
-}
-
-export const DependencyBuilder: DependencyBuilderStatic = Java.type("org.jboss.forge.addon.dependencies.builder.DependencyBuilder");
-
-
-interface OptionalStatic {
-
-	empty<T>(  ):java.util.Optional<T>;
-	of<T>( arg0:any /* java.lang.Object */ ):java.util.Optional<T>;
-	ofNullable<T>( arg0:any /* java.lang.Object */ ):java.util.Optional<T>;
-}
-
-export const Optional: OptionalStatic = Java.type("java.util.Optional");
-
-
-interface StreamStatic {
-
-	builder<T>(  ):any /* java.util.stream.Stream$Builder */;
-	concat<T>( arg0:java.util.stream.Stream<T>, arg1:java.util.stream.Stream<T> ):java.util.stream.Stream<T>;
-	empty<T>(  ):java.util.stream.Stream<T>;
-	generate<T>( arg0:Supplier<T> ):java.util.stream.Stream<T>;
-	iterate<T>( arg0:any /* java.lang.Object */, arg1:UnaryOperator<T> ):java.util.stream.Stream<T>;
-	of<T>( arg0:[any] /* [Ljava.lang.Object; */ ):java.util.stream.Stream<T>;
-	of<T>( arg0:any /* java.lang.Object */ ):java.util.stream.Stream<T>;
-}
-
-export const Stream: StreamStatic = Java.type("java.util.stream.Stream");
-
-
 interface CollectionsStatic {
 
+	readonly class:any;
 	addAll( arg0:java.util.Collection<any>, arg1:[any] /* [Ljava.lang.Object; */ ):boolean;
 	asLifoQueue<E>( arg0:any /* java.util.Deque */ ):any /* java.util.Queue */;
 	binarySearch( arg0:java.util.List<any>, arg1:any /* java.lang.Object */ ):int;
@@ -57,7 +24,7 @@ interface CollectionsStatic {
 	copy( arg0:java.util.List<any>, arg1:java.util.List<any> ):void;
 	disjoint( arg0:java.util.Collection<any>, arg1:java.util.Collection<any> ):boolean;
 	emptyEnumeration<E>(  ):any /* java.util.Enumeration */;
-	emptyIterator<E>(  ):any /* java.util.Iterator */;
+	emptyIterator<E>(  ):java.util.Iterator<any>;
 	emptyList<E>(  ):java.util.List<any>;
 	emptyListIterator<E>(  ):any /* java.util.ListIterator */;
 	emptyMap<K,V>(  ):java.util.Map<any, any>;
@@ -110,5 +77,141 @@ interface CollectionsStatic {
 }
 
 export const Collections: CollectionsStatic = Java.type("java.util.Collections");
+
+
+interface MavenPluginBuilderStatic {
+
+	readonly class:any;
+	create(  ):org.jboss.forge.addon.maven.plugins.MavenPluginBuilder;
+	create( arg0:org.jboss.forge.addon.maven.plugins.MavenPlugin ):org.jboss.forge.addon.maven.plugins.MavenPluginBuilder;
+}
+
+export const MavenPluginBuilder: MavenPluginBuilderStatic = Java.type("org.jboss.forge.addon.maven.plugins.MavenPluginBuilder");
+
+
+}
+
+export const Iterator: IteratorStatic = Java.type("java.util.Iterator");
+
+
+interface StringStatic {
+
+	readonly class:any;
+	copyValueOf( arg0:chararray ):string;
+	copyValueOf( arg0:chararray, arg1:int, arg2:int ):string;
+	format( arg0:any /* java.util.Locale */, arg1:string, arg2:[any] /* [Ljava.lang.Object; */ ):string;
+	format( arg0:string, arg1:[any] /* [Ljava.lang.Object; */ ):string;
+	join( arg0:any /* java.lang.CharSequence */, arg1:[any] /* [Ljava.lang.CharSequence; */ ):string;
+	join( arg0:any /* java.lang.CharSequence */, arg1:java.lang.Iterable<any> ):string;
+	valueOf( arg0:any /* char */ ):string;
+	valueOf( arg0:any /* java.lang.Object */ ):string;
+	valueOf( arg0:boolean ):string;
+	valueOf( arg0:chararray ):string;
+	valueOf( arg0:chararray, arg1:int, arg2:int ):string;
+	valueOf( arg0:double ):string;
+	valueOf( arg0:float ):string;
+	valueOf( arg0:int ):string;
+	valueOf( arg0:long ):string;
+}
+
+export const String: StringStatic = Java.type("java.lang.String");
+
+
+interface CoordinateBuilderStatic {
+
+	readonly class:any;
+	create(  ):org.jboss.forge.addon.dependencies.builder.CoordinateBuilder;
+	create( arg0:java.util.Map<any, any> ):org.jboss.forge.addon.dependencies.builder.CoordinateBuilder;
+	create( arg0:org.jboss.forge.addon.dependencies.Coordinate ):org.jboss.forge.addon.dependencies.builder.CoordinateBuilder;
+	create( arg0:string ):org.jboss.forge.addon.dependencies.builder.CoordinateBuilder;
+}
+
+export const CoordinateBuilder: CoordinateBuilderStatic = Java.type("org.jboss.forge.addon.dependencies.builder.CoordinateBuilder");
+
+
+interface ConfigurationBuilderStatic {
+
+	readonly class:any;
+	create(  ):org.jboss.forge.addon.maven.plugins.ConfigurationBuilder;
+	create( arg0:org.jboss.forge.addon.maven.plugins.Configuration, arg1:org.jboss.forge.addon.maven.plugins.MavenPluginBuilder ):org.jboss.forge.addon.maven.plugins.ConfigurationBuilder;
+	create( arg0:org.jboss.forge.addon.maven.plugins.MavenPluginBuilder ):org.jboss.forge.addon.maven.plugins.ConfigurationBuilder;
+}
+
+export const ConfigurationBuilder: ConfigurationBuilderStatic = Java.type("org.jboss.forge.addon.maven.plugins.ConfigurationBuilder");
+
+
+interface OptionalStatic {
+
+	readonly class:any;
+	empty<T>(  ):java.util.Optional<T>;
+	of<T>( arg0:any /* java.lang.Object */ ):java.util.Optional<T>;
+	ofNullable<T>( arg0:any /* java.lang.Object */ ):java.util.Optional<T>;
+}
+
+export const Optional: OptionalStatic = Java.type("java.util.Optional");
+
+
+interface ConfigurationElementBuilderStatic {
+
+	readonly class:any;
+	create(  ):org.jboss.forge.addon.maven.plugins.ConfigurationElementBuilder;
+	create( arg0:org.jboss.forge.addon.maven.plugins.ConfigurationBuilder ):org.jboss.forge.addon.maven.plugins.ConfigurationElementBuilder;
+	create( arg0:org.jboss.forge.addon.maven.plugins.ConfigurationElementBuilder ):org.jboss.forge.addon.maven.plugins.ConfigurationElementBuilder;
+	createFromExisting( arg0:org.jboss.forge.addon.maven.plugins.ConfigurationElement ):org.jboss.forge.addon.maven.plugins.ConfigurationElementBuilder;
+}
+
+export const ConfigurationElementBuilder: ConfigurationElementBuilderStatic = Java.type("org.jboss.forge.addon.maven.plugins.ConfigurationElementBuilder");
+
+
+}
+
+export const Iterable: IterableStatic = Java.type("java.lang.Iterable");
+
+
+interface StreamStatic {
+
+	readonly class:any;
+	builder<T>(  ):any /* java.util.stream.Stream$Builder */;
+	concat<T>( arg0:java.util.stream.Stream<T>, arg1:java.util.stream.Stream<T> ):java.util.stream.Stream<T>;
+	empty<T>(  ):java.util.stream.Stream<T>;
+	generate<T>( arg0:Supplier<T> ):java.util.stream.Stream<T>;
+	iterate<T>( arg0:any /* java.lang.Object */, arg1:UnaryOperator<T> ):java.util.stream.Stream<T>;
+	of<T>( arg0:[any] /* [Ljava.lang.Object; */ ):java.util.stream.Stream<T>;
+	of<T>( arg0:any /* java.lang.Object */ ):java.util.stream.Stream<T>;
+}
+
+export const Stream: StreamStatic = Java.type("java.util.stream.Stream");
+
+
+interface DependencyBuilderStatic {
+
+	readonly class:any;
+	create(  ):org.jboss.forge.addon.dependencies.builder.DependencyBuilder;
+	create( arg0:org.jboss.forge.addon.dependencies.Dependency ):org.jboss.forge.addon.dependencies.builder.DependencyBuilder;
+	create( arg0:string ):org.jboss.forge.addon.dependencies.builder.DependencyBuilder;
+}
+
+export const DependencyBuilder: DependencyBuilderStatic = Java.type("org.jboss.forge.addon.dependencies.builder.DependencyBuilder");
+
+
+interface DependencyQueryBuilderStatic {
+
+	readonly class:any;
+	create( arg0:any /* org.jboss.forge.addon.dependencies.DependencyQuery */ ):org.jboss.forge.addon.dependencies.builder.DependencyQueryBuilder;
+	create( arg0:org.jboss.forge.addon.dependencies.Coordinate ):org.jboss.forge.addon.dependencies.builder.DependencyQueryBuilder;
+	create( arg0:string ):org.jboss.forge.addon.dependencies.builder.DependencyQueryBuilder;
+}
+
+export const DependencyQueryBuilder: DependencyQueryBuilderStatic = Java.type("org.jboss.forge.addon.dependencies.builder.DependencyQueryBuilder");
+
+
+interface ExecutionBuilderStatic {
+
+	readonly class:any;
+	create(  ):org.jboss.forge.addon.maven.plugins.ExecutionBuilder;
+	create( arg0:any /* org.jboss.forge.addon.maven.plugins.ExecutionImpl */ ):org.jboss.forge.addon.maven.plugins.ExecutionBuilder;
+}
+
+export const ExecutionBuilder: ExecutionBuilderStatic = Java.type("org.jboss.forge.addon.maven.plugins.ExecutionBuilder");
 
 
