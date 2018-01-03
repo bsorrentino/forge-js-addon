@@ -40,56 +40,53 @@ fi
 
 */
 
-var facets  = require("forge/facets");
-var project = require("forge/project");
-var shell   = require("forge/shell");
+import * as facets  from "forge/facets";
+import * as shell   from "forge/shell";
+import {String} from "./forge-types"
 
-var String  = java.lang.String;
-var Boolean = java.lang.Boolean;
+const Boolean:{ readonly class:any } = Java.type("java.lang.Boolean");
 
-var input = {};
-
-input.params = self.componentFactory.createInput("params", String );
-input.params.label = "mvn parameters";
-input.params.setDefaultValue( "-e" );
+let params = $self.componentFactory.createInput("params", String.class );
+params.setLabel("mvn parameters");
+params.setDefaultValue( "-e" );
 //input.params.required = true;
 
-input.dlr = self.componentFactory.createInput("dlr", Boolean );
-input.dlr.label = "Delete project's artifacts from local repo?";
-input.dlr.required = true;
+let dlr = $self.componentFactory.createInput("dlr", Boolean.class );
+dlr.setLabel ( "Delete project's artifacts from local repo?");
+dlr.setRequired(true);
 
-input.dld = self.componentFactory.createInput("dld", Boolean );
-input.dld.label = "Delete project's dependencies from local repo ?";
-input.dld.required = true;
+let dld = $self.componentFactory.createInput("dld", Boolean );
+dld.setLabel("Delete project's dependencies from local repo ?");
+dld.setRequired(true);
 
-function initializeUI( builder ) {
+function initializeUI( builder:any ) {
     
-    builder.add( input.params );
-    builder.add( input.dlr );
-    builder.add( input.dld );
+    builder.add( params );
+    builder.add( dlr );
+    builder.add( dld );
    
 }
 
-function execute( context ) {
+function execute( context:any ) {
    
-    shell.cd( project.root.fullyQualifiedName );
+    shell.cd( $project.getRoot().getFullyQualifiedName() );
 
-    var mvn = project.facet( facets.MavenFacet );
+    var mvn = $project.getFacet( facets.MavenFacet );
     
-    mvn.executeMaven( ["clean",  "-o", input.params.value ] );
+    mvn.executeMaven( ["clean",  "-o", params.getValue() ] );
 
-    if( input.dlr.value ) {    
+    if( dlr.getValue() ) {    
         print( "deleting project's artifact");
         mvn.executeMaven( 
                         ["org.codehaus.mojo:build-helper-maven-plugin:1.8:remove-project-artifact", 
                         "-Dbuildhelper.failOnError=false",
                         "-Dbuildhelper.removeAll=true",
                         "-fn", "-T2", "-o",  
-                        input.params.value
+                        params.getValue()
                          ] );		 
     }
     
-    if( input.dld.value ) {
+    if( dld.getValue() ) {
         print( "deleting project's dependencies");
         mvn.executeMaven( 
                         ["org.apache.maven.plugins:maven-dependency-plugin:2.8:purge-local-repository", 
@@ -97,7 +94,7 @@ function execute( context ) {
                          "-DsnapshotsOnly=false",
                          "-Dverbose=false",
                          "-fn", "-T2", "-o",
-                         input.params.value
+                         params.getValue()
                           ] );		 
     }
    

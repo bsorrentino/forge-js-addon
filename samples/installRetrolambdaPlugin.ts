@@ -1,19 +1,17 @@
-var installPlugin = require("./installPlugin");
+import * as installPlugin from "./installPlugin";
+import {MavenPluginBuilder,ExecutionBuilder, ConfigurationBuilder} from "./forge-types"
 
 
 print("Install Plugin executing ....");
 
 
-function initializeUI( builder ) {
+function initializeUI( builder:any ) {
 
     installPlugin.initializeUI( builder, 'net.orfjackal.retrolambda:retrolambda-maven-plugin' );
 
 }
 
-function execute( context ) {
-    var MavenPluginBuilder = org.jboss.forge.addon.maven.plugins.MavenPluginBuilder,
-        ExecutionBuilder   = org.jboss.forge.addon.maven.plugins.ExecutionBuilder
-        ;
+function execute( context:any ) {
 
     installPlugin.execute( context, function( cc ) {
  

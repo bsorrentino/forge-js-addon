@@ -2,7 +2,7 @@
  * New node file
  */
 //var project = require("forge/project");
-import {Stream} from "../forge-types";
+import {Stream} from "./forge-types";
 
 function  initializeUI( builder:org.jboss.forge.addon.ui.context.UIBuilder ):void {
       print( "initializeUI" );

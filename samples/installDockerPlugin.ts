@@ -1,21 +1,18 @@
-var System = java.lang.System;
+import * as shell from "forge/shell";
+import * as installPlugin from "./installPlugin";
+import {MavenPluginBuilder,ExecutionBuilder, ConfigurationBuilder} from "./forge-types"
 
-print("Install Plugin executing ....", System.getProperty("user.dir"));
 
-var installPlugin = require("./installPlugin");
+print("Install Plugin executing ....", shell.pwd());
 
-function initializeUI( builder ) {
+function initializeUI( builder:any ) {
     print( "initializeUI" );
 
     installPlugin.initializeUI( builder, 'io.fabric8:docker-maven-plugin' );
 
 }
 
-function execute( context ) {
-    var MavenPluginBuilder = org.jboss.forge.addon.maven.plugins.MavenPluginBuilder,
-        ExecutionBuilder   = org.jboss.forge.addon.maven.plugins.ExecutionBuilder,
-        ConfigurationBuilder = org.jboss.forge.addon.maven.plugins.ConfigurationBuilder
-        ;
+function execute( context:any ) {
 
     installPlugin.execute( context, function( cc ) {
  

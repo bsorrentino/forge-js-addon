@@ -1,6 +1,9 @@
 @Java2TS(declare = {
 
-		
+@Type(value=org.jboss.forge.roaster.Roaster.class,export=true),
+@Type(value=org.jboss.forge.roaster.model.source.JavaClassSource.class,export=true),
+@Type(org.jboss.forge.roaster.model.source.JavaSource.class),
+
 @Type(org.jboss.forge.addon.dependencies.Coordinate.class),
 @Type(value=org.jboss.forge.addon.dependencies.builder.CoordinateBuilder.class, export=true),
 @Type(org.jboss.forge.addon.dependencies.Dependency.class),
