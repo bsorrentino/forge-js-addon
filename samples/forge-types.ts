@@ -1,56 +1,9 @@
 //
 // EXPORT DECLARATIONS
-// 
+//
 //
 
 /// <reference path="forge.d.ts"/>
-
-interface DependencyQueryBuilderStatic {
-
-	readonly class:any;
-	create( arg0:any /*org.jboss.forge.addon.dependencies.DependencyQuery*/ ):org.jboss.forge.addon.dependencies.builder.DependencyQueryBuilder;
-	create( arg0:org.jboss.forge.addon.dependencies.Coordinate ):org.jboss.forge.addon.dependencies.builder.DependencyQueryBuilder;
-	create( arg0:string ):org.jboss.forge.addon.dependencies.builder.DependencyQueryBuilder;
-}
-
-export const DependencyQueryBuilder: DependencyQueryBuilderStatic = Java.type("org.jboss.forge.addon.dependencies.builder.DependencyQueryBuilder");
-
-
-interface ExecutionBuilderStatic {
-
-	readonly class:any;
-	create(  ):org.jboss.forge.addon.maven.plugins.ExecutionBuilder;
-	create( arg0:any /*org.jboss.forge.addon.maven.plugins.ExecutionImpl*/ ):org.jboss.forge.addon.maven.plugins.ExecutionBuilder;
-}
-
-export const ExecutionBuilder: ExecutionBuilderStatic = Java.type("org.jboss.forge.addon.maven.plugins.ExecutionBuilder");
-
-
-interface ConfigurationBuilderStatic {
-
-	readonly class:any;
-	create(  ):org.jboss.forge.addon.maven.plugins.ConfigurationBuilder;
-	create( arg0:org.jboss.forge.addon.maven.plugins.Configuration, arg1:org.jboss.forge.addon.maven.plugins.MavenPluginBuilder ):org.jboss.forge.addon.maven.plugins.ConfigurationBuilder;
-	create( arg0:org.jboss.forge.addon.maven.plugins.MavenPluginBuilder ):org.jboss.forge.addon.maven.plugins.ConfigurationBuilder;
-}
-
-export const ConfigurationBuilder: ConfigurationBuilderStatic = Java.type("org.jboss.forge.addon.maven.plugins.ConfigurationBuilder");
-
-
-interface StreamStatic {
-
-	readonly class:any;
-	builder(  ):any /*java.util.stream.Stream$Builder*/;
-	concat<T>( arg0:java.util.stream.Stream<T>, arg1:java.util.stream.Stream<T> ):java.util.stream.Stream<T>;
-	empty<T>(  ):java.util.stream.Stream<T>;
-	generate<T>( arg0:Supplier<T> ):java.util.stream.Stream<T>;
-	iterate<T>( arg0:T, arg1:UnaryOperator<T> ):java.util.stream.Stream<T>;
-	of<T>( ...arg0:any /*java.lang.Object*/[] ):java.util.stream.Stream<T>;
-	of<T>( arg0:T ):java.util.stream.Stream<T>;
-}
-
-export const Stream: StreamStatic = Java.type("java.util.stream.Stream");
-
 
 interface OptionalStatic {
 
@@ -71,27 +24,59 @@ interface IteratorStatic {
 export const Iterator: IteratorStatic = Java.type("java.util.Iterator");
 
 
-interface RoasterStatic {
+interface DependencyQueryBuilderStatic {
 
 	readonly class:any;
-	create<T>( arg0:java.lang.Class<T> ):T;
-	format( arg0:any /*java.util.Properties*/, arg1:string ):string;
-	format( arg0:string ):string;
-	parse( arg0:any /*java.io.File*/ ):any /*org.jboss.forge.roaster.model.JavaType*/;
-	parse( arg0:any /*java.io.InputStream*/ ):any /*org.jboss.forge.roaster.model.JavaType*/;
-	parse( arg0:any /*java.net.URL*/ ):any /*org.jboss.forge.roaster.model.JavaType*/;
-	parse( arg0:chararray ):any /*org.jboss.forge.roaster.model.JavaType*/;
-	parse( arg0:string ):any /*org.jboss.forge.roaster.model.JavaType*/;
-	parse<T>( arg0:java.lang.Class<T>, arg1:any /*java.io.File*/ ):T;
-	parse<T>( arg0:java.lang.Class<T>, arg1:any /*java.io.InputStream*/ ):T;
-	parse<T>( arg0:java.lang.Class<T>, arg1:any /*java.net.URL*/ ):T;
-	parse<T>( arg0:java.lang.Class<T>, arg1:chararray ):T;
-	parse<T>( arg0:java.lang.Class<T>, arg1:string ):T;
-	parseUnit( arg0:any /*java.io.InputStream*/ ):any /*org.jboss.forge.roaster.model.JavaUnit*/;
-	parseUnit( arg0:string ):any /*org.jboss.forge.roaster.model.JavaUnit*/;
+	create( arg0:any /*org.jboss.forge.addon.dependencies.DependencyQuery*/ ):org.jboss.forge.addon.dependencies.builder.DependencyQueryBuilder;
+	create( arg0:org.jboss.forge.addon.dependencies.Coordinate ):org.jboss.forge.addon.dependencies.builder.DependencyQueryBuilder;
+	create( arg0:string ):org.jboss.forge.addon.dependencies.builder.DependencyQueryBuilder;
 }
 
-export const Roaster: RoasterStatic = Java.type("org.jboss.forge.roaster.Roaster");
+export const DependencyQueryBuilder: DependencyQueryBuilderStatic = Java.type("org.jboss.forge.addon.dependencies.builder.DependencyQueryBuilder");
+
+
+interface CoordinateBuilderStatic {
+
+	readonly class:any;
+	create(  ):org.jboss.forge.addon.dependencies.builder.CoordinateBuilder;
+	create( arg0:java.util.Map<string, string> ):org.jboss.forge.addon.dependencies.builder.CoordinateBuilder;
+	create( arg0:org.jboss.forge.addon.dependencies.Coordinate ):org.jboss.forge.addon.dependencies.builder.CoordinateBuilder;
+	create( arg0:string ):org.jboss.forge.addon.dependencies.builder.CoordinateBuilder;
+}
+
+export const CoordinateBuilder: CoordinateBuilderStatic = Java.type("org.jboss.forge.addon.dependencies.builder.CoordinateBuilder");
+
+
+interface MavenPluginBuilderStatic {
+
+	readonly class:any;
+	create(  ):org.jboss.forge.addon.maven.plugins.MavenPluginBuilder;
+	create( arg0:org.jboss.forge.addon.maven.plugins.MavenPlugin ):org.jboss.forge.addon.maven.plugins.MavenPluginBuilder;
+}
+
+export const MavenPluginBuilder: MavenPluginBuilderStatic = Java.type("org.jboss.forge.addon.maven.plugins.MavenPluginBuilder");
+
+
+interface DependencyBuilderStatic {
+
+	readonly class:any;
+	create(  ):org.jboss.forge.addon.dependencies.builder.DependencyBuilder;
+	create( arg0:org.jboss.forge.addon.dependencies.Dependency ):org.jboss.forge.addon.dependencies.builder.DependencyBuilder;
+	create( arg0:string ):org.jboss.forge.addon.dependencies.builder.DependencyBuilder;
+}
+
+export const DependencyBuilder: DependencyBuilderStatic = Java.type("org.jboss.forge.addon.dependencies.builder.DependencyBuilder");
+
+
+interface ConfigurationBuilderStatic {
+
+	readonly class:any;
+	create(  ):org.jboss.forge.addon.maven.plugins.ConfigurationBuilder;
+	create( arg0:org.jboss.forge.addon.maven.plugins.Configuration, arg1:org.jboss.forge.addon.maven.plugins.MavenPluginBuilder ):org.jboss.forge.addon.maven.plugins.ConfigurationBuilder;
+	create( arg0:org.jboss.forge.addon.maven.plugins.MavenPluginBuilder ):org.jboss.forge.addon.maven.plugins.ConfigurationBuilder;
+}
+
+export const ConfigurationBuilder: ConfigurationBuilderStatic = Java.type("org.jboss.forge.addon.maven.plugins.ConfigurationBuilder");
 
 
 interface CollectionsStatic {
@@ -168,34 +153,15 @@ interface CollectionsStatic {
 export const Collections: CollectionsStatic = Java.type("java.util.Collections");
 
 
-interface CoordinateBuilderStatic {
-
+interface MavenDependencyAdapterStatic {
+	new( arg:any):org.jboss.forge.addon.maven.dependencies.MavenDependencyAdapter;
 	readonly class:any;
-	create(  ):org.jboss.forge.addon.dependencies.builder.CoordinateBuilder;
-	create( arg0:java.util.Map<string, string> ):org.jboss.forge.addon.dependencies.builder.CoordinateBuilder;
-	create( arg0:org.jboss.forge.addon.dependencies.Coordinate ):org.jboss.forge.addon.dependencies.builder.CoordinateBuilder;
-	create( arg0:string ):org.jboss.forge.addon.dependencies.builder.CoordinateBuilder;
+	fromAetherList( arg0:java.util.List<any /*org.eclipse.aether.graph.Dependency*/> ):java.util.List<org.jboss.forge.addon.dependencies.Dependency>;
+	fromMavenList( arg0:java.util.List<org.apache.maven.model.Dependency> ):java.util.List<org.jboss.forge.addon.dependencies.Dependency>;
+	toMavenList( arg0:java.util.List<org.jboss.forge.addon.dependencies.Dependency> ):java.util.List<org.apache.maven.model.Dependency>;
 }
 
-export const CoordinateBuilder: CoordinateBuilderStatic = Java.type("org.jboss.forge.addon.dependencies.builder.CoordinateBuilder");
-
-
-interface MavenPluginBuilderStatic {
-
-	readonly class:any;
-	create(  ):org.jboss.forge.addon.maven.plugins.MavenPluginBuilder;
-	create( arg0:org.jboss.forge.addon.maven.plugins.MavenPlugin ):org.jboss.forge.addon.maven.plugins.MavenPluginBuilder;
-}
-
-export const MavenPluginBuilder: MavenPluginBuilderStatic = Java.type("org.jboss.forge.addon.maven.plugins.MavenPluginBuilder");
-
-
-interface IterableStatic {
-
-	readonly class:any;
-}
-
-export const Iterable: IterableStatic = Java.type("java.lang.Iterable");
+export const MavenDependencyAdapter: MavenDependencyAdapterStatic = Java.type("org.jboss.forge.addon.maven.dependencies.MavenDependencyAdapter");
 
 
 interface JavaClassSourceStatic {
@@ -204,6 +170,62 @@ interface JavaClassSourceStatic {
 }
 
 export const JavaClassSource: JavaClassSourceStatic = Java.type("org.jboss.forge.roaster.model.source.JavaClassSource");
+
+
+interface ExecutionBuilderStatic {
+
+	readonly class:any;
+	create(  ):org.jboss.forge.addon.maven.plugins.ExecutionBuilder;
+	create( arg0:any /*org.jboss.forge.addon.maven.plugins.ExecutionImpl*/ ):org.jboss.forge.addon.maven.plugins.ExecutionBuilder;
+}
+
+export const ExecutionBuilder: ExecutionBuilderStatic = Java.type("org.jboss.forge.addon.maven.plugins.ExecutionBuilder");
+
+
+interface RoasterStatic {
+
+	readonly class:any;
+	create<T>( arg0:java.lang.Class<T> ):T;
+	format( arg0:any /*java.util.Properties*/, arg1:string ):string;
+	format( arg0:string ):string;
+	parse( arg0:any /*java.io.File*/ ):any /*org.jboss.forge.roaster.model.JavaType*/;
+	parse( arg0:any /*java.io.InputStream*/ ):any /*org.jboss.forge.roaster.model.JavaType*/;
+	parse( arg0:any /*java.net.URL*/ ):any /*org.jboss.forge.roaster.model.JavaType*/;
+	parse( arg0:chararray ):any /*org.jboss.forge.roaster.model.JavaType*/;
+	parse( arg0:string ):any /*org.jboss.forge.roaster.model.JavaType*/;
+	parse<T>( arg0:java.lang.Class<T>, arg1:any /*java.io.File*/ ):T;
+	parse<T>( arg0:java.lang.Class<T>, arg1:any /*java.io.InputStream*/ ):T;
+	parse<T>( arg0:java.lang.Class<T>, arg1:any /*java.net.URL*/ ):T;
+	parse<T>( arg0:java.lang.Class<T>, arg1:chararray ):T;
+	parse<T>( arg0:java.lang.Class<T>, arg1:string ):T;
+	parseUnit( arg0:any /*java.io.InputStream*/ ):any /*org.jboss.forge.roaster.model.JavaUnit*/;
+	parseUnit( arg0:string ):any /*org.jboss.forge.roaster.model.JavaUnit*/;
+}
+
+export const Roaster: RoasterStatic = Java.type("org.jboss.forge.roaster.Roaster");
+
+
+interface StreamStatic {
+
+	readonly class:any;
+	builder(  ):any /*java.util.stream.Stream$Builder*/;
+	concat<T>( arg0:java.util.stream.Stream<T>, arg1:java.util.stream.Stream<T> ):java.util.stream.Stream<T>;
+	empty<T>(  ):java.util.stream.Stream<T>;
+	generate<T>( arg0:Supplier<T> ):java.util.stream.Stream<T>;
+	iterate<T>( arg0:T, arg1:UnaryOperator<T> ):java.util.stream.Stream<T>;
+	of<T>( ...arg0:any /*java.lang.Object*/[] ):java.util.stream.Stream<T>;
+	of<T>( arg0:T ):java.util.stream.Stream<T>;
+}
+
+export const Stream: StreamStatic = Java.type("java.util.stream.Stream");
+
+
+interface IterableStatic {
+
+	readonly class:any;
+}
+
+export const Iterable: IterableStatic = Java.type("java.lang.Iterable");
 
 
 interface ConfigurationElementBuilderStatic {
@@ -216,17 +238,6 @@ interface ConfigurationElementBuilderStatic {
 }
 
 export const ConfigurationElementBuilder: ConfigurationElementBuilderStatic = Java.type("org.jboss.forge.addon.maven.plugins.ConfigurationElementBuilder");
-
-
-interface DependencyBuilderStatic {
-
-	readonly class:any;
-	create(  ):org.jboss.forge.addon.dependencies.builder.DependencyBuilder;
-	create( arg0:org.jboss.forge.addon.dependencies.Dependency ):org.jboss.forge.addon.dependencies.builder.DependencyBuilder;
-	create( arg0:string ):org.jboss.forge.addon.dependencies.builder.DependencyBuilder;
-}
-
-export const DependencyBuilder: DependencyBuilderStatic = Java.type("org.jboss.forge.addon.dependencies.builder.DependencyBuilder");
 
 
 interface StringStatic {
@@ -250,5 +261,3 @@ interface StringStatic {
 }
 
 export const String: StringStatic = Java.type("java.lang.String");
-
-

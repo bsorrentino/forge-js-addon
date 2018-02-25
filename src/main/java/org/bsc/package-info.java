@@ -1,16 +1,23 @@
 @Java2TS(declare = {
 
-@Type(value=org.jboss.forge.roaster.Roaster.class,export=true),
-@Type(value=org.jboss.forge.roaster.model.source.JavaClassSource.class,export=true),
-@Type(org.jboss.forge.roaster.model.source.JavaSource.class),
-
-@Type(org.jboss.forge.addon.dependencies.Coordinate.class),
+@Type(value=org.jboss.forge.addon.maven.plugins.ConfigurationBuilder.class, export=true),
+@Type(value=org.jboss.forge.addon.maven.plugins.ConfigurationElementBuilder.class, export=true),
+@Type(value=org.jboss.forge.addon.maven.plugins.ExecutionBuilder.class, export=true),
+@Type(value=org.jboss.forge.addon.maven.plugins.MavenPluginBuilder.class, export=true),
 @Type(value=org.jboss.forge.addon.dependencies.builder.CoordinateBuilder.class, export=true),
-@Type(org.jboss.forge.addon.dependencies.Dependency.class),
-@Type(org.jboss.forge.addon.dependencies.DependencyRepository.class),
 @Type(value=org.jboss.forge.addon.dependencies.builder.DependencyBuilder.class, export=true),
 @Type(value=org.jboss.forge.addon.dependencies.builder.CoordinateBuilder.class, export=true),
 @Type(value=org.jboss.forge.addon.dependencies.builder.DependencyQueryBuilder.class, export=true),
+@Type(value=org.jboss.forge.addon.maven.dependencies.MavenDependencyAdapter.class, export=true),
+@Type(value=org.jboss.forge.addon.maven.dependencies.MavenDependencyAdapter.class, export=true),
+@Type(value=org.jboss.forge.roaster.Roaster.class,export=true),
+@Type(value=org.jboss.forge.roaster.model.source.JavaClassSource.class,export=true),
+
+@Type(org.jboss.forge.roaster.model.source.JavaSource.class),
+
+@Type(org.jboss.forge.addon.dependencies.Coordinate.class),
+@Type(org.jboss.forge.addon.dependencies.Dependency.class),
+@Type(org.jboss.forge.addon.dependencies.DependencyRepository.class),
 
 @Type(org.jboss.forge.addon.maven.dependencies.MavenDependencyAdapter.class),
 @Type(org.jboss.forge.addon.maven.plugins.PluginElement.class),
@@ -18,10 +25,6 @@
 @Type(org.jboss.forge.addon.maven.plugins.ConfigurationElement.class),
 @Type(org.jboss.forge.addon.maven.plugins.Configuration.class),
 @Type(org.jboss.forge.addon.maven.plugins.MavenPlugin.class),
-@Type(value=org.jboss.forge.addon.maven.plugins.ConfigurationBuilder.class, export=true),
-@Type(value=org.jboss.forge.addon.maven.plugins.ConfigurationElementBuilder.class, export=true),
-@Type(value=org.jboss.forge.addon.maven.plugins.ExecutionBuilder.class, export=true),
-@Type(value=org.jboss.forge.addon.maven.plugins.MavenPluginBuilder.class, export=true),
 @Type(org.jboss.forge.addon.dependencies.DependencyResolver.class),
 
 @Type(org.jboss.forge.addon.ui.context.UIContext.class),
@@ -53,7 +56,9 @@
 @Type(org.jboss.forge.addon.projects.Project.class),
 @Type(org.jboss.forge.addon.parser.java.facets.JavaSourceFacet.class),
 @Type(org.jboss.forge.addon.maven.projects.MavenFacet.class),
-@Type(org.jboss.forge.addon.maven.projects.MavenPluginFacet.class)
+@Type(org.jboss.forge.addon.maven.projects.MavenPluginFacet.class),
+
+@Type(org.apache.maven.model.Model.class)
 
 })
 package org.bsc;
