@@ -9,12 +9,12 @@ read -n 1 del
 
 if [ "$del" == "y" ] ; then
 	echo -e "\nperform delete "
-	
+
 	mvn  $@ -fn -T2 -o \
 	 org.codehaus.mojo:build-helper-maven-plugin:1.8:remove-project-artifact \
 	 -Dbuildhelper.failOnError=false \
 	 -Dbuildhelper.removeAll=true
-	 
+
 else
 	echo -e "\nskip delete "
 fi
@@ -26,13 +26,13 @@ read -n 1 del
 
 if [ "$del" == "y" ] ; then
 	echo -e "\nperform delete "
-	
+
 	mvn  $@ -fn -T2 -o \
 	 org.apache.maven.plugins:maven-dependency-plugin:2.8:purge-local-repository \
 	 -DreResolve=false \
 	 -DsnapshotsOnly=false \
 	 -Dverbose=true
-	 
+
 else
 	echo -e "\nskip delete"
 fi
@@ -46,59 +46,66 @@ import {String} from "./forge-types"
 
 const Boolean:{ readonly class:any } = Java.type("java.lang.Boolean");
 
-let params = $self.componentFactory.createInput("params", String.class );
-params.setLabel("mvn parameters");
-params.setDefaultValue( "-e" );
-//input.params.required = true;
+class Attributes {
+  params:org.jboss.forge.addon.ui.input.UIInput<any>
+  dlr:org.jboss.forge.addon.ui.input.UIInput<any>
+  dld:org.jboss.forge.addon.ui.input.UIInput<any>
 
-let dlr = $self.componentFactory.createInput("dlr", Boolean.class );
-dlr.setLabel ( "Delete project's artifacts from local repo?");
-dlr.setRequired(true);
+  constructor(  ) {
+    this.params = $self.componentFactory.createInput("params", String.class );
+    this.params.setLabel("mvn parameters");
+    this.params.setDefaultValue( "-e" );
 
-let dld = $self.componentFactory.createInput("dld", Boolean );
-dld.setLabel("Delete project's dependencies from local repo ?");
-dld.setRequired(true);
+    this.dlr = $self.componentFactory.createInput("dlr", Boolean.class );
+    this.dlr.setLabel ( "Delete project's artifacts from local repo?");
+    this.dlr.setRequired(true);
+
+    this.dld = $self.componentFactory.createInput("dld", Boolean.class );
+    this.dld.setLabel("Delete project's dependencies from local repo ?");
+    this.dld.setRequired(true);
+  }
+}
+
+var attrs = new Attributes();
 
 function initializeUI( builder:any ) {
-    
-    builder.add( params );
-    builder.add( dlr );
-    builder.add( dld );
-   
+
+    builder.add( attrs.params );
+    builder.add( attrs.dlr );
+    builder.add( attrs.dld );
+
 }
 
 function execute( context:any ) {
-   
+
     shell.cd( $project.getRoot().getFullyQualifiedName() );
 
-    var mvn = $project.getFacet( facets.MavenFacet );
-    
-    mvn.executeMaven( ["clean",  "-o", params.getValue() ] );
+    let mvn:org.jboss.forge.addon.maven.projects.MavenFacet = $project.getFacet( facets.MavenFacet );
 
-    if( dlr.getValue() ) {    
+    mvn.executeMaven( <any>["clean",  "-o", attrs.params.getValue() ] );
+
+    if( attrs.dlr.getValue() ) {
         print( "deleting project's artifact");
-        mvn.executeMaven( 
-                        ["org.codehaus.mojo:build-helper-maven-plugin:1.8:remove-project-artifact", 
+        mvn.executeMaven( <any>
+                        ["org.codehaus.mojo:build-helper-maven-plugin:1.8:remove-project-artifact",
                         "-Dbuildhelper.failOnError=false",
                         "-Dbuildhelper.removeAll=true",
-                        "-fn", "-T2", "-o",  
-                        params.getValue()
-                         ] );		 
+                        "-fn", "-T2", "-o",
+                        attrs.params.getValue()
+                         ] );
     }
-    
-    if( dld.getValue() ) {
+
+    if( attrs.dld.getValue() ) {
         print( "deleting project's dependencies");
-        mvn.executeMaven( 
-                        ["org.apache.maven.plugins:maven-dependency-plugin:2.8:purge-local-repository", 
+        mvn.executeMaven( <any>
+                        ["org.apache.maven.plugins:maven-dependency-plugin:2.8:purge-local-repository",
                          "-DreResolve=false",
                          "-DsnapshotsOnly=false",
                          "-Dverbose=false",
                          "-fn", "-T2", "-o",
-                         params.getValue()
-                          ] );		 
+                         attrs.params.getValue()
+                          ] );
     }
-   
+
     return "OK ";
 }
-
-
