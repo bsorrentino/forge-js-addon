@@ -76,54 +76,6 @@ public abstract class AbstractJSProjectCommand extends AbstractProjectCommand {
     public void initializeUI(UIBuilder builder) throws Exception {
         
         builder.add(verbose);
-
-        /*
-        final Project project = Projects.getSelectedProject(getProjectFactory(),
-                builder.getUIContext());
-
-        debug( builder, "root [%s]\n", project.getRoot());
-                
-        script.setCompleter(new UICompleter<FileResource<?>>() {
-
-            @SuppressWarnings("unchecked")
-            @Override
-            public Iterable<FileResource<?>> getCompletionProposals(
-                    UIContext context,
-                    InputComponent<?, FileResource<?>> input, String value) {
-
-                List<Resource<?>> result = listResources(
-                        project.getRoot(), new ArrayList<Resource<?>>());
-
-                final java.io.File root = (java.io.File) project.getRoot().getUnderlyingResourceObject();
-
-                final java.io.File resourcesDirs[] = {
-                    new java.io.File(root, "src/main/resources"),
-                    new java.io.File(root, "src/test/resources")
-                };
-
-                for (java.io.File resourcesDir : resourcesDirs) {
-                    if (resourcesDir.exists()) {
-
-                        Resource<?> resourcesRes = resFactory.create(resourcesDir);
-
-                        listResources(resourcesRes, result);
-
-                    }
-                }
-
-                Collections.sort(result, new Comparator<Resource<?>>() {
-
-                    @Override
-                    public int compare(Resource<?> o1, Resource<?> o2) {
-                        return o1.getFullyQualifiedName().compareTo(
-                                o2.getFullyQualifiedName());
-                    }
-                });
-
-                return (Iterable<FileResource<?>>) (List<?>) result;
-            }
-        });
-        */
         
     }
 
@@ -163,8 +115,9 @@ public abstract class AbstractJSProjectCommand extends AbstractProjectCommand {
     }
 
     //private static final String JS_ENGINE_NAME = "rhino-npm";
-    private static final String JS_ENGINE_NAME = "nashorn";
-
+    //private static final String JS_ENGINE_NAME = "nashorn";
+    private static final String JS_ENGINE_NAME = "graal.js";
+    
     final ScriptEngineManager manager = new ScriptEngineManager();
 
     private final ScriptEngine getScriptEngine() {
