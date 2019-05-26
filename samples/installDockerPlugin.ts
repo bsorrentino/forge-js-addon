@@ -1,6 +1,6 @@
 import * as shell from "forge/shell";
 import * as installPlugin from "./installPlugin";
-import {MavenPluginBuilder,ExecutionBuilder, ConfigurationBuilder} from "./forge-types"
+import {MavenPluginBuilder,ExecutionBuilder, ConfigurationBuilder} from "./ts/forge-types"
 
 
 print("Install Plugin executing ....", shell.pwd());

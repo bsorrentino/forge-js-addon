@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.bsc.script.rhino.npm;
+package org.bsc.script;
 
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.BlockJUnit4ClassRunner;
@@ -25,38 +25,38 @@ import org.junit.runners.model.InitializationError;
  * @author softphone
  */
 public class MultiThreadedRunner extends BlockJUnit4ClassRunner {
-    
+
     public MultiThreadedRunner (Class<?> klass) throws InitializationError {
         super (klass);
     }
-    
+
     @Override
     protected void runChild(final FrameworkMethod method, final RunNotifier notifier) {
         final Test test = new Test(method, notifier);
-        
+
         final Thread t = new Thread (test);
         t.start();
         try {
             t.join();
         } catch (InterruptedException ex) {
-            System.err.println ("Interrupted: " + method.getName());            
+            System.err.println ("Interrupted: " + method.getName());
         }
     }
-    
+
     class Test implements Runnable {
         private final FrameworkMethod method;
         private final RunNotifier notifier;
-        
+
         public Test (final FrameworkMethod method, final RunNotifier notifier) {
             this.method = method;
             this.notifier = notifier;
         }
-        
+
         @Override
         public void run () {
             System.err.printf( "executing ... [%s] on thread [%d]\ns", method.getName(), Thread.currentThread().getId());
-            MultiThreadedRunner.super.runChild(method, notifier);            
+            MultiThreadedRunner.super.runChild(method, notifier);
         }
     }
-    
+
 }

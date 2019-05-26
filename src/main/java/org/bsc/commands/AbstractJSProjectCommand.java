@@ -24,11 +24,17 @@
 package org.bsc.commands;
 
 import static java.lang.String.format;
+import static org.bsc.commands.AddonUtils.getOut;
+
+import java.util.function.Predicate;
+
 import javax.inject.Inject;
+import javax.script.Bindings;
+import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
-import static org.bsc.commands.AddonUtils.getOut;
+
 import org.jboss.forge.addon.dependencies.DependencyResolver;
 import org.jboss.forge.addon.projects.ui.AbstractProjectCommand;
 import org.jboss.forge.addon.resource.FileResource;
@@ -128,6 +134,16 @@ public abstract class AbstractJSProjectCommand extends AbstractProjectCommand {
             throw new IllegalStateException(format("[%s] javascript engine not found!", JS_ENGINE_NAME));
         }
         
+        if( JS_ENGINE_NAME.equals("graal.js")) {
+        	final Predicate<String> allowHostClassLookup =  s -> true;
+        	
+            final Bindings bindings = service.getBindings(ScriptContext.ENGINE_SCOPE);
+            // @see https://github.com/graalvm/graaljs/blob/master/docs/user/ScriptEngine.md
+            bindings.put("polyglot.js.allowHostAccess", true);
+            bindings.put("polyglot.js.allowHostClassLookup", allowHostClassLookup);
+            bindings.put("polyglot.js.allowIO", true);
+      
+        }
         return service;
     }
     

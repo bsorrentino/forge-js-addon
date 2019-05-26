@@ -3,7 +3,11 @@
  */
 
 import * as facets  from "forge/facets";
-
+import {
+    Arrays
+  } from "./ts/forge-types"
+  
+  
 
 function initializeUI( builder:any ) {   
 }
@@ -14,7 +18,8 @@ function execute( context:any ):any {
 
     print( mvn.getLocalRepositoryDirectory() );
 
-    mvn.executeMaven( ["clean",  "package"] );
+
+    mvn.executeMaven( Arrays.asList("clean",  "package") );
 
     return "OK ";
 }

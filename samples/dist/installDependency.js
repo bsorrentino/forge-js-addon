@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var facets = require("forge/facets");
 var dps = require("./dependencies");
-var forge_types_1 = require("./forge-types");
+var forge_types_1 = require("./ts/forge-types");
 var Attributes = /** @class */ (function () {
     function Attributes() {
         this.coord = $self.componentFactory.createInput("coordinate", forge_types_1.String.class);

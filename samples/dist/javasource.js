@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var facets = require("forge/facets");
-var forge_types_1 = require("./forge-types");
+var forge_types_1 = require("./ts/forge-types");
 function initializeUI(builder) {
 }
 function execute(context) {

@@ -3,7 +3,7 @@
  */
 import {
    String
- } from "./forge-types"
+ } from "./ts/forge-types"
 
 
 

@@ -2,7 +2,7 @@ import facets = require("forge/facets");
 import {
   Roaster,
   JavaClassSource
-} from "./forge-types"
+} from "./ts/forge-types"
 
 
 function initializeUI( builder:org.jboss.forge.addon.ui.context.UIBuilder ) {

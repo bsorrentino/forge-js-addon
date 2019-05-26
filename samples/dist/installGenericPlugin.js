@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var installPlugin = require("./installPlugin");
-var forge_types_1 = require("./forge-types");
+var forge_types_1 = require("./ts/forge-types");
 print("Install Plugin executing ....");
 function initializeUI(builder) {
     installPlugin.initializeUI(builder);

@@ -42,7 +42,7 @@ fi
 
 import * as facets  from "forge/facets";
 import * as shell   from "forge/shell";
-import {String} from "./forge-types"
+import {String} from "./ts/forge-types"
 
 const Boolean:{ readonly class:any } = Java.type("java.lang.Boolean");
 

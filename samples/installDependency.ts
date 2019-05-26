@@ -1,16 +1,8 @@
 
 import facets = require("forge/facets");
-import * as  dps from "./dependencies";
+import * as dps from "./dependencies";
+import { DependencyBuilder, MavenDependencyAdapter, String } from "./ts/forge-types";
 
-import {
-  DependencyBuilder,
-  CoordinateBuilder,
-  ConfigurationBuilder,
-  ConfigurationElementBuilder,
-  ExecutionBuilder,
-  MavenDependencyAdapter,
-  String
-} from "./forge-types"
 
 class Attributes {
   coord:org.jboss.forge.addon.ui.input.UIInput<any>

@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 /**
  * New node file
  */
-var forge_types_1 = require("./forge-types");
+var forge_types_1 = require("./ts/forge-types");
 var Attributes = /** @class */ (function () {
     function Attributes() {
         this.step1 = $self.componentFactory.createInput("input", forge_types_1.String);

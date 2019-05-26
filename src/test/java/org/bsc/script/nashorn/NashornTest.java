@@ -21,45 +21,69 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.bsc.script.rhino.npm;
+package org.bsc.script.nashorn;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
+import org.hamcrest.core.IsNull;
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-public class RhinoNPMTest {
+public class NashornTest {
     final ScriptEngineManager manager = new ScriptEngineManager();
+
+    ScriptEngine service;
+
+    @Before
+    public void initScriptEngine() {
+        service = manager.getEngineByName("nashorn");
+
+        Assert.assertThat(service, IsNull.notNullValue());
+
+    }
 
     @Test
     @Ignore
     public void dummy() {}
-    
-    @Test
-    public void rhino_test() throws ScriptException {
-        
-        final ScriptEngine service = manager.getEngineByName("rhino-npm");
+
+
+
+    /**
+
+*   require test with relative path ./
+        should be defined ....passed
+        introspection should be defined ....passed
+        moduleA  ....passed
+        moduleB  ....error
+
+        >>>
+        cannot load module moduleB
+        <<<
+
+     */
+    @Test @Ignore
+    public void nashorn_test() throws ScriptException {
 
         service.put( "self", this );
-        
+
         service.eval( "load('classpath:jvm-npm.js');" );
- 
+
         service.put( "lookup_in_classloader", false );
         service.eval( "load('src/test/resources/jasmine/spec.js');" );
     }
-    
+
     @Test
-    public void rhino_classloader_test() throws ScriptException {
-        
-        final ScriptEngine service = manager.getEngineByName("rhino-npm");
+    public void nashorn_classloader_test() throws ScriptException {
 
         service.put( "self", this );
-        
+
         service.eval( "load('classpath:jvm-npm.js');" );
 
         service.put( "lookup_in_classloader", true );
         service.eval( "load('src/test/resources/jasmine/spec.js');" );
     }
-    
+
 }

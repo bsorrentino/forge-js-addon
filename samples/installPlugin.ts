@@ -8,7 +8,7 @@ import {
   ConfigurationElementBuilder,
   ExecutionBuilder,
   String
-} from "./forge-types";
+} from "./ts/forge-types";
 
 class Attributes {
   gid:org.jboss.forge.addon.ui.input.UIInput<any>  

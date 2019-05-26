@@ -1,6 +1,7 @@
 @Java2TS(declare = {
 
 @Type(value=java.util.List.class, alias="List"),
+@Type(value=java.util.Arrays.class, export=true),
 
 @Type(value=org.jboss.forge.addon.maven.plugins.ConfigurationBuilder.class, export=true),
 @Type(value=org.jboss.forge.addon.maven.plugins.ConfigurationElementBuilder.class, export=true),

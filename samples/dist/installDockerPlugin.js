@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var shell = require("forge/shell");
 var installPlugin = require("./installPlugin");
-var forge_types_1 = require("./forge-types");
+var forge_types_1 = require("./ts/forge-types");
 print("Install Plugin executing ....", shell.pwd());
 function initializeUI(builder) {
     print("initializeUI");

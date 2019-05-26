@@ -2,7 +2,7 @@
  * New node file
  */
 //var project = require("forge/project");
-import {Stream} from "./forge-types";
+import {Stream} from "./ts/forge-types";
 
 function  initializeUI( builder:org.jboss.forge.addon.ui.context.UIBuilder ):void {
       print( "initializeUI" );
@@ -15,7 +15,8 @@ function execute( context:org.jboss.forge.addon.ui.context.UIExecutionContext ):
 
       print( "filter", f );
 
-      $project.getFacets().forEach( (f) => print( 'facet:', f) );
+      const forEach = $project.getFacets().forEach;
+      if( forEach ) forEach( f => print( 'facet:', f) );
 
       var name = context.getPrompt().prompt( "give me name");
 

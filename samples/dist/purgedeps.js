@@ -43,7 +43,7 @@ fi
 Object.defineProperty(exports, "__esModule", { value: true });
 var facets = require("forge/facets");
 var shell = require("forge/shell");
-var forge_types_1 = require("./forge-types");
+var forge_types_1 = require("./ts/forge-types");
 var Boolean = Java.type("java.lang.Boolean");
 var Attributes = /** @class */ (function () {
     function Attributes() {

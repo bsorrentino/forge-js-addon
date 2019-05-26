@@ -1,6 +1,6 @@
 
 import * as installPlugin from "./installPlugin";
-import {MavenPluginBuilder} from "./forge-types"
+import {MavenPluginBuilder} from "./ts/forge-types"
 
 print("Install Plugin executing ....");
 
