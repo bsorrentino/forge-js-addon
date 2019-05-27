@@ -1,7 +1,7 @@
 # Forge Javascript Addon
 
 Addon that allow to develop a [forge addon](http://forge.jboss.org/addons) using a JVM Javascript Engine.
-> Currently [greaal.js 1.0.0-rc16](https://github.com/graalvm/graaljs) has supported through project [JVM-NPM](https://github.com/bsorrentino/jvm-npm)  
+> Currently [graal.js 1.0.0-rc16](https://github.com/graalvm/graaljs) has supported through project [JVM-NPM](https://github.com/bsorrentino/jvm-npm)  
 > because **Nashorn** has been deprecated
 
 
