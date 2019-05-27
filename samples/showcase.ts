@@ -15,8 +15,7 @@ function execute( context:org.jboss.forge.addon.ui.context.UIExecutionContext ):
 
       print( "filter", f );
 
-      const forEach = $project.getFacets().forEach;
-      if( forEach ) forEach( f => print( 'facet:', f) );
+      $project.getFacets().forEach( f => print( 'facet:', f) );
 
       var name = context.getPrompt().prompt( "give me name");
 
