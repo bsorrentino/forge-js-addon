@@ -1,8 +1,8 @@
 # Forge Javascript Addon
 
 Addon that allow to develop a [forge addon](http://forge.jboss.org/addons) using a JVM Javascript Engine.
-> Currently [Rhino 1.7.7.1](https://github.com/mozilla/rhino) has supported through project [JVM-NPM](https://github.com/bsorrentino/jvm-npm)  
-> **Nashorn** coming soon ...
+> Currently [greaal.js 1.0.0-rc16](https://github.com/graalvm/graaljs) has supported through project [JVM-NPM](https://github.com/bsorrentino/jvm-npm)  
+> because **Nashorn** has been deprecated
 
 
 <a href="http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22forge-js-addon"><img src="https://img.shields.io/maven-central/v/org.bsc/forge-js-addon.svg"></a>
