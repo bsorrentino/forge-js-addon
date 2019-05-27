@@ -30,7 +30,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.inject.Inject;
 import javax.script.Bindings;
