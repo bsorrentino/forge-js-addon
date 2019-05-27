@@ -26,7 +26,11 @@ package org.bsc.commands;
 import static java.lang.String.format;
 import static org.bsc.commands.AddonUtils.getOut;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.inject.Inject;
 import javax.script.Bindings;
@@ -147,6 +151,7 @@ public abstract class AbstractJSProjectCommand extends AbstractProjectCommand {
         return service;
     }
     
+    
     /**
      * 
      * @param <T>
@@ -155,21 +160,55 @@ public abstract class AbstractJSProjectCommand extends AbstractProjectCommand {
      */
     protected <T extends UIContextProvider> ScriptEngine getScriptEngine( T context, final FileResource<?> js ) {
         
+    	debug( context, "script engine [%s] loading ....", JS_ENGINE_NAME);
+    	
         final ScriptEngine service = getScriptEngine();
-        service.setContext(ScriptContextBuilder.create()
+    	
+        debug( context, "script engine [%s] loaded!", JS_ENGINE_NAME);
+
+    	service.setContext(ScriptContextBuilder.create()
                 .currentResource(js)
                 .stdout(getOut(context).out())
                 .stderr(getOut(context).err())
                 .build());
         service.put( "$self", this );
+        
+        
+        {
+        final String eval = "exports = {};";
 
         try {
+        	
+            service.eval( eval); 
         
-        		System.setProperty(JVM_NPM_DEBUG, String.valueOf(verbose.getValue().booleanValue()));        	
-            service.eval( "load('classpath:jvm-npm.js');");
         } catch (ScriptException ex) {
+        	
+            error( context, "ERROR evaluating\n%s\n", eval, ex);
+            
             throw new RuntimeException(ex);
-        }
+        }}
+        
+        	
+        {
+        //
+        // need for forge class loading problem
+        //
+        final String eval =			
+        		  new BufferedReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream("jvm-npm.js")))
+        		  .lines()
+        		  .collect( Collectors.joining("\n"));
+        //final String eval = "load('classpath:jvm-npm.js');";
+       
+        try {
+        
+        	System.setProperty(JVM_NPM_DEBUG, String.valueOf(verbose.getValue().booleanValue()));        	
+            service.eval(  eval );
+        } catch (ScriptException ex) {
+        	
+            error( context, "ERROR evaluating\n%s\n", eval, ex);
+            
+            throw new RuntimeException(ex);
+        }}
         
         return service;
     }
