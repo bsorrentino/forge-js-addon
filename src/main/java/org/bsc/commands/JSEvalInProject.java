@@ -1,5 +1,9 @@
 package org.bsc.commands;
 
+import static org.bsc.commands.AddonConstants.CATEGORY;
+import static org.bsc.commands.AddonUtils.printVersion;
+import static org.bsc.commands.AddonUtils.putAttribute;
+
 import java.io.File;
 import java.util.Collection;
 import java.util.List;
@@ -8,6 +12,7 @@ import javax.inject.Inject;
 import javax.script.ScriptEngine;
 
 import org.jboss.forge.addon.projects.Project;
+import org.jboss.forge.addon.projects.ProjectFactory;
 import org.jboss.forge.addon.resource.DirectoryResource;
 import org.jboss.forge.addon.resource.FileResource;
 import org.jboss.forge.addon.resource.Resource;
@@ -16,20 +21,15 @@ import org.jboss.forge.addon.ui.context.UIBuilder;
 import org.jboss.forge.addon.ui.context.UIContext;
 import org.jboss.forge.addon.ui.context.UIExecutionContext;
 import org.jboss.forge.addon.ui.context.UINavigationContext;
+import org.jboss.forge.addon.ui.hints.InputType;
+import org.jboss.forge.addon.ui.input.UIInput;
 import org.jboss.forge.addon.ui.metadata.UICommandMetadata;
+import org.jboss.forge.addon.ui.metadata.WithAttributes;
 import org.jboss.forge.addon.ui.result.NavigationResult;
 import org.jboss.forge.addon.ui.result.Result;
 import org.jboss.forge.addon.ui.result.Results;
 import org.jboss.forge.addon.ui.util.Metadata;
 import org.jboss.forge.addon.ui.wizard.UIWizard;
-
-import static org.bsc.commands.AddonUtils.*;
-import org.jboss.forge.addon.script.ScriptContextBuilder;
-import static org.bsc.commands.AddonConstants.*;
-import org.jboss.forge.addon.projects.ProjectFactory;
-import org.jboss.forge.addon.ui.hints.InputType;
-import org.jboss.forge.addon.ui.input.UIInput;
-import org.jboss.forge.addon.ui.metadata.WithAttributes;
 
 /**
  * Evaluate a script in project's scope
@@ -103,13 +103,8 @@ public class JSEvalInProject extends AbstractJSProjectCommand implements UIWizar
 
         final Project project = super.getSelectedProject(context);
 
-        final ScriptEngine scriptEngine = getScriptEngine(context);
+        final ScriptEngine scriptEngine = getScriptEngine(context,js);
         
-        scriptEngine.setContext(ScriptContextBuilder.create()
-                .currentResource(js)
-                .stdout(getOut(context).out())
-                .stderr(getOut(context).err())
-                .build());
         scriptEngine.put("$project", project);
         
         final File file = js.getUnderlyingResourceObject();

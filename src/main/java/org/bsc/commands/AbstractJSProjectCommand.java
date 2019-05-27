@@ -24,13 +24,25 @@
 package org.bsc.commands;
 
 import static java.lang.String.format;
+import static org.bsc.commands.AddonUtils.getOut;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import javax.inject.Inject;
+import javax.script.Bindings;
+import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
-import static org.bsc.commands.AddonUtils.getOut;
+
 import org.jboss.forge.addon.dependencies.DependencyResolver;
 import org.jboss.forge.addon.projects.ui.AbstractProjectCommand;
+import org.jboss.forge.addon.resource.FileResource;
+import org.jboss.forge.addon.script.ScriptContextBuilder;
 import org.jboss.forge.addon.ui.context.UIBuilder;
 import org.jboss.forge.addon.ui.context.UIContextProvider;
 import org.jboss.forge.addon.ui.hints.InputType;
@@ -74,54 +86,6 @@ public abstract class AbstractJSProjectCommand extends AbstractProjectCommand {
     public void initializeUI(UIBuilder builder) throws Exception {
         
         builder.add(verbose);
-
-        /*
-        final Project project = Projects.getSelectedProject(getProjectFactory(),
-                builder.getUIContext());
-
-        debug( builder, "root [%s]\n", project.getRoot());
-                
-        script.setCompleter(new UICompleter<FileResource<?>>() {
-
-            @SuppressWarnings("unchecked")
-            @Override
-            public Iterable<FileResource<?>> getCompletionProposals(
-                    UIContext context,
-                    InputComponent<?, FileResource<?>> input, String value) {
-
-                List<Resource<?>> result = listResources(
-                        project.getRoot(), new ArrayList<Resource<?>>());
-
-                final java.io.File root = (java.io.File) project.getRoot().getUnderlyingResourceObject();
-
-                final java.io.File resourcesDirs[] = {
-                    new java.io.File(root, "src/main/resources"),
-                    new java.io.File(root, "src/test/resources")
-                };
-
-                for (java.io.File resourcesDir : resourcesDirs) {
-                    if (resourcesDir.exists()) {
-
-                        Resource<?> resourcesRes = resFactory.create(resourcesDir);
-
-                        listResources(resourcesRes, result);
-
-                    }
-                }
-
-                Collections.sort(result, new Comparator<Resource<?>>() {
-
-                    @Override
-                    public int compare(Resource<?> o1, Resource<?> o2) {
-                        return o1.getFullyQualifiedName().compareTo(
-                                o2.getFullyQualifiedName());
-                    }
-                });
-
-                return (Iterable<FileResource<?>>) (List<?>) result;
-            }
-        });
-        */
         
     }
 
@@ -160,9 +124,10 @@ public abstract class AbstractJSProjectCommand extends AbstractProjectCommand {
         }   
     }
 
-    private static final String JS_ENGINE_NAME = "rhino-npm";
+    //private static final String JS_ENGINE_NAME = "rhino-npm";
     //private static final String JS_ENGINE_NAME = "nashorn";
-
+    private static final String JS_ENGINE_NAME = "graal.js";
+    
     final ScriptEngineManager manager = new ScriptEngineManager();
 
     private final ScriptEngine getScriptEngine() {
@@ -173,19 +138,19 @@ public abstract class AbstractJSProjectCommand extends AbstractProjectCommand {
             throw new IllegalStateException(format("[%s] javascript engine not found!", JS_ENGINE_NAME));
         }
         
+        if( JS_ENGINE_NAME.equals("graal.js")) {
+        	final Predicate<String> allowHostClassLookup =  s -> true;
+        	
+            final Bindings bindings = service.getBindings(ScriptContext.ENGINE_SCOPE);
+            // @see https://github.com/graalvm/graaljs/blob/master/docs/user/ScriptEngine.md
+            bindings.put("polyglot.js.allowHostAccess", true);
+            bindings.put("polyglot.js.allowHostClassLookup", allowHostClassLookup);
+            bindings.put("polyglot.js.allowIO", true);
+      
+        }
         return service;
     }
     
-    /**
-     * 
-     * @param <T>
-     * @param context
-     * @return 
-     */
-    @Deprecated
-    protected <T extends UIContextProvider> ScriptEngine getScriptEngineEmbedded( T context ) {     
-    	return getScriptEngine(context);
-    }
     
     /**
      * 
@@ -193,19 +158,57 @@ public abstract class AbstractJSProjectCommand extends AbstractProjectCommand {
      * @param context
      * @return 
      */
-    protected <T extends UIContextProvider> ScriptEngine getScriptEngine( T context ) {
+    protected <T extends UIContextProvider> ScriptEngine getScriptEngine( T context, final FileResource<?> js ) {
         
+    	debug( context, "script engine [%s] loading ....", JS_ENGINE_NAME);
+    	
         final ScriptEngine service = getScriptEngine();
+    	
+        debug( context, "script engine [%s] loaded!", JS_ENGINE_NAME);
+
+    	service.setContext(ScriptContextBuilder.create()
+                .currentResource(js)
+                .stdout(getOut(context).out())
+                .stderr(getOut(context).err())
+                .build());
+        service.put( "$self", this );
         
+        
+        {
+        final String eval = "exports = {};";
+
+        try {
+        	
+            service.eval( eval); 
+        
+        } catch (ScriptException ex) {
+        	
+            error( context, "ERROR evaluating\n%s\n", eval, ex);
+            
+            throw new RuntimeException(ex);
+        }}
+        
+        	
+        {
+        //
+        // need for forge class loading problem
+        //
+        final String eval =			
+        		  new BufferedReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream("jvm-npm.js")))
+        		  .lines()
+        		  .collect( Collectors.joining("\n"));
+        //final String eval = "load('classpath:jvm-npm.js');";
+       
         try {
         
-        	System.setProperty(JVM_NPM_DEBUG, String.valueOf(verbose.getValue().booleanValue()));
-        	
-            service.put( "self", this );
-            service.eval( "load('classpath:jvm-npm.js');");
+        	System.setProperty(JVM_NPM_DEBUG, String.valueOf(verbose.getValue().booleanValue()));        	
+            service.eval(  eval );
         } catch (ScriptException ex) {
+        	
+            error( context, "ERROR evaluating\n%s\n", eval, ex);
+            
             throw new RuntimeException(ex);
-        }
+        }}
         
         return service;
     }

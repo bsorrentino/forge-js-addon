@@ -1,28 +1,29 @@
 package org.bsc.commands;
 
+import static org.bsc.commands.AddonConstants.CATEGORY;
+import static org.bsc.commands.AddonUtils.printVersion;
+import static org.bsc.commands.AddonUtils.putAttribute;
+
 import java.io.File;
+
 import javax.inject.Inject;
 import javax.script.ScriptEngine;
 
+import org.jboss.forge.addon.projects.ProjectFactory;
 import org.jboss.forge.addon.resource.FileResource;
 import org.jboss.forge.addon.ui.context.UIBuilder;
 import org.jboss.forge.addon.ui.context.UIContext;
 import org.jboss.forge.addon.ui.context.UIExecutionContext;
 import org.jboss.forge.addon.ui.context.UINavigationContext;
+import org.jboss.forge.addon.ui.hints.InputType;
+import org.jboss.forge.addon.ui.input.UIInput;
 import org.jboss.forge.addon.ui.metadata.UICommandMetadata;
+import org.jboss.forge.addon.ui.metadata.WithAttributes;
 import org.jboss.forge.addon.ui.result.NavigationResult;
 import org.jboss.forge.addon.ui.result.Result;
 import org.jboss.forge.addon.ui.result.Results;
 import org.jboss.forge.addon.ui.util.Metadata;
 import org.jboss.forge.addon.ui.wizard.UIWizard;
-
-import static org.bsc.commands.AddonUtils.*;
-import static org.bsc.commands.AddonConstants.*;
-import org.jboss.forge.addon.script.ScriptContextBuilder;
-import org.jboss.forge.addon.projects.ProjectFactory;
-import org.jboss.forge.addon.ui.hints.InputType;
-import org.jboss.forge.addon.ui.input.UIInput;
-import org.jboss.forge.addon.ui.metadata.WithAttributes;
 
 /**
  * Evaluate a script
@@ -89,13 +90,7 @@ public class JSEval extends AbstractJSProjectCommand implements UIWizard {
         
         final FileResource<?> js = script.getValue();
         
-        final ScriptEngine scriptEngine = super.getScriptEngine(context);
-
-        scriptEngine.setContext(ScriptContextBuilder.create()
-                .currentResource(js)
-                .stdout(getOut(context).out())
-                .stderr(getOut(context).err())
-                .build());
+        final ScriptEngine scriptEngine = super.getScriptEngine(context,js);
 
         final File file = js.getUnderlyingResourceObject();
      

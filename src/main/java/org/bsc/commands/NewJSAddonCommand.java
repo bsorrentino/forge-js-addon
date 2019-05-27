@@ -1,6 +1,13 @@
 package org.bsc.commands;
 
+import static java.lang.String.format;
+import static org.bsc.commands.AddonConstants.CATEGORY;
+import static org.bsc.commands.AddonUtils.getManifest;
+import static org.bsc.commands.AddonUtils.getOut;
+import static org.bsc.commands.AddonUtils.getVersion;
+
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.Iterator;
 import java.util.jar.Manifest;
 
@@ -9,12 +16,13 @@ import javax.inject.Inject;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
-import static org.bsc.commands.AddonConstants.CATEGORY;
 import org.jboss.forge.addon.dependencies.builder.DependencyBuilder;
 import org.jboss.forge.addon.parser.java.facets.JavaSourceFacet;
 import org.jboss.forge.addon.parser.java.ui.AbstractJavaSourceCommand;
 import org.jboss.forge.addon.projects.Project;
+import org.jboss.forge.addon.projects.ProjectFactory;
 import org.jboss.forge.addon.projects.dependencies.DependencyInstaller;
+import org.jboss.forge.addon.resource.DirectoryResource;
 import org.jboss.forge.addon.resource.FileResource;
 import org.jboss.forge.addon.ui.context.UIBuilder;
 import org.jboss.forge.addon.ui.context.UIContext;
@@ -31,12 +39,6 @@ import org.jboss.forge.addon.ui.wizard.UIWizard;
 import org.jboss.forge.furnace.util.Strings;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
-
-import static org.bsc.commands.AddonUtils.*;
-
-import org.jboss.forge.addon.projects.ProjectFactory;
-import org.jboss.forge.addon.resource.DirectoryResource;
-import static java.lang.String.format;
 
 /**
  *
@@ -107,7 +109,7 @@ public class NewJSAddonCommand extends
         final java.io.InputStream is = getClass().getClassLoader()
                 .getResourceAsStream(resourceName);
 
-        return IOUtils.toString(is);
+        return IOUtils.toString(is, Charset.forName("UTF-8"));
     }
 
     private void addAbstractProjectCommandImpl(JavaClassSource source) {
