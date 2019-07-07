@@ -20,8 +20,8 @@ function execute( context:org.jboss.forge.addon.ui.context.UIExecutionContext ):
       var name = context.getPrompt().prompt( "give me name");
 
       print(  "prompt", name ,
-              "componentFactory", $self.componentFactory,
-              "dependencyResolver", $self.dependencyResolver
+              "componentFactory", $self.getComponentFactory(),
+              "dependencyResolver", $self.getDependencyResolver()
            );
 
       return "OK ";

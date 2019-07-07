@@ -2,15 +2,17 @@ package org.bsc.commands;
 
 import static org.bsc.commands.AddonConstants.CATEGORY;
 import static org.bsc.commands.AddonUtils.printVersion;
-import static org.bsc.commands.AddonUtils.putAttribute;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.script.ScriptEngine;
 
+import org.bsc.commands.helper.GraaljsHelper;
+import org.graalvm.polyglot.Context;
+import org.graalvm.polyglot.Source;
 import org.jboss.forge.addon.projects.Project;
 import org.jboss.forge.addon.projects.ProjectFactory;
 import org.jboss.forge.addon.resource.DirectoryResource;
@@ -37,7 +39,13 @@ import org.jboss.forge.addon.ui.wizard.UIWizard;
  * @author bsorrentino
  *
  */
-public class JSEvalInProject extends AbstractJSProjectCommand implements UIWizard {
+public class JSEvalInProject extends AbstractJSProjectCommand implements UIWizard, GraaljsHelper {
+    
+    @Override
+    public boolean isVerbose() {
+        return verbose.hasValue() ? verbose.getValue() : false;
+    }
+
     @Inject
     @WithAttributes(label = "Script", required = true, type = InputType.FILE_PICKER)
     protected UIInput<FileResource<?>> script;
@@ -59,7 +67,7 @@ public class JSEvalInProject extends AbstractJSProjectCommand implements UIWizar
      */
     @Override
     public void initializeUI(final UIBuilder builder) throws Exception {
-        debug( builder, "JSEvalInProject.initializeUI");
+        debug(builder, String.format("%s.initializeUI", getClass().getSimpleName()));
 
         super.initializeUI(builder);
 
@@ -85,7 +93,7 @@ public class JSEvalInProject extends AbstractJSProjectCommand implements UIWizar
     public Result execute(final UIExecutionContext context) {
         printVersion(context);
 
-        debug( context, "EvalP.execute");
+        debug(context, String.format("%s.execute", getClass().getSimpleName()));
 
         return Results.success();
     }
@@ -93,22 +101,38 @@ public class JSEvalInProject extends AbstractJSProjectCommand implements UIWizar
     @Override
     public NavigationResult next(UINavigationContext context) throws Exception {
 
-        if( nextCalls++ > 0 ) { // FIX ISSUE : MULTI INVOCATION
+        if( attributeExists( context, Context.class.getName() ) ) { // FIX ISSUE : MULTI INVOCATION
             return Results.navigateTo(JSEvalStep.class);
         }
         
-        debug(context, "EvalP.next");
+        debug(context, String.format("%s.next", getClass().getSimpleName()));
 
         final FileResource<?> js = script.getValue();
 
         final Project project = super.getSelectedProject(context);
 
-        final ScriptEngine scriptEngine = getScriptEngine(context,js);
+        //final ScriptEntexgine scriptEngine = getScriptEngine(context,js);
+        final Context jsContext = newGraaljsContext(context, js);
         
-        scriptEngine.put("$project", project);
+        //scriptEngine.put("$project", project);
+        jsContext.getBindings("js").putMember("$project", project);
         
         final File file = js.getUnderlyingResourceObject();
 
+        try {
+            final Source source = Source.newBuilder("js", file).build();
+            
+            jsContext.eval(source);
+            
+        } catch (java.lang.LinkageError e) {
+            error( context, "linkage error [%s]", e.getMessage(), e);
+        } catch (IOException e) {
+            error( context, "exception [%s]", e.getMessage(), e);
+            throw e;
+        }
+        putAttribute(context, Context.class.getName(), jsContext);
+        
+        /*
         try(java.io.Reader r = new java.io.FileReader(file)) {
 
             final Object result =  scriptEngine.eval(r);
@@ -124,8 +148,9 @@ public class JSEvalInProject extends AbstractJSProjectCommand implements UIWizar
 
             throw e;
         }
-
         putAttribute(context, ScriptEngine.class.getName(), scriptEngine);
+        */
+        
         putAttribute(context, "verbose", verbose.getValue());
 
         return Results.navigateTo(JSEvalStep.class);

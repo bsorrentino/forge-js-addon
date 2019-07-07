@@ -1,16 +1,10 @@
 package org.bsc.commands;
 
-import static org.bsc.commands.AddonUtils.getAttribute;
-import static org.bsc.commands.AddonUtils.getOut;
-
-import javax.script.Invocable;
-import javax.script.ScriptEngine;
-import javax.script.ScriptException;
-
+import org.bsc.commands.helper.GraaljsHelper;
+import org.graalvm.polyglot.Context;
 import org.jboss.forge.addon.ui.command.AbstractUICommand;
 import org.jboss.forge.addon.ui.command.UICommand;
 import org.jboss.forge.addon.ui.context.UIBuilder;
-import org.jboss.forge.addon.ui.context.UIContextProvider;
 import org.jboss.forge.addon.ui.context.UIExecutionContext;
 import org.jboss.forge.addon.ui.context.UINavigationContext;
 import org.jboss.forge.addon.ui.result.NavigationResult;
@@ -25,32 +19,30 @@ import org.jboss.forge.addon.ui.wizard.UIWizardStep;
  * @author bsorrentino
  *
  */
-public class JSEvalStep extends AbstractUICommand implements UIWizardStep {
-	
-    private <T extends UIContextProvider> boolean isVerbose( T context ) {
-    	return (Boolean.TRUE.equals(getAttribute(context,"verbose")));
-    }
-	
-    private <T extends UIContextProvider> void debug( T context, String fmt, Object...args) {
+public class JSEvalStep extends AbstractUICommand implements UIWizardStep, GraaljsHelper {
 
-    	if(isVerbose(context)) {
-    		final java.io.PrintStream ps = getOut(context).out();
-    		ps.printf(fmt, (Object[])args );
-    		ps.println();
-    	}
-    	
-    }
+    private boolean verbose = false;
     
 	@Override
+    public boolean isVerbose() {
+        return verbose;
+    }
+
+    @Override
 	public NavigationResult next(UINavigationContext context) throws Exception {
         
-        debug(context,"EvalStep.next" );
-
-        final ScriptEngine scriptEngine = (ScriptEngine)getAttribute(context, ScriptEngine.class.getName());
+        debug(context, String.format("%s.next", getClass().getSimpleName()));
+        
+        verbose = getAttribute(context, "verbose",false);
+        
+        //final ScriptEngine scriptEngine = (ScriptEngine)getAttribute(context, ScriptEngine.class.getName(),null);
+        final Context jsContext = (Context)getAttribute(context, Context.class.getName(),null);
 
         try {
-        
-        	final Object result = ((Invocable)scriptEngine).invokeFunction("next");
+            
+            final Object result = invokeFunction( jsContext, "next" );
+            
+        	//final Object result = ((Invocable)scriptEngine).invokeFunction("next");
         
         	if( result instanceof UICommand ) {
         		return NavigationResultBuilder.create()
@@ -61,7 +53,7 @@ public class JSEvalStep extends AbstractUICommand implements UIWizardStep {
         	debug(context,"result of method 'next' is not valid it must be an UICommand instance!" );
         	
         }
-        catch( NoSuchMethodException | ScriptException ex ) {
+        catch( NoSuchMethodException ex ) {
 
         	debug(context,"method 'next' not found" );
         	
@@ -74,23 +66,25 @@ public class JSEvalStep extends AbstractUICommand implements UIWizardStep {
 	public Result execute(UIExecutionContext context) throws Exception {
 		debug(context,"EvalStep.execute");
 
-        final ScriptEngine scriptEngine = (ScriptEngine)getAttribute(context, ScriptEngine.class.getName());
+        //final ScriptEngine scriptEngine = (ScriptEngine)getAttribute(context, ScriptEngine.class.getName(),null);
+        final Context jsContext = (Context)getAttribute(context, Context.class.getName(),null);
 
-        final Object result = ((Invocable)scriptEngine).invokeFunction("execute", context);
+        //final Object result = ((Invocable)scriptEngine).invokeFunction("execute", context);
+        final Object result = invokeFunction(jsContext, "execute", context);        
 
         return Results.success(String.valueOf(result));          
 	}
 
 	@Override
 	public void initializeUI(UIBuilder builder) throws Exception {
-
-            
-        final ScriptEngine scriptEngine = (ScriptEngine)getAttribute(builder, ScriptEngine.class.getName());
+         
+        //final ScriptEngine scriptEngine = (ScriptEngine)getAttribute(builder, ScriptEngine.class.getName(),null);
+        final Context jsContext = (Context)getAttribute(builder, Context.class.getName(),null);
 
         debug(builder,"EvalStep.initializeUI");
 
-        ((Invocable)scriptEngine).invokeFunction("initializeUI", builder);
-                
+        //((Invocable)scriptEngine).invokeFunction("initializeUI", builder);
+        invokeFunction(jsContext, "initializeUI", builder);        
 	}
 
 }

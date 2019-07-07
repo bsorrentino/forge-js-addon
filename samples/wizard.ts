@@ -12,11 +12,11 @@ class Attributes {
   step2:org.jboss.forge.addon.ui.input.UIInput<any>;
 
   constructor(  ) {
-		this.step1 = $self.componentFactory.createInput("input", String);
+		this.step1 = $self.getComponentFactory().createInput("input", String);
 		this.step1.setLabel("input step1");
 		this.step1.setRequired( true );
 
-		this.step2 = $self.componentFactory.createInput("input2", String);
+		this.step2 = $self.getComponentFactory().createInput("input2", String);
 		this.step1.setLabel("input step2");
 		this.step1.setRequired( true );
 

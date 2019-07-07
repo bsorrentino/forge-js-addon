@@ -14,7 +14,7 @@ class Attributes {
   gid:org.jboss.forge.addon.ui.input.UIInput<any>  
 
   constructor(  ) {
-    this.gid = $self.componentFactory.createInput("coordinate", String.class);
+    this.gid = $self.getComponentFactory().createInput("coordinate", String.class);
     this.gid.setLabel( "Coordinate GroupId:ArtifactId[:version]" );
     this.gid.setRequired( true );
   }

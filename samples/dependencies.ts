@@ -5,7 +5,7 @@ export function resolve( qry:string ):List<org.jboss.forge.addon.dependencies.Co
 
         var dq = DependencyQueryBuilder.create( qry );
 
-        return $self.dependencyResolver.resolveVersions(dq);
+        return $self.getDependencyResolver().resolveVersions(dq);
 }
 
 export function resolveFromRepo( qry:string, repo:any ):List<org.jboss.forge.addon.dependencies.Coordinate> {
@@ -18,5 +18,5 @@ export function resolveFromRepo( qry:string, repo:any ):List<org.jboss.forge.add
                   .setRepositories( new DR( repo.id, repo.url ) )
         ;
 
-        return $self.dependencyResolver.resolveVersions(dq);
+        return $self.getDependencyResolver().resolveVersions(dq);
 }

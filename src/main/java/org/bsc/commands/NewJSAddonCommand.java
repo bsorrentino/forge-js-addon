@@ -3,7 +3,6 @@ package org.bsc.commands;
 import static java.lang.String.format;
 import static org.bsc.commands.AddonConstants.CATEGORY;
 import static org.bsc.commands.AddonUtils.getManifest;
-import static org.bsc.commands.AddonUtils.getOut;
 import static org.bsc.commands.AddonUtils.getVersion;
 
 import java.io.IOException;
@@ -46,7 +45,7 @@ import org.jboss.forge.roaster.model.source.MethodSource;
  *
  */
 public class NewJSAddonCommand extends
-        AbstractJavaSourceCommand<JavaClassSource> {
+        AbstractJavaSourceCommand<JavaClassSource> implements UIContextHelper {
 
     @Inject
     @WithAttributes(label = "require project", required = false, type = InputType.CHECKBOX)

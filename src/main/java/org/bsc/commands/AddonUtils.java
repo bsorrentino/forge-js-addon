@@ -22,42 +22,14 @@ public class AddonUtils {
 	private AddonUtils() {
 	}
 
-        /**
-         *
-         * @param <C>
-         * @param <T>
-         * @param ctx
-         * @param name
-         * @return
-         */
-	@SuppressWarnings("unchecked")
-	public static <C extends UIContextProvider,T> T getAttribute( C ctx, String name ) {
 
-		return (T)ctx.getUIContext().getAttributeMap().get(name);
-	}
-
-        /**
-         *
-         * @param <C>
-         * @param <T>
-         * @param ctx
-         * @param name
-         * @param value
-         * @return
-         */
-	@SuppressWarnings("unchecked")
-	public static <C extends UIContextProvider,T> T putAttribute( C ctx, String name, T value ) {
-
-		return (T)ctx.getUIContext().getAttributeMap().put(name, value);
-	}
-
-        /**
-         *
-         * @param <T>
-         * @param context
-         * @return
-         */
-	public static  <T extends UIContextProvider> UIOutput getOut( T context ) {
+    /**
+     *
+     * @param <T>
+     * @param context
+     * @return
+     */
+	private static  <T extends UIContextProvider> UIOutput getOut( T context ) {
 		return context.getUIContext().getProvider().getOutput();
 	}
 
@@ -80,8 +52,8 @@ public class AddonUtils {
 	private static Manifest getManifest(Class<?> clazz) throws IOException {
 		if( clazz == null ) throw new IllegalArgumentException( "argument clazz is null!");
 
-		String className = clazz.getSimpleName().concat(".class");
-		String classPath = clazz.getResource(className).toString();
+		final String className = clazz.getSimpleName().concat(".class");
+		final String classPath = clazz.getResource(className).toString();
 
 		if (!classPath.startsWith("jar")) {
 		  // Class not from JAR
@@ -90,7 +62,7 @@ public class AddonUtils {
 
 		final String manifestPath = classPath.substring(0, classPath.lastIndexOf("!") + 1).concat("/META-INF/MANIFEST.MF");
 
-		Manifest manifest = new Manifest(new java.net.URL(manifestPath).openStream());
+		final Manifest manifest = new Manifest(new java.net.URL(manifestPath).openStream());
 
 		return manifest;
 	}

@@ -8,7 +8,7 @@ class Attributes {
   coord:org.jboss.forge.addon.ui.input.UIInput<any>
 
   constructor(  ) {
-    this.coord = $self.componentFactory.createInput("coordinate", String.class);
+    this.coord = $self.getComponentFactory().createInput("coordinate", String.class);
     this.coord.setLabel( "Coordinate GroupId:ArtifactId[:version]" );
     this.coord.setRequired( true );
   }

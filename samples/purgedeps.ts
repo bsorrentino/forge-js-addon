@@ -52,15 +52,15 @@ class Attributes {
   dld:org.jboss.forge.addon.ui.input.UIInput<any>
 
   constructor(  ) {
-    this.params = $self.componentFactory.createInput("params", String.class );
+    this.params = $self.getComponentFactory().createInput("params", String.class );
     this.params.setLabel("mvn parameters");
     this.params.setDefaultValue( "-e" );
 
-    this.dlr = $self.componentFactory.createInput("dlr", Boolean.class );
+    this.dlr = $self.getComponentFactory().createInput("dlr", Boolean.class );
     this.dlr.setLabel ( "Delete project's artifacts from local repo?");
     this.dlr.setRequired(true);
 
-    this.dld = $self.componentFactory.createInput("dld", Boolean.class );
+    this.dld = $self.getComponentFactory().createInput("dld", Boolean.class );
     this.dld.setLabel("Delete project's dependencies from local repo ?");
     this.dld.setRequired(true);
   }

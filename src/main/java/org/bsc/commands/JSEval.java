@@ -2,13 +2,15 @@ package org.bsc.commands;
 
 import static org.bsc.commands.AddonConstants.CATEGORY;
 import static org.bsc.commands.AddonUtils.printVersion;
-import static org.bsc.commands.AddonUtils.putAttribute;
 
 import java.io.File;
+import java.io.IOException;
 
 import javax.inject.Inject;
-import javax.script.ScriptEngine;
 
+import org.bsc.commands.helper.GraaljsHelper;
+import org.graalvm.polyglot.Context;
+import org.graalvm.polyglot.Source;
 import org.jboss.forge.addon.projects.ProjectFactory;
 import org.jboss.forge.addon.resource.FileResource;
 import org.jboss.forge.addon.ui.context.UIBuilder;
@@ -31,7 +33,12 @@ import org.jboss.forge.addon.ui.wizard.UIWizard;
  * @author bsorrentino
  *
  */
-public class JSEval extends AbstractJSProjectCommand implements UIWizard {
+public class JSEval extends AbstractJSProjectCommand implements UIWizard, GraaljsHelper {
+
+    @Override
+    public boolean isVerbose() {
+        return verbose.hasValue() ? verbose.getValue() : false;
+    }
         
     @Inject
     @WithAttributes(label = "Script", required = true, type = InputType.FILE_PICKER)
@@ -49,7 +56,7 @@ public class JSEval extends AbstractJSProjectCommand implements UIWizard {
     @Override
     public void initializeUI(UIBuilder builder) throws Exception {
        
-        debug( builder, "Eval.initializeUI " );
+        debug(builder, String.format("%s.initializeUI", getClass().getSimpleName()));
 
         super.initializeUI(builder);
 
@@ -74,7 +81,7 @@ public class JSEval extends AbstractJSProjectCommand implements UIWizard {
     public Result execute(final UIExecutionContext context) {
         printVersion(context);
 
-        debug( context, "Eval.execute");
+        debug(context, String.format("%s.execute", getClass().getSimpleName()));
         
         return Results.success();
     }
@@ -82,18 +89,33 @@ public class JSEval extends AbstractJSProjectCommand implements UIWizard {
     @Override
     public NavigationResult next(UINavigationContext context) throws Exception {
 
-        if( nextCalls++ > 0 ) { // FIX ISSUE : MULTI INVOCATION
+        if( attributeExists( context, Context.class.getName() ) ) { // FIX ISSUE : MULTI INVOCATION
             return Results.navigateTo(JSEvalStep.class);
         }
 
-        debug( context, "Eval.next" );
+        debug(context, String.format("%s.next", getClass().getSimpleName()));
         
         final FileResource<?> js = script.getValue();
         
-        final ScriptEngine scriptEngine = super.getScriptEngine(context,js);
+        //final ScriptEngine scriptEngine = getScriptEngine(context,js);
+        final Context jsContext = newGraaljsContext(context, js);
 
         final File file = js.getUnderlyingResourceObject();
-     
+
+        try {
+            final Source source = Source.newBuilder("js", file).build();
+            
+            jsContext.eval(source);
+            
+        } catch (java.lang.LinkageError e) {
+            error( context, "linkage error [%s]", e.getMessage(), e);
+        } catch (IOException e) {
+            error( context, "exception [%s]", e.getMessage(), e);
+            throw e;
+        }
+        putAttribute(context, Context.class.getName(), jsContext);
+
+        /*
         try ( java.io.Reader r = new java.io.FileReader(file) ) {
 
             debug( context, "scriptEngine.eval(%s)", js );
@@ -113,6 +135,8 @@ public class JSEval extends AbstractJSProjectCommand implements UIWizard {
         }
 
         putAttribute(context, ScriptEngine.class.getName(), scriptEngine);
+        */
+        
         putAttribute(context, "verbose", verbose.getValue());
 
         return Results.navigateTo(JSEvalStep.class);

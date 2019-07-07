@@ -21,7 +21,7 @@
 
 	<properties>
 		<jvmnpm.version>1.0.0</jvmnpm.version>
-		 <graalvm.version>1.0.0-rc16</graalvm.version>
+		 <graalvm.version>19.0.2</graalvm.version>
 	</properties>
 
 	<dependencies>
