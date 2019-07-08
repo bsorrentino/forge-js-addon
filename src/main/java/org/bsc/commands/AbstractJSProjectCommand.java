@@ -2,6 +2,7 @@ package org.bsc.commands;
 
 import javax.inject.Inject;
 
+import org.bsc.commands.helper.UIContextHelper;
 import org.jboss.forge.addon.dependencies.DependencyResolver;
 import org.jboss.forge.addon.projects.ui.AbstractProjectCommand;
 import org.jboss.forge.addon.ui.context.UIBuilder;

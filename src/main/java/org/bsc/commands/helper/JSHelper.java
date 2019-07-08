@@ -13,7 +13,6 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
-import org.bsc.commands.UIContextHelper;
 import org.jboss.forge.addon.resource.FileResource;
 import org.jboss.forge.addon.script.ScriptContextBuilder;
 import org.jboss.forge.addon.ui.context.UIContextProvider;

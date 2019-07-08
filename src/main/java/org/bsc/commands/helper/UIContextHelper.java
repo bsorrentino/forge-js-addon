@@ -1,4 +1,4 @@
-package org.bsc.commands;
+package org.bsc.commands.helper;
 
 import org.jboss.forge.addon.ui.command.UICommand;
 import org.jboss.forge.addon.ui.context.UIContextProvider;

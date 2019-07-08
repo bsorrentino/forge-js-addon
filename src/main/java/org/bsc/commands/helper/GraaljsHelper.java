@@ -3,9 +3,9 @@ package org.bsc.commands.helper;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
-import org.bsc.commands.UIContextHelper;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.HostAccess;
 import org.graalvm.polyglot.Source;
@@ -92,6 +92,11 @@ public interface GraaljsHelper extends UIContextHelper {
      * @throws NoSuchMethodException
      */
     default Object invokeFunction( Context jsContext, String functionName, Object... args ) throws NoSuchMethodException {
+        if (jsContext == null)
+            throw new java.lang.IllegalArgumentException("jsContext is null!");
+        if (functionName == null)
+            throw new java.lang.IllegalArgumentException("name is null!");
+
         final Value function = jsContext.getBindings("js").getMember(functionName);
         
         if (function == null) {
@@ -104,5 +109,30 @@ public interface GraaljsHelper extends UIContextHelper {
        
 
     }
+    
+    default Object invokeMethod( Context jsContext, Object thiz, String methodName, Object... args) throws NoSuchMethodException  {
+        if (thiz == null)
+            throw new java.lang.IllegalArgumentException("thiz is null!");
+        if (jsContext == null)
+            throw new java.lang.IllegalArgumentException("jsContext is null!");
+        if (methodName == null)
+            throw new java.lang.IllegalArgumentException("name is null!");
 
+        final Value value = Value.asValue(thiz);
+        //final Value value = jsContext.getBindings("js")..asValue(thiz);
+        
+        if( value == null ) {
+            throw new NoSuchElementException("js object not found!");
+        }
+        
+        final Value method = value.getMember(methodName);
+        
+        if (method == null) {
+            throw new NoSuchMethodException(methodName);
+        } else if (!method.canExecute()) {
+            throw new NoSuchMethodException( String.format( "%s is not a method", methodName) );
+        }
+        
+        return method.execute(args).as(Object.class);
+    }
 }
