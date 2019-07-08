@@ -96,18 +96,19 @@ function execute( context:any ) {
                             .getParentElement()
                         .getParentElement()
                             ;
-        
+
+        const config = ConfigurationBuilder.create()
+                            .addConfigurationElement(images)
+                            ;
                         
-        var pb = MavenPluginBuilder.create()
+        const pb = MavenPluginBuilder.create()
                 .setCoordinate(cc)
                 .addExecution(
                         ExecutionBuilder.create()
                         .setPhase("package")
                         .addGoal("build")
-                        .setConfig( 
-                            ConfigurationBuilder.create()
-                                .addConfigurationElement(images)
-                        ))
+                        .setConfig( config )
+                        )
                 ;
 
         return pb;
