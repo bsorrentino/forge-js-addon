@@ -17,6 +17,7 @@ import org.jboss.forge.addon.resource.FileResource;
 import org.jboss.forge.addon.script.ScriptContextBuilder;
 import org.jboss.forge.addon.ui.context.UIContextProvider;
 
+@Deprecated
 public interface JSHelper extends UIContextHelper {
     
     //private static final String JS_ENGINE_NAME = "rhino-npm";
@@ -113,5 +114,6 @@ public interface JSHelper extends UIContextHelper {
         
         return service;
     }
+    
 
 }

@@ -1,14 +1,7 @@
 import facets = require("forge/facets");
-import * as  dps from "./dependencies";
+import * as dps from "./dependencies";
+import { String } from "./ts/forge-types";
 
-import {
-  MavenPluginBuilder,
-  CoordinateBuilder,
-  ConfigurationBuilder,
-  ConfigurationElementBuilder,
-  ExecutionBuilder,
-  String
-} from "./ts/forge-types";
 
 class Attributes {
   gid:org.jboss.forge.addon.ui.input.UIInput<any>  
@@ -22,18 +15,13 @@ class Attributes {
 
 var attrs = new Attributes();
 
-
 export function initializeUI(builder:org.jboss.forge.addon.ui.context.UIBuilder, defaultValue?:any ) {
 
-    print("installPlugin initialize UI ");
     if( defaultValue ) {
         attrs.gid.setDefaultValue(defaultValue);
     }
 
     builder.add(attrs.gid);
-    
-    print("UI initialized!")
-
 }
 
 /**
