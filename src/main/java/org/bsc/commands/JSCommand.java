@@ -3,9 +3,6 @@ package org.bsc.commands;
 
 import static java.lang.String.format;
 
-import javax.script.Invocable;
-import javax.script.ScriptEngine;
-
 import org.bsc.commands.helper.GraaljsHelper;
 import org.graalvm.polyglot.Context;
 import org.jboss.forge.addon.ui.command.AbstractUICommand;
