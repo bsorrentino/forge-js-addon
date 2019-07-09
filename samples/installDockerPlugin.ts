@@ -38,7 +38,7 @@ class Attributes {
         builder.add( this.build_contextDir);
 
         const choices = Arrays.asList( 
-            'none',
+            'custom',
             'artifact-with-dependencies',
             'artifact',
             'project',
@@ -70,17 +70,21 @@ function initializeUI( builder:org.jboss.forge.addon.ui.context.UIBuilder ) {
  * 
  * @param context 
  */
-function execute( context:any ) {
+function execute( context:org.jboss.forge.addon.ui.context.UIExecutionContext ) {
  
     console.log( `image name = ${attrs.image_name.getValue()} `);
 
-    installPlugin.execute( context, ( cc ) => {
+    let assembly = ConfigurationBuilder.create()
+        .createConfigurationElement('assembly')
+    if( attrs.assembly_descriptorRef.getSelectedIndex() > 0  ) {
+        assembly.addChild( 'descriptorRef' ).setText( attrs.assembly_descriptorRef.getValue() )
+    }
+    else {
+        const assembly_model = context.getPrompt().prompt("assembly model name");
+        assembly.addChild( 'descriptor' ).setText( assembly_model )
+    }
 
-        let assembly = ConfigurationBuilder.create()
-                        .createConfigurationElement('assembly')
-        if( attrs.assembly_descriptorRef.getSelectedIndex() > 0  ) {
-            assembly.addChild( 'descriptorRef' ).setText( attrs.assembly_descriptorRef.getValue() )
-        }
+    installPlugin.execute( context, ( cc ) => {
 
         let images = ConfigurationBuilder.create()
                         .createConfigurationElement('images')
