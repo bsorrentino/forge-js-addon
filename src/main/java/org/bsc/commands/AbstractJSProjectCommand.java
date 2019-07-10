@@ -12,15 +12,13 @@ import org.jboss.forge.addon.ui.input.UIInput;
 import org.jboss.forge.addon.ui.metadata.WithAttributes;
 
 public abstract class AbstractJSProjectCommand extends AbstractProjectCommand implements UIContextHelper {
-    
-    
+
     @Inject
     protected DependencyResolver dependencyResolver;
 
     @Inject
     private InputComponentFactory componentFactory;
 
-    
     public DependencyResolver getDependencyResolver() {
         return dependencyResolver;
     }
@@ -29,17 +27,15 @@ public abstract class AbstractJSProjectCommand extends AbstractProjectCommand im
         return componentFactory;
     }
 
-    
     @Inject
-    @WithAttributes(label = "Verbose", required = true, type = InputType.CHECKBOX,defaultValue = "false")
+    @WithAttributes(label = "Verbose", required = true, type = InputType.CHECKBOX, defaultValue = "false")
     protected UIInput<Boolean> verbose;
 
-    
     @Override
     public void initializeUI(UIBuilder builder) throws Exception {
-        
+
         builder.add(verbose);
-        
+
     }
 
 }
