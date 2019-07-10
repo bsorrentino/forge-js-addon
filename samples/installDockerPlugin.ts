@@ -23,9 +23,9 @@ class Attributes {
         this.image_alias.setDefaultValue( 'dockerfile' );
   
         this.build_contextDir = $self.getComponentFactory().createInput("build:contextDir", String.class);
-        this.build_contextDir.setLabel( "Docker file dir" );
+        this.build_contextDir.setLabel( "Docker file dir from ${project.basedir}" );
         this.build_contextDir.setRequired( false );
-        this.build_contextDir.setDefaultValue( '${project.basedir}/src/main/docker' );
+        this.build_contextDir.setDefaultValue( 'src/main/docker' );
 
         this.assembly_descriptorRef = $self.getComponentFactory().createSelectOne("assembly:descriptorRef", String.class);
         this.assembly_descriptorRef.setLabel( "Assembly Descriptor Ref" );
@@ -80,8 +80,8 @@ function execute( context:org.jboss.forge.addon.ui.context.UIExecutionContext ) 
         assembly.addChild( 'descriptorRef' ).setText( attrs.assembly_descriptorRef.getValue() )
     }
     else {
-        const assembly_model = context.getPrompt().prompt("assembly model name");
-        assembly.addChild( 'descriptor' ).setText( assembly_model )
+        const assembly_model = context.getPrompt().prompt("assembly model file from ${project.basedir}");
+        assembly.addChild( 'descriptor' ).setText( '${project.basedir}/' + assembly_model )
     }
 
     installPlugin.execute( context, ( cc ) => {
@@ -94,7 +94,7 @@ function execute( context:org.jboss.forge.addon.ui.context.UIExecutionContext ) 
                             .addChild( 'alias' ).setText( attrs.image_alias.getValue() )
                             .getParentElement()
                             .addChild('build')
-                                .addChild('contextDir').setText( attrs.build_contextDir.getValue())
+                                .addChild('contextDir').setText( '${project.basedir}/' + attrs.build_contextDir.getValue())
                                 .getParentElement()
                                 .addChild( assembly )
                             .getParentElement()
