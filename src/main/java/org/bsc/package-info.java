@@ -2,6 +2,7 @@
 
 @Type(value=java.util.List.class, alias="List"),
 @Type(value=java.util.Arrays.class, export=true),
+@Type(value=java.util.Properties.class),
 
 @Type(value=org.jboss.forge.addon.maven.plugins.ConfigurationBuilder.class, export=true),
 @Type(value=org.jboss.forge.addon.maven.plugins.ConfigurationElementBuilder.class, export=true),

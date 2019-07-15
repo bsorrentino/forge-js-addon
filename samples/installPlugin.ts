@@ -31,8 +31,6 @@ export function initializeUI(builder:org.jboss.forge.addon.ui.context.UIBuilder,
  *
  */
 export function installPlugin(cc:org.jboss.forge.addon.dependencies.Coordinate, pb:org.jboss.forge.addon.maven.plugins.MavenPlugin) {
-    print("installPlugin");
-
     var mvn = $project.getFacet( facets.MavenPluginFacet ) as org.jboss.forge.addon.maven.projects.MavenPluginFacet;
 
     try {
@@ -64,8 +62,6 @@ export function execute(
   context:org.jboss.forge.addon.ui.context.UIExecutionContext,
   cb:(coordinate:org.jboss.forge.addon.dependencies.Coordinate) => org.jboss.forge.addon.maven.plugins.MavenPlugin )
 {
-
-    print("execute");
 
     var list = dps.resolve("" + attrs.gid.getValue());
 
